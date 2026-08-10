@@ -1,3 +1,50 @@
+# ScrapeBadger PHP SDK
+
+[![version](https://img.shields.io/packagist/v/scrape-badger/scrapebadger-php)](https://packagist.org/packages/scrape-badger/scrapebadger-php) [![CI](https://img.shields.io/github/actions/workflow/status/scrape-badger/scrapebadger-php/ci.yml?label=CI)](https://github.com/scrape-badger/scrapebadger-php/actions) [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
+Official **PHP** SDK for [ScrapeBadger](https://scrapebadger.com) — one API key for
+30+ scraping APIs: Twitter/X, Reddit, Facebook, Instagram, TikTok, YouTube, Amazon, eBay,
+Walmart, Vinted, Google (18 products), Bing, Yahoo, ChatGPT, Perplexity, real estate, and
+any URL via the general Web Scraping API. Generated from the ScrapeBadger OpenAPI spec —
+always in sync with the API. ⚠️ This repository is regenerated automatically; don't send
+PRs here, request changes via the [roadmap](https://github.com/scrape-badger/roadmap).
+
+📚 [API docs](https://docs.scrapebadger.com) · 🧰 [All SDKs](https://scrapebadger.com/sdks) · 🔑 [Get an API key](https://scrapebadger.com/auth/signup) — 1,000 free credits
+
+## 🚀 Install
+
+```
+composer require scrape-badger/scrapebadger-php
+```
+
+## ⚡ Quick start
+
+```php
+<?php
+require_once __DIR__ . '/vendor/autoload.php';
+
+$config = ScrapeBadger\Configuration::getDefaultConfiguration()
+    ->setApiKey('X-API-Key', 'YOUR_API_KEY');
+
+$twitter = new ScrapeBadger\Api\TwitterApi(config: $config);
+$user = $twitter->twitterGetUserByUsername('elonmusk');
+var_dump($user);
+```
+
+Every scraper is available as its own API class (`TwitterApi`, `AmazonApi`, `GoogleApi`, …)
+with one method per endpoint — the full list is in the reference below.
+
+## 🛠 Development
+
+```sh
+composer install                     # deps
+composer validate --strict           # manifest lint
+find lib -name '*.php' | xargs -n1 php -l   # syntax
+./vendor/bin/phpunit                 # tests
+```
+
+---
+
 # OpenAPIClient-php
 
 Unified credit-based scraping API. https://docs.scrapebadger.com

@@ -14,6 +14,7 @@ docs/Api/DepopApi.md
 docs/Api/DuckDuckGoApi.md
 docs/Api/EBayApi.md
 docs/Api/FacebookApi.md
+docs/Api/GeminiApi.md
 docs/Api/GoogleApi.md
 docs/Api/IdealistaApi.md
 docs/Api/ImmobiliareApi.md
@@ -21,6 +22,7 @@ docs/Api/InstagramApi.md
 docs/Api/LeboncoinApi.md
 docs/Api/LinkedInApi.md
 docs/Api/LoopNetApi.md
+docs/Api/PerplexityApi.md
 docs/Api/RealtorApi.md
 docs/Api/RedditApi.md
 docs/Api/RedfinApi.md
@@ -72,6 +74,7 @@ lib/Api/DepopApi.php
 lib/Api/DuckDuckGoApi.php
 lib/Api/EBayApi.php
 lib/Api/FacebookApi.php
+lib/Api/GeminiApi.php
 lib/Api/GoogleApi.php
 lib/Api/IdealistaApi.php
 lib/Api/ImmobiliareApi.php
@@ -79,6 +82,7 @@ lib/Api/InstagramApi.php
 lib/Api/LeboncoinApi.php
 lib/Api/LinkedInApi.php
 lib/Api/LoopNetApi.php
+lib/Api/PerplexityApi.php
 lib/Api/RealtorApi.php
 lib/Api/RedditApi.php
 lib/Api/RedfinApi.php
@@ -135,6 +139,7 @@ test/Api/DepopApiTest.php
 test/Api/DuckDuckGoApiTest.php
 test/Api/EBayApiTest.php
 test/Api/FacebookApiTest.php
+test/Api/GeminiApiTest.php
 test/Api/GoogleApiTest.php
 test/Api/IdealistaApiTest.php
 test/Api/ImmobiliareApiTest.php
@@ -142,6 +147,7 @@ test/Api/InstagramApiTest.php
 test/Api/LeboncoinApiTest.php
 test/Api/LinkedInApiTest.php
 test/Api/LoopNetApiTest.php
+test/Api/PerplexityApiTest.php
 test/Api/RealtorApiTest.php
 test/Api/RedditApiTest.php
 test/Api/RedfinApiTest.php

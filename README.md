@@ -171,6 +171,12 @@ Class | Method | HTTP request | Description
 *FacebookApi* | [**facebookSearchPlaces**](docs/Api/FacebookApi.md#facebooksearchplaces) | **GET** /v1/facebook/search/places | Search places
 *FacebookApi* | [**facebookSearchPosts**](docs/Api/FacebookApi.md#facebooksearchposts) | **GET** /v1/facebook/search/posts | Search posts
 *FacebookApi* | [**facebookSearchTheAdLibrary**](docs/Api/FacebookApi.md#facebooksearchtheadlibrary) | **GET** /v1/facebook/ads/search | Search the Ad Library
+*GeminiApi* | [**geminiAskGeminiAQuestion**](docs/Api/GeminiApi.md#geminiaskgeminiaquestion) | **GET** /v1/gemini/ask | Ask Gemini a question
+*GeminiApi* | [**geminiAskGeminiAQuestionPost**](docs/Api/GeminiApi.md#geminiaskgeminiaquestionpost) | **POST** /v1/gemini/ask | Ask Gemini a question (POST)
+*GeminiApi* | [**geminiGeminiScraperHealthCheck**](docs/Api/GeminiApi.md#geminigeminiscraperhealthcheck) | **GET** /v1/gemini/health | Gemini scraper health check
+*GeminiApi* | [**geminiGeminiScraperHealthCheckHead**](docs/Api/GeminiApi.md#geminigeminiscraperhealthcheckhead) | **HEAD** /v1/gemini/health | Gemini scraper health check
+*GeminiApi* | [**geminiMeasureABrandSVisibilityInAGeminiAnswer**](docs/Api/GeminiApi.md#geminimeasureabrandsvisibilityinageminianswer) | **GET** /v1/gemini/brand-visibility | Measure a brand&#39;s visibility in a Gemini answer
+*GeminiApi* | [**geminiMeasureABrandSVisibilityInAGeminiAnswerPost**](docs/Api/GeminiApi.md#geminimeasureabrandsvisibilityinageminianswerpost) | **POST** /v1/gemini/brand-visibility | Measure a brand&#39;s visibility in a Gemini answer (POST)
 *GoogleApi* | [**googleGetAuthorCitationsPerYearChart**](docs/Api/GoogleApi.md#googlegetauthorcitationsperyearchart) | **GET** /v1/google/scholar/author/citation | Get author citations-per-year chart
 *GoogleApi* | [**googleGetBusinessPosts**](docs/Api/GoogleApi.md#googlegetbusinessposts) | **GET** /v1/google/maps/posts | Get business posts
 *GoogleApi* | [**googleGetCitationFormatsForAScholarPaper**](docs/Api/GoogleApi.md#googlegetcitationformatsforascholarpaper) | **GET** /v1/google/scholar/cite | Get citation formats for a Scholar paper
@@ -284,6 +290,12 @@ Class | Method | HTTP request | Description
 *LoopNetApi* | [**loopnetLoopnetScraperHealthCheck**](docs/Api/LoopNetApi.md#loopnetloopnetscraperhealthcheck) | **GET** /v1/loopnet/health | LoopNet scraper health check
 *LoopNetApi* | [**loopnetLoopnetScraperHealthCheckHead**](docs/Api/LoopNetApi.md#loopnetloopnetscraperhealthcheckhead) | **HEAD** /v1/loopnet/health | LoopNet scraper health check
 *LoopNetApi* | [**loopnetSearchCommercialRealEstate**](docs/Api/LoopNetApi.md#loopnetsearchcommercialrealestate) | **GET** /v1/loopnet/search | Search commercial real estate
+*PerplexityApi* | [**perplexityAskPerplexityAQuestion**](docs/Api/PerplexityApi.md#perplexityaskperplexityaquestion) | **GET** /v1/perplexity/ask | Ask Perplexity a question
+*PerplexityApi* | [**perplexityAskPerplexityAQuestionPost**](docs/Api/PerplexityApi.md#perplexityaskperplexityaquestionpost) | **POST** /v1/perplexity/ask | Ask Perplexity a question (POST)
+*PerplexityApi* | [**perplexityMeasureABrandSVisibilityInAPerplexityAnswer**](docs/Api/PerplexityApi.md#perplexitymeasureabrandsvisibilityinaperplexityanswer) | **GET** /v1/perplexity/brand-visibility | Measure a brand&#39;s visibility in a Perplexity answer
+*PerplexityApi* | [**perplexityMeasureABrandSVisibilityInAPerplexityAnswerPost**](docs/Api/PerplexityApi.md#perplexitymeasureabrandsvisibilityinaperplexityanswerpost) | **POST** /v1/perplexity/brand-visibility | Measure a brand&#39;s visibility in a Perplexity answer (POST)
+*PerplexityApi* | [**perplexityPerplexityScraperHealthCheck**](docs/Api/PerplexityApi.md#perplexityperplexityscraperhealthcheck) | **GET** /v1/perplexity/health | Perplexity scraper health check
+*PerplexityApi* | [**perplexityPerplexityScraperHealthCheckHead**](docs/Api/PerplexityApi.md#perplexityperplexityscraperhealthcheckhead) | **HEAD** /v1/perplexity/health | Perplexity scraper health check
 *RealtorApi* | [**realtorGetFullPropertyDetail**](docs/Api/RealtorApi.md#realtorgetfullpropertydetail) | **GET** /v1/realtor/properties/{property_id} | Get full property detail
 *RealtorApi* | [**realtorListMarkets**](docs/Api/RealtorApi.md#realtorlistmarkets) | **GET** /v1/realtor/markets | List markets
 *RealtorApi* | [**realtorLocationAutocomplete**](docs/Api/RealtorApi.md#realtorlocationautocomplete) | **GET** /v1/realtor/autocomplete | Location autocomplete

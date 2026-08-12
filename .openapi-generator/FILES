@@ -7,6 +7,7 @@ composer.json
 docs/Api/AccountApi.md
 docs/Api/AmazonApi.md
 docs/Api/ApartmentsApi.md
+docs/Api/AppStoreApi.md
 docs/Api/BaiduApi.md
 docs/Api/BingApi.md
 docs/Api/ChatGPTApi.md
@@ -16,6 +17,7 @@ docs/Api/EBayApi.md
 docs/Api/FacebookApi.md
 docs/Api/GeminiApi.md
 docs/Api/GoogleApi.md
+docs/Api/GooglePlayApi.md
 docs/Api/IdealistaApi.md
 docs/Api/ImmobiliareApi.md
 docs/Api/InstagramApi.md
@@ -67,6 +69,7 @@ git_push.sh
 lib/Api/AccountApi.php
 lib/Api/AmazonApi.php
 lib/Api/ApartmentsApi.php
+lib/Api/AppStoreApi.php
 lib/Api/BaiduApi.php
 lib/Api/BingApi.php
 lib/Api/ChatGPTApi.php
@@ -76,6 +79,7 @@ lib/Api/EBayApi.php
 lib/Api/FacebookApi.php
 lib/Api/GeminiApi.php
 lib/Api/GoogleApi.php
+lib/Api/GooglePlayApi.php
 lib/Api/IdealistaApi.php
 lib/Api/ImmobiliareApi.php
 lib/Api/InstagramApi.php
@@ -132,6 +136,7 @@ phpunit.xml.dist
 test/Api/AccountApiTest.php
 test/Api/AmazonApiTest.php
 test/Api/ApartmentsApiTest.php
+test/Api/AppStoreApiTest.php
 test/Api/BaiduApiTest.php
 test/Api/BingApiTest.php
 test/Api/ChatGPTApiTest.php
@@ -141,6 +146,7 @@ test/Api/EBayApiTest.php
 test/Api/FacebookApiTest.php
 test/Api/GeminiApiTest.php
 test/Api/GoogleApiTest.php
+test/Api/GooglePlayApiTest.php
 test/Api/IdealistaApiTest.php
 test/Api/ImmobiliareApiTest.php
 test/Api/InstagramApiTest.php

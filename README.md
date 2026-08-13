@@ -133,6 +133,14 @@ All URIs are relative to *https://scrapebadger.com*
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *AccountApi* | [**accountGetAccountInfo**](docs/Api/AccountApi.md#accountgetaccountinfo) | **GET** /v1/account/me | Get account info
+*AirbnbApi* | [**airbnbAirbnbScraperHealthCheck**](docs/Api/AirbnbApi.md#airbnbairbnbscraperhealthcheck) | **GET** /v1/airbnb/health | Airbnb scraper health check
+*AirbnbApi* | [**airbnbAirbnbScraperHealthCheckHead**](docs/Api/AirbnbApi.md#airbnbairbnbscraperhealthcheckhead) | **HEAD** /v1/airbnb/health | Airbnb scraper health check
+*AirbnbApi* | [**airbnbGetAvailabilityCalendar**](docs/Api/AirbnbApi.md#airbnbgetavailabilitycalendar) | **GET** /v1/airbnb/listings/{room_id}/calendar | Get availability calendar
+*AirbnbApi* | [**airbnbGetExperienceDetail**](docs/Api/AirbnbApi.md#airbnbgetexperiencedetail) | **GET** /v1/airbnb/experiences/{experience_id} | Get experience detail
+*AirbnbApi* | [**airbnbGetListingDetail**](docs/Api/AirbnbApi.md#airbnbgetlistingdetail) | **GET** /v1/airbnb/listings/{room_id} | Get listing detail
+*AirbnbApi* | [**airbnbGetListingReviews**](docs/Api/AirbnbApi.md#airbnbgetlistingreviews) | **GET** /v1/airbnb/listings/{room_id}/reviews | Get listing reviews
+*AirbnbApi* | [**airbnbSearchExperiences**](docs/Api/AirbnbApi.md#airbnbsearchexperiences) | **GET** /v1/airbnb/experiences | Search experiences
+*AirbnbApi* | [**airbnbSearchStays**](docs/Api/AirbnbApi.md#airbnbsearchstays) | **GET** /v1/airbnb/search | Search stays
 *AmazonApi* | [**amazonAmazonScraperHealthCheck**](docs/Api/AmazonApi.md#amazonamazonscraperhealthcheck) | **GET** /v1/amazon/health | Amazon scraper health check
 *AmazonApi* | [**amazonAmazonScraperHealthCheckHead**](docs/Api/AmazonApi.md#amazonamazonscraperhealthcheckhead) | **HEAD** /v1/amazon/health | Amazon scraper health check
 *AmazonApi* | [**amazonBestsellersByCategory**](docs/Api/AmazonApi.md#amazonbestsellersbycategory) | **GET** /v1/amazon/bestsellers | Bestsellers by category

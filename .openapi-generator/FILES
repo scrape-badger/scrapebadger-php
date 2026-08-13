@@ -5,6 +5,7 @@
 README.md
 composer.json
 docs/Api/AccountApi.md
+docs/Api/AirbnbApi.md
 docs/Api/AmazonApi.md
 docs/Api/ApartmentsApi.md
 docs/Api/AppStoreApi.md
@@ -67,6 +68,7 @@ docs/Model/WebhookTestRequest.md
 docs/Model/WebhookTestResponse.md
 git_push.sh
 lib/Api/AccountApi.php
+lib/Api/AirbnbApi.php
 lib/Api/AmazonApi.php
 lib/Api/ApartmentsApi.php
 lib/Api/AppStoreApi.php
@@ -134,6 +136,7 @@ lib/Model/WebhookTestResponse.php
 lib/ObjectSerializer.php
 phpunit.xml.dist
 test/Api/AccountApiTest.php
+test/Api/AirbnbApiTest.php
 test/Api/AmazonApiTest.php
 test/Api/ApartmentsApiTest.php
 test/Api/AppStoreApiTest.php

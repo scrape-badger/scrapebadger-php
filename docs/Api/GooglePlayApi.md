@@ -19,7 +19,7 @@ All URIs are relative to https://scrapebadger.com, except if the operation defin
 ## `googlePlayBrowseACategory()`
 
 ```php
-googlePlayBrowseACategory($category_id, $country, $lang): mixed
+googlePlayBrowseACategory($category_id, $country, $lang, $num): mixed
 ```
 
 Browse a category
@@ -48,9 +48,10 @@ $apiInstance = new ScrapeBadger\Api\GooglePlayApi(
 $category_id = 'category_id_example'; // string | Play category id, e.g. 'GAME_PUZZLE' or 'SOCIAL'
 $country = 'US'; // string | Play storefront country (gl), ISO 3166-1 alpha-2, e.g. 'US'
 $lang = 'en'; // string | Play content language (hl), e.g. 'en' or 'pt-BR'
+$num = 100; // int | Max apps; follows each rail's 'see more' continuation above the ~40-120 the page renders directly
 
 try {
-    $result = $apiInstance->googlePlayBrowseACategory($category_id, $country, $lang);
+    $result = $apiInstance->googlePlayBrowseACategory($category_id, $country, $lang, $num);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling GooglePlayApi->googlePlayBrowseACategory: ', $e->getMessage(), PHP_EOL;
@@ -64,6 +65,7 @@ try {
 | **category_id** | **string**| Play category id, e.g. &#39;GAME_PUZZLE&#39; or &#39;SOCIAL&#39; | |
 | **country** | **string**| Play storefront country (gl), ISO 3166-1 alpha-2, e.g. &#39;US&#39; | [optional] [default to &#39;US&#39;] |
 | **lang** | **string**| Play content language (hl), e.g. &#39;en&#39; or &#39;pt-BR&#39; | [optional] [default to &#39;en&#39;] |
+| **num** | **int**| Max apps; follows each rail&#39;s &#39;see more&#39; continuation above the ~40-120 the page renders directly | [optional] [default to 100] |
 
 ### Return type
 
@@ -287,7 +289,7 @@ try {
 ## `googlePlayGetDeveloperApps()`
 
 ```php
-googlePlayGetDeveloperApps($developer, $country, $lang): mixed
+googlePlayGetDeveloperApps($developer, $country, $lang, $num): mixed
 ```
 
 Get developer apps
@@ -316,9 +318,10 @@ $apiInstance = new ScrapeBadger\Api\GooglePlayApi(
 $developer = 'developer_example'; // string | Developer name or numeric id
 $country = 'US'; // string | Play storefront country (gl), ISO 3166-1 alpha-2, e.g. 'US'
 $lang = 'en'; // string | Play content language (hl), e.g. 'en' or 'pt-BR'
+$num = 100; // int | Max apps; follows rail continuations above the page's directly-rendered slice
 
 try {
-    $result = $apiInstance->googlePlayGetDeveloperApps($developer, $country, $lang);
+    $result = $apiInstance->googlePlayGetDeveloperApps($developer, $country, $lang, $num);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling GooglePlayApi->googlePlayGetDeveloperApps: ', $e->getMessage(), PHP_EOL;
@@ -332,6 +335,7 @@ try {
 | **developer** | **string**| Developer name or numeric id | |
 | **country** | **string**| Play storefront country (gl), ISO 3166-1 alpha-2, e.g. &#39;US&#39; | [optional] [default to &#39;US&#39;] |
 | **lang** | **string**| Play content language (hl), e.g. &#39;en&#39; or &#39;pt-BR&#39; | [optional] [default to &#39;en&#39;] |
+| **num** | **int**| Max apps; follows rail continuations above the page&#39;s directly-rendered slice | [optional] [default to 100] |
 
 ### Return type
 

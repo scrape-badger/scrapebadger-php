@@ -157,15 +157,16 @@ class GooglePlayApi
      * @param  string $category_id Play category id, e.g. &#39;GAME_PUZZLE&#39; or &#39;SOCIAL&#39; (required)
      * @param  string $country Play storefront country (gl), ISO 3166-1 alpha-2, e.g. &#39;US&#39; (optional, default to 'US')
      * @param  string $lang Play content language (hl), e.g. &#39;en&#39; or &#39;pt-BR&#39; (optional, default to 'en')
+     * @param  int $num Max apps; follows each rail&#39;s &#39;see more&#39; continuation above the ~40-120 the page renders directly (optional, default to 100)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googlePlayBrowseACategory'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return mixed|\ScrapeBadger\Model\HTTPValidationError
      */
-    public function googlePlayBrowseACategory($category_id, $country = 'US', $lang = 'en', string $contentType = self::contentTypes['googlePlayBrowseACategory'][0])
+    public function googlePlayBrowseACategory($category_id, $country = 'US', $lang = 'en', $num = 100, string $contentType = self::contentTypes['googlePlayBrowseACategory'][0])
     {
-        list($response) = $this->googlePlayBrowseACategoryWithHttpInfo($category_id, $country, $lang, $contentType);
+        list($response) = $this->googlePlayBrowseACategoryWithHttpInfo($category_id, $country, $lang, $num, $contentType);
         return $response;
     }
 
@@ -177,15 +178,16 @@ class GooglePlayApi
      * @param  string $category_id Play category id, e.g. &#39;GAME_PUZZLE&#39; or &#39;SOCIAL&#39; (required)
      * @param  string $country Play storefront country (gl), ISO 3166-1 alpha-2, e.g. &#39;US&#39; (optional, default to 'US')
      * @param  string $lang Play content language (hl), e.g. &#39;en&#39; or &#39;pt-BR&#39; (optional, default to 'en')
+     * @param  int $num Max apps; follows each rail&#39;s &#39;see more&#39; continuation above the ~40-120 the page renders directly (optional, default to 100)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googlePlayBrowseACategory'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
-    public function googlePlayBrowseACategoryWithHttpInfo($category_id, $country = 'US', $lang = 'en', string $contentType = self::contentTypes['googlePlayBrowseACategory'][0])
+    public function googlePlayBrowseACategoryWithHttpInfo($category_id, $country = 'US', $lang = 'en', $num = 100, string $contentType = self::contentTypes['googlePlayBrowseACategory'][0])
     {
-        $request = $this->googlePlayBrowseACategoryRequest($category_id, $country, $lang, $contentType);
+        $request = $this->googlePlayBrowseACategoryRequest($category_id, $country, $lang, $num, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -339,14 +341,15 @@ class GooglePlayApi
      * @param  string $category_id Play category id, e.g. &#39;GAME_PUZZLE&#39; or &#39;SOCIAL&#39; (required)
      * @param  string $country Play storefront country (gl), ISO 3166-1 alpha-2, e.g. &#39;US&#39; (optional, default to 'US')
      * @param  string $lang Play content language (hl), e.g. &#39;en&#39; or &#39;pt-BR&#39; (optional, default to 'en')
+     * @param  int $num Max apps; follows each rail&#39;s &#39;see more&#39; continuation above the ~40-120 the page renders directly (optional, default to 100)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googlePlayBrowseACategory'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function googlePlayBrowseACategoryAsync($category_id, $country = 'US', $lang = 'en', string $contentType = self::contentTypes['googlePlayBrowseACategory'][0])
+    public function googlePlayBrowseACategoryAsync($category_id, $country = 'US', $lang = 'en', $num = 100, string $contentType = self::contentTypes['googlePlayBrowseACategory'][0])
     {
-        return $this->googlePlayBrowseACategoryAsyncWithHttpInfo($category_id, $country, $lang, $contentType)
+        return $this->googlePlayBrowseACategoryAsyncWithHttpInfo($category_id, $country, $lang, $num, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -362,15 +365,16 @@ class GooglePlayApi
      * @param  string $category_id Play category id, e.g. &#39;GAME_PUZZLE&#39; or &#39;SOCIAL&#39; (required)
      * @param  string $country Play storefront country (gl), ISO 3166-1 alpha-2, e.g. &#39;US&#39; (optional, default to 'US')
      * @param  string $lang Play content language (hl), e.g. &#39;en&#39; or &#39;pt-BR&#39; (optional, default to 'en')
+     * @param  int $num Max apps; follows each rail&#39;s &#39;see more&#39; continuation above the ~40-120 the page renders directly (optional, default to 100)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googlePlayBrowseACategory'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function googlePlayBrowseACategoryAsyncWithHttpInfo($category_id, $country = 'US', $lang = 'en', string $contentType = self::contentTypes['googlePlayBrowseACategory'][0])
+    public function googlePlayBrowseACategoryAsyncWithHttpInfo($category_id, $country = 'US', $lang = 'en', $num = 100, string $contentType = self::contentTypes['googlePlayBrowseACategory'][0])
     {
         $returnType = 'mixed';
-        $request = $this->googlePlayBrowseACategoryRequest($category_id, $country, $lang, $contentType);
+        $request = $this->googlePlayBrowseACategoryRequest($category_id, $country, $lang, $num, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -414,12 +418,13 @@ class GooglePlayApi
      * @param  string $category_id Play category id, e.g. &#39;GAME_PUZZLE&#39; or &#39;SOCIAL&#39; (required)
      * @param  string $country Play storefront country (gl), ISO 3166-1 alpha-2, e.g. &#39;US&#39; (optional, default to 'US')
      * @param  string $lang Play content language (hl), e.g. &#39;en&#39; or &#39;pt-BR&#39; (optional, default to 'en')
+     * @param  int $num Max apps; follows each rail&#39;s &#39;see more&#39; continuation above the ~40-120 the page renders directly (optional, default to 100)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googlePlayBrowseACategory'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function googlePlayBrowseACategoryRequest($category_id, $country = 'US', $lang = 'en', string $contentType = self::contentTypes['googlePlayBrowseACategory'][0])
+    public function googlePlayBrowseACategoryRequest($category_id, $country = 'US', $lang = 'en', $num = 100, string $contentType = self::contentTypes['googlePlayBrowseACategory'][0])
     {
 
         // verify the required parameter 'category_id' is set
@@ -431,6 +436,13 @@ class GooglePlayApi
 
 
 
+        if ($num !== null && $num > 500) {
+            throw new \InvalidArgumentException('invalid value for "$num" when calling GooglePlayApi.googlePlayBrowseACategory, must be smaller than or equal to 500.');
+        }
+        if ($num !== null && $num < 1) {
+            throw new \InvalidArgumentException('invalid value for "$num" when calling GooglePlayApi.googlePlayBrowseACategory, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/google-play/categories/{category_id}';
         $formParams = [];
@@ -453,6 +465,15 @@ class GooglePlayApi
             $lang,
             'lang', // param base name
             'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $num,
+            'num', // param base name
+            'integer', // openApiType
             'form', // style
             true, // explode
             false // required
@@ -1705,15 +1726,16 @@ class GooglePlayApi
      * @param  string $developer Developer name or numeric id (required)
      * @param  string $country Play storefront country (gl), ISO 3166-1 alpha-2, e.g. &#39;US&#39; (optional, default to 'US')
      * @param  string $lang Play content language (hl), e.g. &#39;en&#39; or &#39;pt-BR&#39; (optional, default to 'en')
+     * @param  int $num Max apps; follows rail continuations above the page&#39;s directly-rendered slice (optional, default to 100)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googlePlayGetDeveloperApps'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return mixed|\ScrapeBadger\Model\HTTPValidationError
      */
-    public function googlePlayGetDeveloperApps($developer, $country = 'US', $lang = 'en', string $contentType = self::contentTypes['googlePlayGetDeveloperApps'][0])
+    public function googlePlayGetDeveloperApps($developer, $country = 'US', $lang = 'en', $num = 100, string $contentType = self::contentTypes['googlePlayGetDeveloperApps'][0])
     {
-        list($response) = $this->googlePlayGetDeveloperAppsWithHttpInfo($developer, $country, $lang, $contentType);
+        list($response) = $this->googlePlayGetDeveloperAppsWithHttpInfo($developer, $country, $lang, $num, $contentType);
         return $response;
     }
 
@@ -1725,15 +1747,16 @@ class GooglePlayApi
      * @param  string $developer Developer name or numeric id (required)
      * @param  string $country Play storefront country (gl), ISO 3166-1 alpha-2, e.g. &#39;US&#39; (optional, default to 'US')
      * @param  string $lang Play content language (hl), e.g. &#39;en&#39; or &#39;pt-BR&#39; (optional, default to 'en')
+     * @param  int $num Max apps; follows rail continuations above the page&#39;s directly-rendered slice (optional, default to 100)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googlePlayGetDeveloperApps'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
-    public function googlePlayGetDeveloperAppsWithHttpInfo($developer, $country = 'US', $lang = 'en', string $contentType = self::contentTypes['googlePlayGetDeveloperApps'][0])
+    public function googlePlayGetDeveloperAppsWithHttpInfo($developer, $country = 'US', $lang = 'en', $num = 100, string $contentType = self::contentTypes['googlePlayGetDeveloperApps'][0])
     {
-        $request = $this->googlePlayGetDeveloperAppsRequest($developer, $country, $lang, $contentType);
+        $request = $this->googlePlayGetDeveloperAppsRequest($developer, $country, $lang, $num, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -1887,14 +1910,15 @@ class GooglePlayApi
      * @param  string $developer Developer name or numeric id (required)
      * @param  string $country Play storefront country (gl), ISO 3166-1 alpha-2, e.g. &#39;US&#39; (optional, default to 'US')
      * @param  string $lang Play content language (hl), e.g. &#39;en&#39; or &#39;pt-BR&#39; (optional, default to 'en')
+     * @param  int $num Max apps; follows rail continuations above the page&#39;s directly-rendered slice (optional, default to 100)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googlePlayGetDeveloperApps'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function googlePlayGetDeveloperAppsAsync($developer, $country = 'US', $lang = 'en', string $contentType = self::contentTypes['googlePlayGetDeveloperApps'][0])
+    public function googlePlayGetDeveloperAppsAsync($developer, $country = 'US', $lang = 'en', $num = 100, string $contentType = self::contentTypes['googlePlayGetDeveloperApps'][0])
     {
-        return $this->googlePlayGetDeveloperAppsAsyncWithHttpInfo($developer, $country, $lang, $contentType)
+        return $this->googlePlayGetDeveloperAppsAsyncWithHttpInfo($developer, $country, $lang, $num, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -1910,15 +1934,16 @@ class GooglePlayApi
      * @param  string $developer Developer name or numeric id (required)
      * @param  string $country Play storefront country (gl), ISO 3166-1 alpha-2, e.g. &#39;US&#39; (optional, default to 'US')
      * @param  string $lang Play content language (hl), e.g. &#39;en&#39; or &#39;pt-BR&#39; (optional, default to 'en')
+     * @param  int $num Max apps; follows rail continuations above the page&#39;s directly-rendered slice (optional, default to 100)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googlePlayGetDeveloperApps'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function googlePlayGetDeveloperAppsAsyncWithHttpInfo($developer, $country = 'US', $lang = 'en', string $contentType = self::contentTypes['googlePlayGetDeveloperApps'][0])
+    public function googlePlayGetDeveloperAppsAsyncWithHttpInfo($developer, $country = 'US', $lang = 'en', $num = 100, string $contentType = self::contentTypes['googlePlayGetDeveloperApps'][0])
     {
         $returnType = 'mixed';
-        $request = $this->googlePlayGetDeveloperAppsRequest($developer, $country, $lang, $contentType);
+        $request = $this->googlePlayGetDeveloperAppsRequest($developer, $country, $lang, $num, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -1962,12 +1987,13 @@ class GooglePlayApi
      * @param  string $developer Developer name or numeric id (required)
      * @param  string $country Play storefront country (gl), ISO 3166-1 alpha-2, e.g. &#39;US&#39; (optional, default to 'US')
      * @param  string $lang Play content language (hl), e.g. &#39;en&#39; or &#39;pt-BR&#39; (optional, default to 'en')
+     * @param  int $num Max apps; follows rail continuations above the page&#39;s directly-rendered slice (optional, default to 100)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googlePlayGetDeveloperApps'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function googlePlayGetDeveloperAppsRequest($developer, $country = 'US', $lang = 'en', string $contentType = self::contentTypes['googlePlayGetDeveloperApps'][0])
+    public function googlePlayGetDeveloperAppsRequest($developer, $country = 'US', $lang = 'en', $num = 100, string $contentType = self::contentTypes['googlePlayGetDeveloperApps'][0])
     {
 
         // verify the required parameter 'developer' is set
@@ -1979,6 +2005,13 @@ class GooglePlayApi
 
 
 
+        if ($num !== null && $num > 500) {
+            throw new \InvalidArgumentException('invalid value for "$num" when calling GooglePlayApi.googlePlayGetDeveloperApps, must be smaller than or equal to 500.');
+        }
+        if ($num !== null && $num < 1) {
+            throw new \InvalidArgumentException('invalid value for "$num" when calling GooglePlayApi.googlePlayGetDeveloperApps, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/google-play/developers/{developer}';
         $formParams = [];
@@ -2001,6 +2034,15 @@ class GooglePlayApi
             $lang,
             'lang', // param base name
             'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $num,
+            'num', // param base name
+            'integer', // openApiType
             'form', // style
             true, // explode
             false // required

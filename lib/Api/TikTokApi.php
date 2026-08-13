@@ -110,6 +110,9 @@ class TikTokApi
         'tiktokGetReposts' => [
             'application/json',
         ],
+        'tiktokGetTiktokAdDetail' => [
+            'application/json',
+        ],
         'tiktokGetTranscript' => [
             'application/json',
         ],
@@ -135,6 +138,9 @@ class TikTokApi
             'application/json',
         ],
         'tiktokSearchTheTiktokAdLibrary' => [
+            'application/json',
+        ],
+        'tiktokSearchTiktokAdvertisers' => [
             'application/json',
         ],
         'tiktokSearchUsers' => [
@@ -5243,6 +5249,369 @@ class TikTokApi
     }
 
     /**
+     * Operation tiktokGetTiktokAdDetail
+     *
+     * Get TikTok ad detail
+     *
+     * @param  string $ad_id ad_id (required)
+     * @param  string $region EU region code (the Ad Library is EU-only) (optional, default to 'DE')
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetTiktokAdDetail'] to see the possible values for this operation
+     *
+     * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     */
+    public function tiktokGetTiktokAdDetail($ad_id, $region = 'DE', string $contentType = self::contentTypes['tiktokGetTiktokAdDetail'][0])
+    {
+        list($response) = $this->tiktokGetTiktokAdDetailWithHttpInfo($ad_id, $region, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation tiktokGetTiktokAdDetailWithHttpInfo
+     *
+     * Get TikTok ad detail
+     *
+     * @param  string $ad_id (required)
+     * @param  string $region EU region code (the Ad Library is EU-only) (optional, default to 'DE')
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetTiktokAdDetail'] to see the possible values for this operation
+     *
+     * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function tiktokGetTiktokAdDetailWithHttpInfo($ad_id, $region = 'DE', string $contentType = self::contentTypes['tiktokGetTiktokAdDetail'][0])
+    {
+        $request = $this->tiktokGetTiktokAdDetailRequest($ad_id, $region, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    if ('mixed' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('mixed' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, 'mixed', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                case 422:
+                    if ('\ScrapeBadger\Model\HTTPValidationError' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\HTTPValidationError' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\HTTPValidationError', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+            }
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            $returnType = 'mixed';
+            if ($returnType === '\SplFileObject') {
+                $content = $response->getBody(); //stream goes to serializer
+            } else {
+                $content = (string) $response->getBody();
+                if ($returnType !== 'string') {
+                    try {
+                        $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                    } catch (\JsonException $exception) {
+                        throw new ApiException(
+                            sprintf(
+                                'Error JSON decoding server response (%s)',
+                                $request->getUri()
+                            ),
+                            $statusCode,
+                            $response->getHeaders(),
+                            $content
+                        );
+                    }
+                }
+            }
+
+            return [
+                ObjectSerializer::deserialize($content, $returnType, []),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            ];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        'mixed',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\HTTPValidationError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation tiktokGetTiktokAdDetailAsync
+     *
+     * Get TikTok ad detail
+     *
+     * @param  string $ad_id (required)
+     * @param  string $region EU region code (the Ad Library is EU-only) (optional, default to 'DE')
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetTiktokAdDetail'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function tiktokGetTiktokAdDetailAsync($ad_id, $region = 'DE', string $contentType = self::contentTypes['tiktokGetTiktokAdDetail'][0])
+    {
+        return $this->tiktokGetTiktokAdDetailAsyncWithHttpInfo($ad_id, $region, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation tiktokGetTiktokAdDetailAsyncWithHttpInfo
+     *
+     * Get TikTok ad detail
+     *
+     * @param  string $ad_id (required)
+     * @param  string $region EU region code (the Ad Library is EU-only) (optional, default to 'DE')
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetTiktokAdDetail'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function tiktokGetTiktokAdDetailAsyncWithHttpInfo($ad_id, $region = 'DE', string $contentType = self::contentTypes['tiktokGetTiktokAdDetail'][0])
+    {
+        $returnType = 'mixed';
+        $request = $this->tiktokGetTiktokAdDetailRequest($ad_id, $region, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'tiktokGetTiktokAdDetail'
+     *
+     * @param  string $ad_id (required)
+     * @param  string $region EU region code (the Ad Library is EU-only) (optional, default to 'DE')
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetTiktokAdDetail'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function tiktokGetTiktokAdDetailRequest($ad_id, $region = 'DE', string $contentType = self::contentTypes['tiktokGetTiktokAdDetail'][0])
+    {
+
+        // verify the required parameter 'ad_id' is set
+        if ($ad_id === null || (is_array($ad_id) && count($ad_id) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $ad_id when calling tiktokGetTiktokAdDetail'
+            );
+        }
+
+
+
+        $resourcePath = '/v1/tiktok/ads/{ad_id}';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $region,
+            'region', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+
+
+        // path params
+        if ($ad_id !== null) {
+            $resourcePath = str_replace(
+                '{' . 'ad_id' . '}',
+                ObjectSerializer::toPathValue($ad_id),
+                $resourcePath
+            );
+        }
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+        // this endpoint requires API key authentication
+        $apiKey = $this->config->getApiKeyWithPrefix('X-API-Key');
+        if ($apiKey !== null) {
+            $headers['X-API-Key'] = $apiKey;
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'GET',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
      * Operation tiktokGetTranscript
      *
      * Get transcript
@@ -8411,6 +8780,394 @@ class TikTokApi
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
             $search_id,
             'search_id', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $count,
+            'count', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+
+
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+        // this endpoint requires API key authentication
+        $apiKey = $this->config->getApiKeyWithPrefix('X-API-Key');
+        if ($apiKey !== null) {
+            $headers['X-API-Key'] = $apiKey;
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'GET',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation tiktokSearchTiktokAdvertisers
+     *
+     * Search TikTok advertisers
+     *
+     * @param  string $query Advertiser name (or partial) to look up (required)
+     * @param  string $region EU region code (the Ad Library is EU-only) (optional, default to 'DE')
+     * @param  int $count count (optional, default to 10)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokSearchTiktokAdvertisers'] to see the possible values for this operation
+     *
+     * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     */
+    public function tiktokSearchTiktokAdvertisers($query, $region = 'DE', $count = 10, string $contentType = self::contentTypes['tiktokSearchTiktokAdvertisers'][0])
+    {
+        list($response) = $this->tiktokSearchTiktokAdvertisersWithHttpInfo($query, $region, $count, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation tiktokSearchTiktokAdvertisersWithHttpInfo
+     *
+     * Search TikTok advertisers
+     *
+     * @param  string $query Advertiser name (or partial) to look up (required)
+     * @param  string $region EU region code (the Ad Library is EU-only) (optional, default to 'DE')
+     * @param  int $count (optional, default to 10)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokSearchTiktokAdvertisers'] to see the possible values for this operation
+     *
+     * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function tiktokSearchTiktokAdvertisersWithHttpInfo($query, $region = 'DE', $count = 10, string $contentType = self::contentTypes['tiktokSearchTiktokAdvertisers'][0])
+    {
+        $request = $this->tiktokSearchTiktokAdvertisersRequest($query, $region, $count, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    if ('mixed' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('mixed' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, 'mixed', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                case 422:
+                    if ('\ScrapeBadger\Model\HTTPValidationError' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\HTTPValidationError' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\HTTPValidationError', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+            }
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            $returnType = 'mixed';
+            if ($returnType === '\SplFileObject') {
+                $content = $response->getBody(); //stream goes to serializer
+            } else {
+                $content = (string) $response->getBody();
+                if ($returnType !== 'string') {
+                    try {
+                        $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                    } catch (\JsonException $exception) {
+                        throw new ApiException(
+                            sprintf(
+                                'Error JSON decoding server response (%s)',
+                                $request->getUri()
+                            ),
+                            $statusCode,
+                            $response->getHeaders(),
+                            $content
+                        );
+                    }
+                }
+            }
+
+            return [
+                ObjectSerializer::deserialize($content, $returnType, []),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            ];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        'mixed',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\HTTPValidationError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation tiktokSearchTiktokAdvertisersAsync
+     *
+     * Search TikTok advertisers
+     *
+     * @param  string $query Advertiser name (or partial) to look up (required)
+     * @param  string $region EU region code (the Ad Library is EU-only) (optional, default to 'DE')
+     * @param  int $count (optional, default to 10)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokSearchTiktokAdvertisers'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function tiktokSearchTiktokAdvertisersAsync($query, $region = 'DE', $count = 10, string $contentType = self::contentTypes['tiktokSearchTiktokAdvertisers'][0])
+    {
+        return $this->tiktokSearchTiktokAdvertisersAsyncWithHttpInfo($query, $region, $count, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation tiktokSearchTiktokAdvertisersAsyncWithHttpInfo
+     *
+     * Search TikTok advertisers
+     *
+     * @param  string $query Advertiser name (or partial) to look up (required)
+     * @param  string $region EU region code (the Ad Library is EU-only) (optional, default to 'DE')
+     * @param  int $count (optional, default to 10)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokSearchTiktokAdvertisers'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function tiktokSearchTiktokAdvertisersAsyncWithHttpInfo($query, $region = 'DE', $count = 10, string $contentType = self::contentTypes['tiktokSearchTiktokAdvertisers'][0])
+    {
+        $returnType = 'mixed';
+        $request = $this->tiktokSearchTiktokAdvertisersRequest($query, $region, $count, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'tiktokSearchTiktokAdvertisers'
+     *
+     * @param  string $query Advertiser name (or partial) to look up (required)
+     * @param  string $region EU region code (the Ad Library is EU-only) (optional, default to 'DE')
+     * @param  int $count (optional, default to 10)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokSearchTiktokAdvertisers'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function tiktokSearchTiktokAdvertisersRequest($query, $region = 'DE', $count = 10, string $contentType = self::contentTypes['tiktokSearchTiktokAdvertisers'][0])
+    {
+
+        // verify the required parameter 'query' is set
+        if ($query === null || (is_array($query) && count($query) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $query when calling tiktokSearchTiktokAdvertisers'
+            );
+        }
+        if (strlen($query) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$query" when calling TikTokApi.tiktokSearchTiktokAdvertisers, must be bigger than or equal to 1.');
+        }
+        
+
+        if ($count !== null && $count > 50) {
+            throw new \InvalidArgumentException('invalid value for "$count" when calling TikTokApi.tiktokSearchTiktokAdvertisers, must be smaller than or equal to 50.');
+        }
+        if ($count !== null && $count < 1) {
+            throw new \InvalidArgumentException('invalid value for "$count" when calling TikTokApi.tiktokSearchTiktokAdvertisers, must be bigger than or equal to 1.');
+        }
+        
+
+        $resourcePath = '/v1/tiktok/ads/advertisers';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $query,
+            'query', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            true // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $region,
+            'region', // param base name
             'string', // openApiType
             'form', // style
             true, // explode

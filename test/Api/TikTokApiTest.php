@@ -228,6 +228,18 @@ class TikTokApiTest extends TestCase
     }
 
     /**
+     * Test case for tiktokGetTiktokAdDetail
+     *
+     * Get TikTok ad detail.
+     *
+     */
+    public function testTiktokGetTiktokAdDetail()
+    {
+        // TODO: implement
+        self::markTestIncomplete('Not implemented');
+    }
+
+    /**
      * Test case for tiktokGetTranscript
      *
      * Get transcript.
@@ -330,6 +342,18 @@ class TikTokApiTest extends TestCase
      *
      */
     public function testTiktokSearchTheTiktokAdLibrary()
+    {
+        // TODO: implement
+        self::markTestIncomplete('Not implemented');
+    }
+
+    /**
+     * Test case for tiktokSearchTiktokAdvertisers
+     *
+     * Search TikTok advertisers.
+     *
+     */
+    public function testTiktokSearchTiktokAdvertisers()
     {
         // TODO: implement
         self::markTestIncomplete('Not implemented');

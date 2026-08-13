@@ -417,6 +417,7 @@ Class | Method | HTTP request | Description
 *TikTokApi* | [**tiktokGetOembedMetadata**](docs/Api/TikTokApi.md#tiktokgetoembedmetadata) | **GET** /v1/tiktok/oembed | Get oEmbed metadata
 *TikTokApi* | [**tiktokGetRelatedVideos**](docs/Api/TikTokApi.md#tiktokgetrelatedvideos) | **GET** /v1/tiktok/videos/{video_id}/related | Get related videos
 *TikTokApi* | [**tiktokGetReposts**](docs/Api/TikTokApi.md#tiktokgetreposts) | **GET** /v1/tiktok/users/{username}/reposts | Get reposts
+*TikTokApi* | [**tiktokGetTiktokAdDetail**](docs/Api/TikTokApi.md#tiktokgettiktokaddetail) | **GET** /v1/tiktok/ads/{ad_id} | Get TikTok ad detail
 *TikTokApi* | [**tiktokGetTranscript**](docs/Api/TikTokApi.md#tiktokgettranscript) | **GET** /v1/tiktok/videos/{video_id}/transcript | Get transcript
 *TikTokApi* | [**tiktokGetUserProfile**](docs/Api/TikTokApi.md#tiktokgetuserprofile) | **GET** /v1/tiktok/users/{username} | Get user profile
 *TikTokApi* | [**tiktokGetUserVideos**](docs/Api/TikTokApi.md#tiktokgetuservideos) | **GET** /v1/tiktok/users/{username}/videos | Get user videos
@@ -426,6 +427,7 @@ Class | Method | HTTP request | Description
 *TikTokApi* | [**tiktokListRegions**](docs/Api/TikTokApi.md#tiktoklistregions) | **GET** /v1/tiktok/regions | List regions
 *TikTokApi* | [**tiktokSearchHashtags**](docs/Api/TikTokApi.md#tiktoksearchhashtags) | **GET** /v1/tiktok/search/hashtags | Search hashtags
 *TikTokApi* | [**tiktokSearchTheTiktokAdLibrary**](docs/Api/TikTokApi.md#tiktoksearchthetiktokadlibrary) | **GET** /v1/tiktok/ads/search | Search the TikTok Ad Library
+*TikTokApi* | [**tiktokSearchTiktokAdvertisers**](docs/Api/TikTokApi.md#tiktoksearchtiktokadvertisers) | **GET** /v1/tiktok/ads/advertisers | Search TikTok advertisers
 *TikTokApi* | [**tiktokSearchUsers**](docs/Api/TikTokApi.md#tiktoksearchusers) | **GET** /v1/tiktok/search/users | Search users
 *TikTokApi* | [**tiktokSearchVideos**](docs/Api/TikTokApi.md#tiktoksearchvideos) | **GET** /v1/tiktok/search/videos | Search videos
 *TikTokApi* | [**tiktokTrendingHashtags**](docs/Api/TikTokApi.md#tiktoktrendinghashtags) | **GET** /v1/tiktok/trending/hashtags | Trending hashtags

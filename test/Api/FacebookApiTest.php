@@ -96,6 +96,18 @@ class FacebookApiTest extends TestCase
     }
 
     /**
+     * Test case for facebookGetAdvertiserPageInfo
+     *
+     * Get advertiser page info.
+     *
+     */
+    public function testFacebookGetAdvertiserPageInfo()
+    {
+        // TODO: implement
+        self::markTestIncomplete('Not implemented');
+    }
+
+    /**
      * Test case for facebookGetAnAd
      *
      * Get an ad.
@@ -222,6 +234,18 @@ class FacebookApiTest extends TestCase
      *
      */
     public function testFacebookListLocations()
+    {
+        // TODO: implement
+        self::markTestIncomplete('Not implemented');
+    }
+
+    /**
+     * Test case for facebookSearchAdvertiserPages
+     *
+     * Search advertiser pages.
+     *
+     */
+    public function testFacebookSearchAdvertiserPages()
     {
         // TODO: implement
         self::markTestIncomplete('Not implemented');

@@ -77,6 +77,9 @@ class FacebookApi
         'facebookGetAMarketplaceItem' => [
             'application/json',
         ],
+        'facebookGetAdvertiserPageInfo' => [
+            'application/json',
+        ],
         'facebookGetAnAd' => [
             'application/json',
         ],
@@ -108,6 +111,9 @@ class FacebookApi
             'application/json',
         ],
         'facebookListLocations' => [
+            'application/json',
+        ],
+        'facebookSearchAdvertiserPages' => [
             'application/json',
         ],
         'facebookSearchEvents' => [
@@ -957,20 +963,384 @@ class FacebookApi
     }
 
     /**
+     * Operation facebookGetAdvertiserPageInfo
+     *
+     * Get advertiser page info
+     *
+     * @param  string $page_id page_id (required)
+     * @param  string $country country (optional, default to 'US')
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookGetAdvertiserPageInfo'] to see the possible values for this operation
+     *
+     * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     */
+    public function facebookGetAdvertiserPageInfo($page_id, $country = 'US', string $contentType = self::contentTypes['facebookGetAdvertiserPageInfo'][0])
+    {
+        list($response) = $this->facebookGetAdvertiserPageInfoWithHttpInfo($page_id, $country, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation facebookGetAdvertiserPageInfoWithHttpInfo
+     *
+     * Get advertiser page info
+     *
+     * @param  string $page_id (required)
+     * @param  string $country (optional, default to 'US')
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookGetAdvertiserPageInfo'] to see the possible values for this operation
+     *
+     * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function facebookGetAdvertiserPageInfoWithHttpInfo($page_id, $country = 'US', string $contentType = self::contentTypes['facebookGetAdvertiserPageInfo'][0])
+    {
+        $request = $this->facebookGetAdvertiserPageInfoRequest($page_id, $country, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    if ('mixed' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('mixed' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, 'mixed', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                case 422:
+                    if ('\ScrapeBadger\Model\HTTPValidationError' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\HTTPValidationError' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\HTTPValidationError', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+            }
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            $returnType = 'mixed';
+            if ($returnType === '\SplFileObject') {
+                $content = $response->getBody(); //stream goes to serializer
+            } else {
+                $content = (string) $response->getBody();
+                if ($returnType !== 'string') {
+                    try {
+                        $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                    } catch (\JsonException $exception) {
+                        throw new ApiException(
+                            sprintf(
+                                'Error JSON decoding server response (%s)',
+                                $request->getUri()
+                            ),
+                            $statusCode,
+                            $response->getHeaders(),
+                            $content
+                        );
+                    }
+                }
+            }
+
+            return [
+                ObjectSerializer::deserialize($content, $returnType, []),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            ];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        'mixed',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\HTTPValidationError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation facebookGetAdvertiserPageInfoAsync
+     *
+     * Get advertiser page info
+     *
+     * @param  string $page_id (required)
+     * @param  string $country (optional, default to 'US')
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookGetAdvertiserPageInfo'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function facebookGetAdvertiserPageInfoAsync($page_id, $country = 'US', string $contentType = self::contentTypes['facebookGetAdvertiserPageInfo'][0])
+    {
+        return $this->facebookGetAdvertiserPageInfoAsyncWithHttpInfo($page_id, $country, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation facebookGetAdvertiserPageInfoAsyncWithHttpInfo
+     *
+     * Get advertiser page info
+     *
+     * @param  string $page_id (required)
+     * @param  string $country (optional, default to 'US')
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookGetAdvertiserPageInfo'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function facebookGetAdvertiserPageInfoAsyncWithHttpInfo($page_id, $country = 'US', string $contentType = self::contentTypes['facebookGetAdvertiserPageInfo'][0])
+    {
+        $returnType = 'mixed';
+        $request = $this->facebookGetAdvertiserPageInfoRequest($page_id, $country, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'facebookGetAdvertiserPageInfo'
+     *
+     * @param  string $page_id (required)
+     * @param  string $country (optional, default to 'US')
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookGetAdvertiserPageInfo'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function facebookGetAdvertiserPageInfoRequest($page_id, $country = 'US', string $contentType = self::contentTypes['facebookGetAdvertiserPageInfo'][0])
+    {
+
+        // verify the required parameter 'page_id' is set
+        if ($page_id === null || (is_array($page_id) && count($page_id) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $page_id when calling facebookGetAdvertiserPageInfo'
+            );
+        }
+
+
+
+        $resourcePath = '/v1/facebook/ads/pages/{page_id}';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $country,
+            'country', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+
+
+        // path params
+        if ($page_id !== null) {
+            $resourcePath = str_replace(
+                '{' . 'page_id' . '}',
+                ObjectSerializer::toPathValue($page_id),
+                $resourcePath
+            );
+        }
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+        // this endpoint requires API key authentication
+        $apiKey = $this->config->getApiKeyWithPrefix('X-API-Key');
+        if ($apiKey !== null) {
+            $headers['X-API-Key'] = $apiKey;
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'GET',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
      * Operation facebookGetAnAd
      *
      * Get an ad
      *
      * @param  string $ad_archive_id ad_archive_id (required)
+     * @param  string $country ISO country code (an EU code returns EU transparency) (optional, default to 'US')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookGetAnAd'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return mixed|\ScrapeBadger\Model\HTTPValidationError
      */
-    public function facebookGetAnAd($ad_archive_id, string $contentType = self::contentTypes['facebookGetAnAd'][0])
+    public function facebookGetAnAd($ad_archive_id, $country = 'US', string $contentType = self::contentTypes['facebookGetAnAd'][0])
     {
-        list($response) = $this->facebookGetAnAdWithHttpInfo($ad_archive_id, $contentType);
+        list($response) = $this->facebookGetAnAdWithHttpInfo($ad_archive_id, $country, $contentType);
         return $response;
     }
 
@@ -980,15 +1350,16 @@ class FacebookApi
      * Get an ad
      *
      * @param  string $ad_archive_id (required)
+     * @param  string $country ISO country code (an EU code returns EU transparency) (optional, default to 'US')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookGetAnAd'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
-    public function facebookGetAnAdWithHttpInfo($ad_archive_id, string $contentType = self::contentTypes['facebookGetAnAd'][0])
+    public function facebookGetAnAdWithHttpInfo($ad_archive_id, $country = 'US', string $contentType = self::contentTypes['facebookGetAnAd'][0])
     {
-        $request = $this->facebookGetAnAdRequest($ad_archive_id, $contentType);
+        $request = $this->facebookGetAnAdRequest($ad_archive_id, $country, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -1140,14 +1511,15 @@ class FacebookApi
      * Get an ad
      *
      * @param  string $ad_archive_id (required)
+     * @param  string $country ISO country code (an EU code returns EU transparency) (optional, default to 'US')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookGetAnAd'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function facebookGetAnAdAsync($ad_archive_id, string $contentType = self::contentTypes['facebookGetAnAd'][0])
+    public function facebookGetAnAdAsync($ad_archive_id, $country = 'US', string $contentType = self::contentTypes['facebookGetAnAd'][0])
     {
-        return $this->facebookGetAnAdAsyncWithHttpInfo($ad_archive_id, $contentType)
+        return $this->facebookGetAnAdAsyncWithHttpInfo($ad_archive_id, $country, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -1161,15 +1533,16 @@ class FacebookApi
      * Get an ad
      *
      * @param  string $ad_archive_id (required)
+     * @param  string $country ISO country code (an EU code returns EU transparency) (optional, default to 'US')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookGetAnAd'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function facebookGetAnAdAsyncWithHttpInfo($ad_archive_id, string $contentType = self::contentTypes['facebookGetAnAd'][0])
+    public function facebookGetAnAdAsyncWithHttpInfo($ad_archive_id, $country = 'US', string $contentType = self::contentTypes['facebookGetAnAd'][0])
     {
         $returnType = 'mixed';
-        $request = $this->facebookGetAnAdRequest($ad_archive_id, $contentType);
+        $request = $this->facebookGetAnAdRequest($ad_archive_id, $country, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -1211,12 +1584,13 @@ class FacebookApi
      * Create request for operation 'facebookGetAnAd'
      *
      * @param  string $ad_archive_id (required)
+     * @param  string $country ISO country code (an EU code returns EU transparency) (optional, default to 'US')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookGetAnAd'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function facebookGetAnAdRequest($ad_archive_id, string $contentType = self::contentTypes['facebookGetAnAd'][0])
+    public function facebookGetAnAdRequest($ad_archive_id, $country = 'US', string $contentType = self::contentTypes['facebookGetAnAd'][0])
     {
 
         // verify the required parameter 'ad_archive_id' is set
@@ -1227,6 +1601,7 @@ class FacebookApi
         }
 
 
+
         $resourcePath = '/v1/facebook/ads/{ad_archive_id}';
         $formParams = [];
         $queryParams = [];
@@ -1234,6 +1609,15 @@ class FacebookApi
         $httpBody = '';
         $multipart = false;
 
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $country,
+            'country', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
 
         // path params
@@ -4687,6 +5071,370 @@ class FacebookApi
         $httpBody = '';
         $multipart = false;
 
+
+
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+        // this endpoint requires API key authentication
+        $apiKey = $this->config->getApiKeyWithPrefix('X-API-Key');
+        if ($apiKey !== null) {
+            $headers['X-API-Key'] = $apiKey;
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'GET',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation facebookSearchAdvertiserPages
+     *
+     * Search advertiser pages
+     *
+     * @param  string $query Advertiser name or keyword (required)
+     * @param  string $country country (optional, default to 'US')
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookSearchAdvertiserPages'] to see the possible values for this operation
+     *
+     * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     */
+    public function facebookSearchAdvertiserPages($query, $country = 'US', string $contentType = self::contentTypes['facebookSearchAdvertiserPages'][0])
+    {
+        list($response) = $this->facebookSearchAdvertiserPagesWithHttpInfo($query, $country, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation facebookSearchAdvertiserPagesWithHttpInfo
+     *
+     * Search advertiser pages
+     *
+     * @param  string $query Advertiser name or keyword (required)
+     * @param  string $country (optional, default to 'US')
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookSearchAdvertiserPages'] to see the possible values for this operation
+     *
+     * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function facebookSearchAdvertiserPagesWithHttpInfo($query, $country = 'US', string $contentType = self::contentTypes['facebookSearchAdvertiserPages'][0])
+    {
+        $request = $this->facebookSearchAdvertiserPagesRequest($query, $country, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    if ('mixed' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('mixed' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, 'mixed', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                case 422:
+                    if ('\ScrapeBadger\Model\HTTPValidationError' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\HTTPValidationError' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\HTTPValidationError', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+            }
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            $returnType = 'mixed';
+            if ($returnType === '\SplFileObject') {
+                $content = $response->getBody(); //stream goes to serializer
+            } else {
+                $content = (string) $response->getBody();
+                if ($returnType !== 'string') {
+                    try {
+                        $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                    } catch (\JsonException $exception) {
+                        throw new ApiException(
+                            sprintf(
+                                'Error JSON decoding server response (%s)',
+                                $request->getUri()
+                            ),
+                            $statusCode,
+                            $response->getHeaders(),
+                            $content
+                        );
+                    }
+                }
+            }
+
+            return [
+                ObjectSerializer::deserialize($content, $returnType, []),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            ];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        'mixed',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\HTTPValidationError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation facebookSearchAdvertiserPagesAsync
+     *
+     * Search advertiser pages
+     *
+     * @param  string $query Advertiser name or keyword (required)
+     * @param  string $country (optional, default to 'US')
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookSearchAdvertiserPages'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function facebookSearchAdvertiserPagesAsync($query, $country = 'US', string $contentType = self::contentTypes['facebookSearchAdvertiserPages'][0])
+    {
+        return $this->facebookSearchAdvertiserPagesAsyncWithHttpInfo($query, $country, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation facebookSearchAdvertiserPagesAsyncWithHttpInfo
+     *
+     * Search advertiser pages
+     *
+     * @param  string $query Advertiser name or keyword (required)
+     * @param  string $country (optional, default to 'US')
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookSearchAdvertiserPages'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function facebookSearchAdvertiserPagesAsyncWithHttpInfo($query, $country = 'US', string $contentType = self::contentTypes['facebookSearchAdvertiserPages'][0])
+    {
+        $returnType = 'mixed';
+        $request = $this->facebookSearchAdvertiserPagesRequest($query, $country, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'facebookSearchAdvertiserPages'
+     *
+     * @param  string $query Advertiser name or keyword (required)
+     * @param  string $country (optional, default to 'US')
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookSearchAdvertiserPages'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function facebookSearchAdvertiserPagesRequest($query, $country = 'US', string $contentType = self::contentTypes['facebookSearchAdvertiserPages'][0])
+    {
+
+        // verify the required parameter 'query' is set
+        if ($query === null || (is_array($query) && count($query) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $query when calling facebookSearchAdvertiserPages'
+            );
+        }
+
+
+
+        $resourcePath = '/v1/facebook/ads/pages/search';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $query,
+            'query', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            true // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $country,
+            'country', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
 
 

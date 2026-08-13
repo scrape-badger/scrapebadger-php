@@ -6,6 +6,7 @@ All URIs are relative to https://scrapebadger.com, except if the operation defin
 | ------------- | ------------- | ------------- |
 | [**facebookBrowseAMarketplaceCategory()**](FacebookApi.md#facebookBrowseAMarketplaceCategory) | **GET** /v1/facebook/marketplace/category/{category} | Browse a Marketplace category |
 | [**facebookGetAMarketplaceItem()**](FacebookApi.md#facebookGetAMarketplaceItem) | **GET** /v1/facebook/marketplace/item/{item_id} | Get a Marketplace item |
+| [**facebookGetAdvertiserPageInfo()**](FacebookApi.md#facebookGetAdvertiserPageInfo) | **GET** /v1/facebook/ads/pages/{page_id} | Get advertiser page info |
 | [**facebookGetAnAd()**](FacebookApi.md#facebookGetAnAd) | **GET** /v1/facebook/ads/{ad_archive_id} | Get an ad |
 | [**facebookGetGroupDetail()**](FacebookApi.md#facebookGetGroupDetail) | **GET** /v1/facebook/groups/{group_id} | Get group detail |
 | [**facebookGetGroupPosts()**](FacebookApi.md#facebookGetGroupPosts) | **GET** /v1/facebook/groups/{group_id}/posts | Get group posts |
@@ -17,6 +18,7 @@ All URIs are relative to https://scrapebadger.com, except if the operation defin
 | [**facebookGetProfilePosts()**](FacebookApi.md#facebookGetProfilePosts) | **GET** /v1/facebook/profiles/{identifier}/posts | Get profile posts |
 | [**facebookListCategories()**](FacebookApi.md#facebookListCategories) | **GET** /v1/facebook/marketplace/categories | List categories |
 | [**facebookListLocations()**](FacebookApi.md#facebookListLocations) | **GET** /v1/facebook/marketplace/locations | List locations |
+| [**facebookSearchAdvertiserPages()**](FacebookApi.md#facebookSearchAdvertiserPages) | **GET** /v1/facebook/ads/pages/search | Search advertiser pages |
 | [**facebookSearchEvents()**](FacebookApi.md#facebookSearchEvents) | **GET** /v1/facebook/search/events | Search events |
 | [**facebookSearchEverything()**](FacebookApi.md#facebookSearchEverything) | **GET** /v1/facebook/search | Search everything |
 | [**facebookSearchGroups()**](FacebookApi.md#facebookSearchGroups) | **GET** /v1/facebook/search/groups | Search groups |
@@ -162,15 +164,79 @@ try {
 [[Back to Model list]](../../README.md#models)
 [[Back to README]](../../README.md)
 
+## `facebookGetAdvertiserPageInfo()`
+
+```php
+facebookGetAdvertiserPageInfo($page_id, $country): mixed
+```
+
+Get advertiser page info
+
+Get advertiser page info: category, followers, page transparency (creation date, name history, managing organization, admin-account locations), related pages, and ad spend (for political/issue advertisers).
+
+### Example
+
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+// Configure API key authorization: ApiKeyAuth
+$config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKey('X-API-Key', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// $config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKeyPrefix('X-API-Key', 'Bearer');
+
+
+$apiInstance = new ScrapeBadger\Api\FacebookApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client(),
+    $config
+);
+$page_id = 'page_id_example'; // string
+$country = 'US'; // string
+
+try {
+    $result = $apiInstance->facebookGetAdvertiserPageInfo($page_id, $country);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling FacebookApi->facebookGetAdvertiserPageInfo: ', $e->getMessage(), PHP_EOL;
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+| ------------- | ------------- | ------------- | ------------- |
+| **page_id** | **string**|  | |
+| **country** | **string**|  | [optional] [default to &#39;US&#39;] |
+
+### Return type
+
+**mixed**
+
+### Authorization
+
+[ApiKeyAuth](../../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `application/json`
+
+[[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
+[[Back to Model list]](../../README.md#models)
+[[Back to README]](../../README.md)
+
 ## `facebookGetAnAd()`
 
 ```php
-facebookGetAnAd($ad_archive_id): mixed
+facebookGetAnAd($ad_archive_id, $country): mixed
 ```
 
 Get an ad
 
-Get a single Ad Library ad by its archive id.
+Get a single Ad Library ad by its archive id. For EU/UK-targeted ads the response also includes transparency insights (payer/beneficiary, total EU reach, and age/gender/country reach breakdowns).
 
 ### Example
 
@@ -192,9 +258,10 @@ $apiInstance = new ScrapeBadger\Api\FacebookApi(
     $config
 );
 $ad_archive_id = 'ad_archive_id_example'; // string
+$country = 'US'; // string | ISO country code (an EU code returns EU transparency)
 
 try {
-    $result = $apiInstance->facebookGetAnAd($ad_archive_id);
+    $result = $apiInstance->facebookGetAnAd($ad_archive_id, $country);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling FacebookApi->facebookGetAnAd: ', $e->getMessage(), PHP_EOL;
@@ -206,6 +273,7 @@ try {
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
 | **ad_archive_id** | **string**|  | |
+| **country** | **string**| ISO country code (an EU code returns EU transparency) | [optional] [default to &#39;US&#39;] |
 
 ### Return type
 
@@ -830,6 +898,70 @@ try {
 ### Parameters
 
 This endpoint does not need any parameter.
+
+### Return type
+
+**mixed**
+
+### Authorization
+
+[ApiKeyAuth](../../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `application/json`
+
+[[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
+[[Back to Model list]](../../README.md#models)
+[[Back to README]](../../README.md)
+
+## `facebookSearchAdvertiserPages()`
+
+```php
+facebookSearchAdvertiserPages($query, $country): mixed
+```
+
+Search advertiser pages
+
+Search advertiser Pages in the Ad Library — returns page ids, categories, likes/followers, verification and Instagram handles.
+
+### Example
+
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+// Configure API key authorization: ApiKeyAuth
+$config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKey('X-API-Key', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// $config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKeyPrefix('X-API-Key', 'Bearer');
+
+
+$apiInstance = new ScrapeBadger\Api\FacebookApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client(),
+    $config
+);
+$query = 'query_example'; // string | Advertiser name or keyword
+$country = 'US'; // string
+
+try {
+    $result = $apiInstance->facebookSearchAdvertiserPages($query, $country);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling FacebookApi->facebookSearchAdvertiserPages: ', $e->getMessage(), PHP_EOL;
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+| ------------- | ------------- | ------------- | ------------- |
+| **query** | **string**| Advertiser name or keyword | |
+| **country** | **string**|  | [optional] [default to &#39;US&#39;] |
 
 ### Return type
 

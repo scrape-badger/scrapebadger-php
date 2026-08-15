@@ -393,9 +393,9 @@ $apiInstance = new ScrapeBadger\Api\GoogleApi(
     $config
 );
 $data_id = 'data_id_example'; // string | Maps data ID
-$sort_by = 'qualityScore'; // string
+$sort_by = 'qualityScore'; // string | qualityScore | newestFirst | ratingHigh | ratingLow
 $hl = 'en'; // string
-$next_page_token = 'next_page_token_example'; // string
+$next_page_token = 'next_page_token_example'; // string | Cursor from the previous response's pagination.next; omit for page 1.
 $results = 10; // int
 
 try {
@@ -411,9 +411,9 @@ try {
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
 | **data_id** | **string**| Maps data ID | |
-| **sort_by** | **string**|  | [optional] [default to &#39;qualityScore&#39;] |
+| **sort_by** | **string**| qualityScore | newestFirst | ratingHigh | ratingLow | [optional] [default to &#39;qualityScore&#39;] |
 | **hl** | **string**|  | [optional] [default to &#39;en&#39;] |
-| **next_page_token** | **string**|  | [optional] |
+| **next_page_token** | **string**| Cursor from the previous response&#39;s pagination.next; omit for page 1. | [optional] |
 | **results** | **int**|  | [optional] [default to 10] |
 
 ### Return type

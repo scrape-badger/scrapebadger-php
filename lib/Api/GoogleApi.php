@@ -2101,9 +2101,9 @@ class GoogleApi
      * Get place reviews
      *
      * @param  string $data_id Maps data ID (required)
-     * @param  string $sort_by sort_by (optional, default to 'qualityScore')
+     * @param  string $sort_by qualityScore | newestFirst | ratingHigh | ratingLow (optional, default to 'qualityScore')
      * @param  string $hl hl (optional, default to 'en')
-     * @param  string $next_page_token next_page_token (optional)
+     * @param  string $next_page_token Cursor from the previous response&#39;s pagination.next; omit for page 1. (optional)
      * @param  int $results results (optional, default to 10)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googleGetPlaceReviews'] to see the possible values for this operation
      *
@@ -2123,9 +2123,9 @@ class GoogleApi
      * Get place reviews
      *
      * @param  string $data_id Maps data ID (required)
-     * @param  string $sort_by (optional, default to 'qualityScore')
+     * @param  string $sort_by qualityScore | newestFirst | ratingHigh | ratingLow (optional, default to 'qualityScore')
      * @param  string $hl (optional, default to 'en')
-     * @param  string $next_page_token (optional)
+     * @param  string $next_page_token Cursor from the previous response&#39;s pagination.next; omit for page 1. (optional)
      * @param  int $results (optional, default to 10)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googleGetPlaceReviews'] to see the possible values for this operation
      *
@@ -2287,9 +2287,9 @@ class GoogleApi
      * Get place reviews
      *
      * @param  string $data_id Maps data ID (required)
-     * @param  string $sort_by (optional, default to 'qualityScore')
+     * @param  string $sort_by qualityScore | newestFirst | ratingHigh | ratingLow (optional, default to 'qualityScore')
      * @param  string $hl (optional, default to 'en')
-     * @param  string $next_page_token (optional)
+     * @param  string $next_page_token Cursor from the previous response&#39;s pagination.next; omit for page 1. (optional)
      * @param  int $results (optional, default to 10)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googleGetPlaceReviews'] to see the possible values for this operation
      *
@@ -2312,9 +2312,9 @@ class GoogleApi
      * Get place reviews
      *
      * @param  string $data_id Maps data ID (required)
-     * @param  string $sort_by (optional, default to 'qualityScore')
+     * @param  string $sort_by qualityScore | newestFirst | ratingHigh | ratingLow (optional, default to 'qualityScore')
      * @param  string $hl (optional, default to 'en')
-     * @param  string $next_page_token (optional)
+     * @param  string $next_page_token Cursor from the previous response&#39;s pagination.next; omit for page 1. (optional)
      * @param  int $results (optional, default to 10)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googleGetPlaceReviews'] to see the possible values for this operation
      *
@@ -2366,9 +2366,9 @@ class GoogleApi
      * Create request for operation 'googleGetPlaceReviews'
      *
      * @param  string $data_id Maps data ID (required)
-     * @param  string $sort_by (optional, default to 'qualityScore')
+     * @param  string $sort_by qualityScore | newestFirst | ratingHigh | ratingLow (optional, default to 'qualityScore')
      * @param  string $hl (optional, default to 'en')
-     * @param  string $next_page_token (optional)
+     * @param  string $next_page_token Cursor from the previous response&#39;s pagination.next; omit for page 1. (optional)
      * @param  int $results (optional, default to 10)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googleGetPlaceReviews'] to see the possible values for this operation
      *

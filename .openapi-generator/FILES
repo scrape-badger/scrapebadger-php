@@ -11,6 +11,7 @@ docs/Api/ApartmentsApi.md
 docs/Api/AppStoreApi.md
 docs/Api/BaiduApi.md
 docs/Api/BingApi.md
+docs/Api/BookingApi.md
 docs/Api/ChatGPTApi.md
 docs/Api/DepopApi.md
 docs/Api/DuckDuckGoApi.md
@@ -74,6 +75,7 @@ lib/Api/ApartmentsApi.php
 lib/Api/AppStoreApi.php
 lib/Api/BaiduApi.php
 lib/Api/BingApi.php
+lib/Api/BookingApi.php
 lib/Api/ChatGPTApi.php
 lib/Api/DepopApi.php
 lib/Api/DuckDuckGoApi.php
@@ -142,6 +144,7 @@ test/Api/ApartmentsApiTest.php
 test/Api/AppStoreApiTest.php
 test/Api/BaiduApiTest.php
 test/Api/BingApiTest.php
+test/Api/BookingApiTest.php
 test/Api/ChatGPTApiTest.php
 test/Api/DepopApiTest.php
 test/Api/DuckDuckGoApiTest.php

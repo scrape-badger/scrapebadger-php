@@ -8,6 +8,7 @@ All URIs are relative to https://scrapebadger.com, except if the operation defin
 | [**bookingBookingScraperHealthCheckHead()**](BookingApi.md#bookingBookingScraperHealthCheckHead) | **HEAD** /v1/booking/health | Booking scraper health check |
 | [**bookingGetPropertyDetail()**](BookingApi.md#bookingGetPropertyDetail) | **GET** /v1/booking/properties/{country_code}/{slug} | Get property detail |
 | [**bookingGetPropertyReviews()**](BookingApi.md#bookingGetPropertyReviews) | **GET** /v1/booking/properties/{country_code}/{slug}/reviews | Get property reviews |
+| [**bookingGetRoomTypesAndLiveRates()**](BookingApi.md#bookingGetRoomTypesAndLiveRates) | **GET** /v1/booking/properties/{country_code}/{slug}/rooms | Get room types and live rates |
 | [**bookingSearchDestinations()**](BookingApi.md#bookingSearchDestinations) | **GET** /v1/booking/destinations | Search destinations |
 | [**bookingSearchProperties()**](BookingApi.md#bookingSearchProperties) | **GET** /v1/booking/search | Search properties |
 
@@ -258,6 +259,84 @@ try {
 | **review_language** | **string**| Only reviews written in this language, e.g. &#39;fr&#39; | [optional] |
 | **guest_type** | **string**| FAMILIES | COUPLES | GROUP_OF_FRIENDS | SOLO_TRAVELLERS | BUSINESS_TRAVELLERS | [optional] |
 | **language** | **string**| Locale for labels, e.g. en-us | [optional] |
+
+### Return type
+
+**mixed**
+
+### Authorization
+
+[ApiKeyAuth](../../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `application/json`
+
+[[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
+[[Back to Model list]](../../README.md#models)
+[[Back to README]](../../README.md)
+
+## `bookingGetRoomTypesAndLiveRates()`
+
+```php
+bookingGetRoomTypesAndLiveRates($country_code, $slug, $checkin, $checkout, $adults, $children, $rooms, $currency, $language): mixed
+```
+
+Get room types and live rates
+
+Every room type at one property with every rate bookable on it for the given dates — price, price before discount, price per night, discounts and badges — plus per-room facilities, bed layouts, occupancy and photos. /search returns only the cheapest rate per property; this returns the whole table.
+
+### Example
+
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+// Configure API key authorization: ApiKeyAuth
+$config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKey('X-API-Key', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// $config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKeyPrefix('X-API-Key', 'Bearer');
+
+
+$apiInstance = new ScrapeBadger\Api\BookingApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client(),
+    $config
+);
+$country_code = 'country_code_example'; // string | Two-letter country code, e.g. 'it'
+$slug = 'slug_example'; // string | Booking page name, e.g. 'hotel-artemide'
+$checkin = 'checkin_example'; // string | Check-in date YYYY-MM-DD
+$checkout = 'checkout_example'; // string | Check-out date YYYY-MM-DD
+$adults = 2; // int
+$children = 'children_example'; // string | Comma-separated children ages, e.g. '4,9'
+$rooms = 1; // int
+$currency = 'currency_example'; // string | ISO currency, e.g. EUR, USD, GBP
+$language = 'language_example'; // string | Locale, e.g. en-us, fr, de
+
+try {
+    $result = $apiInstance->bookingGetRoomTypesAndLiveRates($country_code, $slug, $checkin, $checkout, $adults, $children, $rooms, $currency, $language);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling BookingApi->bookingGetRoomTypesAndLiveRates: ', $e->getMessage(), PHP_EOL;
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+| ------------- | ------------- | ------------- | ------------- |
+| **country_code** | **string**| Two-letter country code, e.g. &#39;it&#39; | |
+| **slug** | **string**| Booking page name, e.g. &#39;hotel-artemide&#39; | |
+| **checkin** | **string**| Check-in date YYYY-MM-DD | |
+| **checkout** | **string**| Check-out date YYYY-MM-DD | |
+| **adults** | **int**|  | [optional] [default to 2] |
+| **children** | **string**| Comma-separated children ages, e.g. &#39;4,9&#39; | [optional] |
+| **rooms** | **int**|  | [optional] [default to 1] |
+| **currency** | **string**| ISO currency, e.g. EUR, USD, GBP | [optional] |
+| **language** | **string**| Locale, e.g. en-us, fr, de | [optional] |
 
 ### Return type
 

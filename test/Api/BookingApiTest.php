@@ -120,6 +120,18 @@ class BookingApiTest extends TestCase
     }
 
     /**
+     * Test case for bookingGetRoomTypesAndLiveRates
+     *
+     * Get room types and live rates.
+     *
+     */
+    public function testBookingGetRoomTypesAndLiveRates()
+    {
+        // TODO: implement
+        self::markTestIncomplete('Not implemented');
+    }
+
+    /**
      * Test case for bookingSearchDestinations
      *
      * Search destinations.

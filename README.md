@@ -187,6 +187,7 @@ Class | Method | HTTP request | Description
 *BookingApi* | [**bookingBookingScraperHealthCheckHead**](docs/Api/BookingApi.md#bookingbookingscraperhealthcheckhead) | **HEAD** /v1/booking/health | Booking scraper health check
 *BookingApi* | [**bookingGetPropertyDetail**](docs/Api/BookingApi.md#bookinggetpropertydetail) | **GET** /v1/booking/properties/{country_code}/{slug} | Get property detail
 *BookingApi* | [**bookingGetPropertyReviews**](docs/Api/BookingApi.md#bookinggetpropertyreviews) | **GET** /v1/booking/properties/{country_code}/{slug}/reviews | Get property reviews
+*BookingApi* | [**bookingGetRoomTypesAndLiveRates**](docs/Api/BookingApi.md#bookinggetroomtypesandliverates) | **GET** /v1/booking/properties/{country_code}/{slug}/rooms | Get room types and live rates
 *BookingApi* | [**bookingSearchDestinations**](docs/Api/BookingApi.md#bookingsearchdestinations) | **GET** /v1/booking/destinations | Search destinations
 *BookingApi* | [**bookingSearchProperties**](docs/Api/BookingApi.md#bookingsearchproperties) | **GET** /v1/booking/search | Search properties
 *ChatGPTApi* | [**chatgptAskChatgptAQuestion**](docs/Api/ChatGPTApi.md#chatgptaskchatgptaquestion) | **GET** /v1/chatgpt/ask | Ask ChatGPT a question

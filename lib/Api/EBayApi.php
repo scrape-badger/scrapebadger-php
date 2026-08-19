@@ -74,7 +74,7 @@ class EBayApi
         'ebayBrowseACategory' => [
             'application/json',
         ],
-        'ebayCompletedSoldListings' => [
+        'ebayCompletedSoldListingsDeprecated' => [
             'application/json',
         ],
         'ebayEbayScraperHealthCheck' => [
@@ -615,9 +615,9 @@ class EBayApi
     }
 
     /**
-     * Operation ebayCompletedSoldListings
+     * Operation ebayCompletedSoldListingsDeprecated
      *
-     * Completed / sold listings
+     * Completed / sold listings (deprecated)
      *
      * @param  string $query Search keywords (required)
      * @param  string $domain domain (optional, default to 'com')
@@ -628,22 +628,23 @@ class EBayApi
      * @param  string $condition new|open_box|refurbished|used|for_parts (optional)
      * @param  float $min_price min_price (optional)
      * @param  float $max_price max_price (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayCompletedSoldListings'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayCompletedSoldListingsDeprecated'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @deprecated
      */
-    public function ebayCompletedSoldListings($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
+    public function ebayCompletedSoldListingsDeprecated($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, string $contentType = self::contentTypes['ebayCompletedSoldListingsDeprecated'][0])
     {
-        list($response) = $this->ebayCompletedSoldListingsWithHttpInfo($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $contentType);
+        list($response) = $this->ebayCompletedSoldListingsDeprecatedWithHttpInfo($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $contentType);
         return $response;
     }
 
     /**
-     * Operation ebayCompletedSoldListingsWithHttpInfo
+     * Operation ebayCompletedSoldListingsDeprecatedWithHttpInfo
      *
-     * Completed / sold listings
+     * Completed / sold listings (deprecated)
      *
      * @param  string $query Search keywords (required)
      * @param  string $domain (optional, default to 'com')
@@ -654,15 +655,16 @@ class EBayApi
      * @param  string $condition new|open_box|refurbished|used|for_parts (optional)
      * @param  float $min_price (optional)
      * @param  float $max_price (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayCompletedSoldListings'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayCompletedSoldListingsDeprecated'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @deprecated
      */
-    public function ebayCompletedSoldListingsWithHttpInfo($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
+    public function ebayCompletedSoldListingsDeprecatedWithHttpInfo($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, string $contentType = self::contentTypes['ebayCompletedSoldListingsDeprecated'][0])
     {
-        $request = $this->ebayCompletedSoldListingsRequest($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $contentType);
+        $request = $this->ebayCompletedSoldListingsDeprecatedRequest($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -809,9 +811,9 @@ class EBayApi
     }
 
     /**
-     * Operation ebayCompletedSoldListingsAsync
+     * Operation ebayCompletedSoldListingsDeprecatedAsync
      *
-     * Completed / sold listings
+     * Completed / sold listings (deprecated)
      *
      * @param  string $query Search keywords (required)
      * @param  string $domain (optional, default to 'com')
@@ -822,14 +824,15 @@ class EBayApi
      * @param  string $condition new|open_box|refurbished|used|for_parts (optional)
      * @param  float $min_price (optional)
      * @param  float $max_price (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayCompletedSoldListings'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayCompletedSoldListingsDeprecated'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
+     * @deprecated
      */
-    public function ebayCompletedSoldListingsAsync($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
+    public function ebayCompletedSoldListingsDeprecatedAsync($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, string $contentType = self::contentTypes['ebayCompletedSoldListingsDeprecated'][0])
     {
-        return $this->ebayCompletedSoldListingsAsyncWithHttpInfo($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $contentType)
+        return $this->ebayCompletedSoldListingsDeprecatedAsyncWithHttpInfo($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -838,9 +841,9 @@ class EBayApi
     }
 
     /**
-     * Operation ebayCompletedSoldListingsAsyncWithHttpInfo
+     * Operation ebayCompletedSoldListingsDeprecatedAsyncWithHttpInfo
      *
-     * Completed / sold listings
+     * Completed / sold listings (deprecated)
      *
      * @param  string $query Search keywords (required)
      * @param  string $domain (optional, default to 'com')
@@ -851,15 +854,16 @@ class EBayApi
      * @param  string $condition new|open_box|refurbished|used|for_parts (optional)
      * @param  float $min_price (optional)
      * @param  float $max_price (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayCompletedSoldListings'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayCompletedSoldListingsDeprecated'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
+     * @deprecated
      */
-    public function ebayCompletedSoldListingsAsyncWithHttpInfo($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
+    public function ebayCompletedSoldListingsDeprecatedAsyncWithHttpInfo($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, string $contentType = self::contentTypes['ebayCompletedSoldListingsDeprecated'][0])
     {
         $returnType = 'mixed';
-        $request = $this->ebayCompletedSoldListingsRequest($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $contentType);
+        $request = $this->ebayCompletedSoldListingsDeprecatedRequest($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -898,7 +902,7 @@ class EBayApi
     }
 
     /**
-     * Create request for operation 'ebayCompletedSoldListings'
+     * Create request for operation 'ebayCompletedSoldListingsDeprecated'
      *
      * @param  string $query Search keywords (required)
      * @param  string $domain (optional, default to 'com')
@@ -909,45 +913,46 @@ class EBayApi
      * @param  string $condition new|open_box|refurbished|used|for_parts (optional)
      * @param  float $min_price (optional)
      * @param  float $max_price (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayCompletedSoldListings'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayCompletedSoldListingsDeprecated'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @deprecated
      */
-    public function ebayCompletedSoldListingsRequest($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
+    public function ebayCompletedSoldListingsDeprecatedRequest($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, string $contentType = self::contentTypes['ebayCompletedSoldListingsDeprecated'][0])
     {
 
         // verify the required parameter 'query' is set
         if ($query === null || (is_array($query) && count($query) === 0)) {
             throw new \InvalidArgumentException(
-                'Missing the required parameter $query when calling ebayCompletedSoldListings'
+                'Missing the required parameter $query when calling ebayCompletedSoldListingsDeprecated'
             );
         }
 
 
 
         if ($page !== null && $page > 100) {
-            throw new \InvalidArgumentException('invalid value for "$page" when calling EBayApi.ebayCompletedSoldListings, must be smaller than or equal to 100.');
+            throw new \InvalidArgumentException('invalid value for "$page" when calling EBayApi.ebayCompletedSoldListingsDeprecated, must be smaller than or equal to 100.');
         }
         if ($page !== null && $page < 1) {
-            throw new \InvalidArgumentException('invalid value for "$page" when calling EBayApi.ebayCompletedSoldListings, must be bigger than or equal to 1.');
+            throw new \InvalidArgumentException('invalid value for "$page" when calling EBayApi.ebayCompletedSoldListingsDeprecated, must be bigger than or equal to 1.');
         }
         
         if ($per_page !== null && $per_page > 240) {
-            throw new \InvalidArgumentException('invalid value for "$per_page" when calling EBayApi.ebayCompletedSoldListings, must be smaller than or equal to 240.');
+            throw new \InvalidArgumentException('invalid value for "$per_page" when calling EBayApi.ebayCompletedSoldListingsDeprecated, must be smaller than or equal to 240.');
         }
         if ($per_page !== null && $per_page < 1) {
-            throw new \InvalidArgumentException('invalid value for "$per_page" when calling EBayApi.ebayCompletedSoldListings, must be bigger than or equal to 1.');
+            throw new \InvalidArgumentException('invalid value for "$per_page" when calling EBayApi.ebayCompletedSoldListingsDeprecated, must be bigger than or equal to 1.');
         }
         
 
 
         if ($min_price !== null && $min_price < 0) {
-            throw new \InvalidArgumentException('invalid value for "$min_price" when calling EBayApi.ebayCompletedSoldListings, must be bigger than or equal to 0.');
+            throw new \InvalidArgumentException('invalid value for "$min_price" when calling EBayApi.ebayCompletedSoldListingsDeprecated, must be bigger than or equal to 0.');
         }
         
         if ($max_price !== null && $max_price < 0) {
-            throw new \InvalidArgumentException('invalid value for "$max_price" when calling EBayApi.ebayCompletedSoldListings, must be bigger than or equal to 0.');
+            throw new \InvalidArgumentException('invalid value for "$max_price" when calling EBayApi.ebayCompletedSoldListingsDeprecated, must be bigger than or equal to 0.');
         }
         
 

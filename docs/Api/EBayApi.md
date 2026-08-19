@@ -5,7 +5,7 @@ All URIs are relative to https://scrapebadger.com, except if the operation defin
 | Method | HTTP request | Description |
 | ------------- | ------------- | ------------- |
 | [**ebayBrowseACategory()**](EBayApi.md#ebayBrowseACategory) | **GET** /v1/ebay/categories/{category_id}/items | Browse a category |
-| [**ebayCompletedSoldListings()**](EBayApi.md#ebayCompletedSoldListings) | **GET** /v1/ebay/completed | Completed / sold listings |
+| [**ebayCompletedSoldListingsDeprecated()**](EBayApi.md#ebayCompletedSoldListingsDeprecated) | **GET** /v1/ebay/completed | Completed / sold listings (deprecated) |
 | [**ebayEbayScraperHealthCheck()**](EBayApi.md#ebayEbayScraperHealthCheck) | **GET** /v1/ebay/health | eBay scraper health check |
 | [**ebayEbayScraperHealthCheckHead()**](EBayApi.md#ebayEbayScraperHealthCheckHead) | **HEAD** /v1/ebay/health | eBay scraper health check |
 | [**ebayGetItemDetail()**](EBayApi.md#ebayGetItemDetail) | **GET** /v1/ebay/items/{item_id} | Get item detail |
@@ -93,15 +93,15 @@ try {
 [[Back to Model list]](../../README.md#models)
 [[Back to README]](../../README.md)
 
-## `ebayCompletedSoldListings()`
+## `ebayCompletedSoldListingsDeprecated()`
 
 ```php
-ebayCompletedSoldListings($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price): mixed
+ebayCompletedSoldListingsDeprecated($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price): mixed
 ```
 
-Completed / sold listings
+Completed / sold listings (deprecated)
 
-Search completed/sold listings — eBay's sold-price history.
+Deprecated — eBay requires a signed-in account for sold listings. Returns 410.
 
 ### Example
 
@@ -133,10 +133,10 @@ $min_price = 3.4; // float
 $max_price = 3.4; // float
 
 try {
-    $result = $apiInstance->ebayCompletedSoldListings($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price);
+    $result = $apiInstance->ebayCompletedSoldListingsDeprecated($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price);
     print_r($result);
 } catch (Exception $e) {
-    echo 'Exception when calling EBayApi->ebayCompletedSoldListings: ', $e->getMessage(), PHP_EOL;
+    echo 'Exception when calling EBayApi->ebayCompletedSoldListingsDeprecated: ', $e->getMessage(), PHP_EOL;
 }
 ```
 

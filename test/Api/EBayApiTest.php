@@ -84,12 +84,12 @@ class EBayApiTest extends TestCase
     }
 
     /**
-     * Test case for ebayCompletedSoldListings
+     * Test case for ebayCompletedSoldListingsDeprecated
      *
-     * Completed / sold listings.
+     * Completed / sold listings (deprecated).
      *
      */
-    public function testEbayCompletedSoldListings()
+    public function testEbayCompletedSoldListingsDeprecated()
     {
         // TODO: implement
         self::markTestIncomplete('Not implemented');

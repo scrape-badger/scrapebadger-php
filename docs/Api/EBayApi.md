@@ -5,7 +5,7 @@ All URIs are relative to https://scrapebadger.com, except if the operation defin
 | Method | HTTP request | Description |
 | ------------- | ------------- | ------------- |
 | [**ebayBrowseACategory()**](EBayApi.md#ebayBrowseACategory) | **GET** /v1/ebay/categories/{category_id}/items | Browse a category |
-| [**ebayCompletedSoldListingsDeprecated()**](EBayApi.md#ebayCompletedSoldListingsDeprecated) | **GET** /v1/ebay/completed | Completed / sold listings (deprecated) |
+| [**ebayCompletedSoldListings()**](EBayApi.md#ebayCompletedSoldListings) | **GET** /v1/ebay/completed | Completed / sold listings |
 | [**ebayEbayScraperHealthCheck()**](EBayApi.md#ebayEbayScraperHealthCheck) | **GET** /v1/ebay/health | eBay scraper health check |
 | [**ebayEbayScraperHealthCheckHead()**](EBayApi.md#ebayEbayScraperHealthCheckHead) | **HEAD** /v1/ebay/health | eBay scraper health check |
 | [**ebayGetItemDetail()**](EBayApi.md#ebayGetItemDetail) | **GET** /v1/ebay/items/{item_id} | Get item detail |
@@ -93,15 +93,15 @@ try {
 [[Back to Model list]](../../README.md#models)
 [[Back to README]](../../README.md)
 
-## `ebayCompletedSoldListingsDeprecated()`
+## `ebayCompletedSoldListings()`
 
 ```php
-ebayCompletedSoldListingsDeprecated($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price): mixed
+ebayCompletedSoldListings($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price): mixed
 ```
 
-Completed / sold listings (deprecated)
+Completed / sold listings
 
-Deprecated — eBay requires a signed-in account for sold listings. Returns 410.
+Search completed/sold listings — eBay's sold-price history.
 
 ### Example
 
@@ -123,20 +123,20 @@ $apiInstance = new ScrapeBadger\Api\EBayApi(
     $config
 );
 $query = 'query_example'; // string | Search keywords
-$domain = 'com'; // string
-$category_id = 'category_id_example'; // string
+$domain = 'com'; // string | Marketplace domain (com, co.uk, de …)
+$category_id = 'category_id_example'; // string | Restrict to a category id
 $page = 1; // int
-$per_page = 56; // int
+$per_page = 56; // int | 60, 120 or 240
 $sort_by = 'best_match'; // string | best_match|ending_soonest|newly_listed|price_low_to_high|price_high_to_low
 $condition = 'condition_example'; // string | new|open_box|refurbished|used|for_parts
 $min_price = 3.4; // float
 $max_price = 3.4; // float
 
 try {
-    $result = $apiInstance->ebayCompletedSoldListingsDeprecated($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price);
+    $result = $apiInstance->ebayCompletedSoldListings($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price);
     print_r($result);
 } catch (Exception $e) {
-    echo 'Exception when calling EBayApi->ebayCompletedSoldListingsDeprecated: ', $e->getMessage(), PHP_EOL;
+    echo 'Exception when calling EBayApi->ebayCompletedSoldListings: ', $e->getMessage(), PHP_EOL;
 }
 ```
 
@@ -145,10 +145,10 @@ try {
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
 | **query** | **string**| Search keywords | |
-| **domain** | **string**|  | [optional] [default to &#39;com&#39;] |
-| **category_id** | **string**|  | [optional] |
+| **domain** | **string**| Marketplace domain (com, co.uk, de …) | [optional] [default to &#39;com&#39;] |
+| **category_id** | **string**| Restrict to a category id | [optional] |
 | **page** | **int**|  | [optional] [default to 1] |
-| **per_page** | **int**|  | [optional] |
+| **per_page** | **int**| 60, 120 or 240 | [optional] |
 | **sort_by** | **string**| best_match|ending_soonest|newly_listed|price_low_to_high|price_high_to_low | [optional] [default to &#39;best_match&#39;] |
 | **condition** | **string**| new|open_box|refurbished|used|for_parts | [optional] |
 | **min_price** | **float**|  | [optional] |

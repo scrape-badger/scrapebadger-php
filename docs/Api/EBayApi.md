@@ -96,7 +96,7 @@ try {
 ## `ebayCompletedSoldListings()`
 
 ```php
-ebayCompletedSoldListings($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price): mixed
+ebayCompletedSoldListings($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $location): mixed
 ```
 
 Completed / sold listings
@@ -128,12 +128,13 @@ $category_id = 'category_id_example'; // string | Restrict to a category id
 $page = 1; // int
 $per_page = 56; // int | 60, 120 or 240
 $sort_by = 'best_match'; // string | best_match|ending_soonest|newly_listed|price_low_to_high|price_high_to_low
-$condition = 'condition_example'; // string | new|open_box|refurbished|used|for_parts
+$condition = 'condition_example'; // string | new|open_box|refurbished|used|for_parts|graded|ungraded
 $min_price = 3.4; // float
 $max_price = 3.4; // float
+$location = 'location_example'; // string | domestic|worldwide
 
 try {
-    $result = $apiInstance->ebayCompletedSoldListings($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price);
+    $result = $apiInstance->ebayCompletedSoldListings($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $location);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling EBayApi->ebayCompletedSoldListings: ', $e->getMessage(), PHP_EOL;
@@ -150,9 +151,10 @@ try {
 | **page** | **int**|  | [optional] [default to 1] |
 | **per_page** | **int**| 60, 120 or 240 | [optional] |
 | **sort_by** | **string**| best_match|ending_soonest|newly_listed|price_low_to_high|price_high_to_low | [optional] [default to &#39;best_match&#39;] |
-| **condition** | **string**| new|open_box|refurbished|used|for_parts | [optional] |
+| **condition** | **string**| new|open_box|refurbished|used|for_parts|graded|ungraded | [optional] |
 | **min_price** | **float**|  | [optional] |
 | **max_price** | **float**|  | [optional] |
+| **location** | **string**| domestic|worldwide | [optional] |
 
 ### Return type
 
@@ -804,7 +806,7 @@ This endpoint does not need any parameter.
 ## `ebaySearchListings()`
 
 ```php
-ebaySearchListings($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $buying_format, $min_price, $max_price, $free_shipping): mixed
+ebaySearchListings($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $buying_format, $min_price, $max_price, $free_shipping, $location): mixed
 ```
 
 Search listings
@@ -836,14 +838,15 @@ $category_id = 'category_id_example'; // string | Restrict to a category id
 $page = 1; // int
 $per_page = 56; // int | 60, 120 or 240
 $sort_by = 'best_match'; // string | best_match|ending_soonest|newly_listed|price_low_to_high|price_high_to_low
-$condition = 'condition_example'; // string | new|open_box|refurbished|used|for_parts
+$condition = 'condition_example'; // string | new|open_box|refurbished|used|for_parts|graded|ungraded
 $buying_format = 'buying_format_example'; // string | auction|buy_it_now|best_offer
 $min_price = 3.4; // float
 $max_price = 3.4; // float
 $free_shipping = false; // bool
+$location = 'location_example'; // string | domestic|worldwide
 
 try {
-    $result = $apiInstance->ebaySearchListings($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $buying_format, $min_price, $max_price, $free_shipping);
+    $result = $apiInstance->ebaySearchListings($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $buying_format, $min_price, $max_price, $free_shipping, $location);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling EBayApi->ebaySearchListings: ', $e->getMessage(), PHP_EOL;
@@ -860,11 +863,12 @@ try {
 | **page** | **int**|  | [optional] [default to 1] |
 | **per_page** | **int**| 60, 120 or 240 | [optional] |
 | **sort_by** | **string**| best_match|ending_soonest|newly_listed|price_low_to_high|price_high_to_low | [optional] [default to &#39;best_match&#39;] |
-| **condition** | **string**| new|open_box|refurbished|used|for_parts | [optional] |
+| **condition** | **string**| new|open_box|refurbished|used|for_parts|graded|ungraded | [optional] |
 | **buying_format** | **string**| auction|buy_it_now|best_offer | [optional] |
 | **min_price** | **float**|  | [optional] |
 | **max_price** | **float**|  | [optional] |
 | **free_shipping** | **bool**|  | [optional] [default to false] |
+| **location** | **string**| domestic|worldwide | [optional] |
 
 ### Return type
 

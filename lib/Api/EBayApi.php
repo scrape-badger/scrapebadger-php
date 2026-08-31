@@ -625,18 +625,19 @@ class EBayApi
      * @param  int $page page (optional, default to 1)
      * @param  int $per_page 60, 120 or 240 (optional)
      * @param  string $sort_by best_match|ending_soonest|newly_listed|price_low_to_high|price_high_to_low (optional, default to 'best_match')
-     * @param  string $condition new|open_box|refurbished|used|for_parts (optional)
+     * @param  string $condition new|open_box|refurbished|used|for_parts|graded|ungraded (optional)
      * @param  float $min_price min_price (optional)
      * @param  float $max_price max_price (optional)
+     * @param  string $location domestic|worldwide (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayCompletedSoldListings'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return mixed|\ScrapeBadger\Model\HTTPValidationError
      */
-    public function ebayCompletedSoldListings($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
+    public function ebayCompletedSoldListings($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, $location = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
     {
-        list($response) = $this->ebayCompletedSoldListingsWithHttpInfo($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $contentType);
+        list($response) = $this->ebayCompletedSoldListingsWithHttpInfo($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $location, $contentType);
         return $response;
     }
 
@@ -651,18 +652,19 @@ class EBayApi
      * @param  int $page (optional, default to 1)
      * @param  int $per_page 60, 120 or 240 (optional)
      * @param  string $sort_by best_match|ending_soonest|newly_listed|price_low_to_high|price_high_to_low (optional, default to 'best_match')
-     * @param  string $condition new|open_box|refurbished|used|for_parts (optional)
+     * @param  string $condition new|open_box|refurbished|used|for_parts|graded|ungraded (optional)
      * @param  float $min_price (optional)
      * @param  float $max_price (optional)
+     * @param  string $location domestic|worldwide (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayCompletedSoldListings'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
-    public function ebayCompletedSoldListingsWithHttpInfo($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
+    public function ebayCompletedSoldListingsWithHttpInfo($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, $location = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
     {
-        $request = $this->ebayCompletedSoldListingsRequest($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $contentType);
+        $request = $this->ebayCompletedSoldListingsRequest($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $location, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -819,17 +821,18 @@ class EBayApi
      * @param  int $page (optional, default to 1)
      * @param  int $per_page 60, 120 or 240 (optional)
      * @param  string $sort_by best_match|ending_soonest|newly_listed|price_low_to_high|price_high_to_low (optional, default to 'best_match')
-     * @param  string $condition new|open_box|refurbished|used|for_parts (optional)
+     * @param  string $condition new|open_box|refurbished|used|for_parts|graded|ungraded (optional)
      * @param  float $min_price (optional)
      * @param  float $max_price (optional)
+     * @param  string $location domestic|worldwide (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayCompletedSoldListings'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function ebayCompletedSoldListingsAsync($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
+    public function ebayCompletedSoldListingsAsync($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, $location = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
     {
-        return $this->ebayCompletedSoldListingsAsyncWithHttpInfo($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $contentType)
+        return $this->ebayCompletedSoldListingsAsyncWithHttpInfo($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $location, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -848,18 +851,19 @@ class EBayApi
      * @param  int $page (optional, default to 1)
      * @param  int $per_page 60, 120 or 240 (optional)
      * @param  string $sort_by best_match|ending_soonest|newly_listed|price_low_to_high|price_high_to_low (optional, default to 'best_match')
-     * @param  string $condition new|open_box|refurbished|used|for_parts (optional)
+     * @param  string $condition new|open_box|refurbished|used|for_parts|graded|ungraded (optional)
      * @param  float $min_price (optional)
      * @param  float $max_price (optional)
+     * @param  string $location domestic|worldwide (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayCompletedSoldListings'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function ebayCompletedSoldListingsAsyncWithHttpInfo($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
+    public function ebayCompletedSoldListingsAsyncWithHttpInfo($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, $location = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
     {
         $returnType = 'mixed';
-        $request = $this->ebayCompletedSoldListingsRequest($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $contentType);
+        $request = $this->ebayCompletedSoldListingsRequest($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $location, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -906,15 +910,16 @@ class EBayApi
      * @param  int $page (optional, default to 1)
      * @param  int $per_page 60, 120 or 240 (optional)
      * @param  string $sort_by best_match|ending_soonest|newly_listed|price_low_to_high|price_high_to_low (optional, default to 'best_match')
-     * @param  string $condition new|open_box|refurbished|used|for_parts (optional)
+     * @param  string $condition new|open_box|refurbished|used|for_parts|graded|ungraded (optional)
      * @param  float $min_price (optional)
      * @param  float $max_price (optional)
+     * @param  string $location domestic|worldwide (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayCompletedSoldListings'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function ebayCompletedSoldListingsRequest($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
+    public function ebayCompletedSoldListingsRequest($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, $location = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
     {
 
         // verify the required parameter 'query' is set
@@ -950,6 +955,7 @@ class EBayApi
             throw new \InvalidArgumentException('invalid value for "$max_price" when calling EBayApi.ebayCompletedSoldListings, must be bigger than or equal to 0.');
         }
         
+
 
         $resourcePath = '/v1/ebay/completed';
         $formParams = [];
@@ -1035,6 +1041,15 @@ class EBayApi
             $max_price,
             'max_price', // param base name
             'number', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $location,
+            'location', // param base name
+            'string', // openApiType
             'form', // style
             true, // explode
             false // required
@@ -4562,20 +4577,21 @@ class EBayApi
      * @param  int $page page (optional, default to 1)
      * @param  int $per_page 60, 120 or 240 (optional)
      * @param  string $sort_by best_match|ending_soonest|newly_listed|price_low_to_high|price_high_to_low (optional, default to 'best_match')
-     * @param  string $condition new|open_box|refurbished|used|for_parts (optional)
+     * @param  string $condition new|open_box|refurbished|used|for_parts|graded|ungraded (optional)
      * @param  string $buying_format auction|buy_it_now|best_offer (optional)
      * @param  float $min_price min_price (optional)
      * @param  float $max_price max_price (optional)
      * @param  bool $free_shipping free_shipping (optional, default to false)
+     * @param  string $location domestic|worldwide (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebaySearchListings'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return mixed|\ScrapeBadger\Model\HTTPValidationError
      */
-    public function ebaySearchListings($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $buying_format = null, $min_price = null, $max_price = null, $free_shipping = false, string $contentType = self::contentTypes['ebaySearchListings'][0])
+    public function ebaySearchListings($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $buying_format = null, $min_price = null, $max_price = null, $free_shipping = false, $location = null, string $contentType = self::contentTypes['ebaySearchListings'][0])
     {
-        list($response) = $this->ebaySearchListingsWithHttpInfo($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $buying_format, $min_price, $max_price, $free_shipping, $contentType);
+        list($response) = $this->ebaySearchListingsWithHttpInfo($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $buying_format, $min_price, $max_price, $free_shipping, $location, $contentType);
         return $response;
     }
 
@@ -4590,20 +4606,21 @@ class EBayApi
      * @param  int $page (optional, default to 1)
      * @param  int $per_page 60, 120 or 240 (optional)
      * @param  string $sort_by best_match|ending_soonest|newly_listed|price_low_to_high|price_high_to_low (optional, default to 'best_match')
-     * @param  string $condition new|open_box|refurbished|used|for_parts (optional)
+     * @param  string $condition new|open_box|refurbished|used|for_parts|graded|ungraded (optional)
      * @param  string $buying_format auction|buy_it_now|best_offer (optional)
      * @param  float $min_price (optional)
      * @param  float $max_price (optional)
      * @param  bool $free_shipping (optional, default to false)
+     * @param  string $location domestic|worldwide (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebaySearchListings'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
-    public function ebaySearchListingsWithHttpInfo($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $buying_format = null, $min_price = null, $max_price = null, $free_shipping = false, string $contentType = self::contentTypes['ebaySearchListings'][0])
+    public function ebaySearchListingsWithHttpInfo($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $buying_format = null, $min_price = null, $max_price = null, $free_shipping = false, $location = null, string $contentType = self::contentTypes['ebaySearchListings'][0])
     {
-        $request = $this->ebaySearchListingsRequest($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $buying_format, $min_price, $max_price, $free_shipping, $contentType);
+        $request = $this->ebaySearchListingsRequest($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $buying_format, $min_price, $max_price, $free_shipping, $location, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -4760,19 +4777,20 @@ class EBayApi
      * @param  int $page (optional, default to 1)
      * @param  int $per_page 60, 120 or 240 (optional)
      * @param  string $sort_by best_match|ending_soonest|newly_listed|price_low_to_high|price_high_to_low (optional, default to 'best_match')
-     * @param  string $condition new|open_box|refurbished|used|for_parts (optional)
+     * @param  string $condition new|open_box|refurbished|used|for_parts|graded|ungraded (optional)
      * @param  string $buying_format auction|buy_it_now|best_offer (optional)
      * @param  float $min_price (optional)
      * @param  float $max_price (optional)
      * @param  bool $free_shipping (optional, default to false)
+     * @param  string $location domestic|worldwide (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebaySearchListings'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function ebaySearchListingsAsync($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $buying_format = null, $min_price = null, $max_price = null, $free_shipping = false, string $contentType = self::contentTypes['ebaySearchListings'][0])
+    public function ebaySearchListingsAsync($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $buying_format = null, $min_price = null, $max_price = null, $free_shipping = false, $location = null, string $contentType = self::contentTypes['ebaySearchListings'][0])
     {
-        return $this->ebaySearchListingsAsyncWithHttpInfo($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $buying_format, $min_price, $max_price, $free_shipping, $contentType)
+        return $this->ebaySearchListingsAsyncWithHttpInfo($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $buying_format, $min_price, $max_price, $free_shipping, $location, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -4791,20 +4809,21 @@ class EBayApi
      * @param  int $page (optional, default to 1)
      * @param  int $per_page 60, 120 or 240 (optional)
      * @param  string $sort_by best_match|ending_soonest|newly_listed|price_low_to_high|price_high_to_low (optional, default to 'best_match')
-     * @param  string $condition new|open_box|refurbished|used|for_parts (optional)
+     * @param  string $condition new|open_box|refurbished|used|for_parts|graded|ungraded (optional)
      * @param  string $buying_format auction|buy_it_now|best_offer (optional)
      * @param  float $min_price (optional)
      * @param  float $max_price (optional)
      * @param  bool $free_shipping (optional, default to false)
+     * @param  string $location domestic|worldwide (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebaySearchListings'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function ebaySearchListingsAsyncWithHttpInfo($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $buying_format = null, $min_price = null, $max_price = null, $free_shipping = false, string $contentType = self::contentTypes['ebaySearchListings'][0])
+    public function ebaySearchListingsAsyncWithHttpInfo($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $buying_format = null, $min_price = null, $max_price = null, $free_shipping = false, $location = null, string $contentType = self::contentTypes['ebaySearchListings'][0])
     {
         $returnType = 'mixed';
-        $request = $this->ebaySearchListingsRequest($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $buying_format, $min_price, $max_price, $free_shipping, $contentType);
+        $request = $this->ebaySearchListingsRequest($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $buying_format, $min_price, $max_price, $free_shipping, $location, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -4851,17 +4870,18 @@ class EBayApi
      * @param  int $page (optional, default to 1)
      * @param  int $per_page 60, 120 or 240 (optional)
      * @param  string $sort_by best_match|ending_soonest|newly_listed|price_low_to_high|price_high_to_low (optional, default to 'best_match')
-     * @param  string $condition new|open_box|refurbished|used|for_parts (optional)
+     * @param  string $condition new|open_box|refurbished|used|for_parts|graded|ungraded (optional)
      * @param  string $buying_format auction|buy_it_now|best_offer (optional)
      * @param  float $min_price (optional)
      * @param  float $max_price (optional)
      * @param  bool $free_shipping (optional, default to false)
+     * @param  string $location domestic|worldwide (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebaySearchListings'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function ebaySearchListingsRequest($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $buying_format = null, $min_price = null, $max_price = null, $free_shipping = false, string $contentType = self::contentTypes['ebaySearchListings'][0])
+    public function ebaySearchListingsRequest($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $buying_format = null, $min_price = null, $max_price = null, $free_shipping = false, $location = null, string $contentType = self::contentTypes['ebaySearchListings'][0])
     {
 
         // verify the required parameter 'query' is set
@@ -4898,6 +4918,7 @@ class EBayApi
             throw new \InvalidArgumentException('invalid value for "$max_price" when calling EBayApi.ebaySearchListings, must be bigger than or equal to 0.');
         }
         
+
 
 
         $resourcePath = '/v1/ebay/search';
@@ -5002,6 +5023,15 @@ class EBayApi
             $free_shipping,
             'free_shipping', // param base name
             'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $location,
+            'location', // param base name
+            'string', // openApiType
             'form', // style
             true, // explode
             false // required

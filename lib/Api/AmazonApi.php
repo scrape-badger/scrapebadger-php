@@ -1540,15 +1540,16 @@ class AmazonApi
      * @param  string $asin asin (required)
      * @param  string $domain domain (optional, default to 'com')
      * @param  string $zip zip (optional)
+     * @param  int $page Offer page, 10 rows each (optional, default to 1)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['amazonGetAllSellerOffersBuybox'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return mixed|\ScrapeBadger\Model\HTTPValidationError
      */
-    public function amazonGetAllSellerOffersBuybox($asin, $domain = 'com', $zip = null, string $contentType = self::contentTypes['amazonGetAllSellerOffersBuybox'][0])
+    public function amazonGetAllSellerOffersBuybox($asin, $domain = 'com', $zip = null, $page = 1, string $contentType = self::contentTypes['amazonGetAllSellerOffersBuybox'][0])
     {
-        list($response) = $this->amazonGetAllSellerOffersBuyboxWithHttpInfo($asin, $domain, $zip, $contentType);
+        list($response) = $this->amazonGetAllSellerOffersBuyboxWithHttpInfo($asin, $domain, $zip, $page, $contentType);
         return $response;
     }
 
@@ -1560,15 +1561,16 @@ class AmazonApi
      * @param  string $asin (required)
      * @param  string $domain (optional, default to 'com')
      * @param  string $zip (optional)
+     * @param  int $page Offer page, 10 rows each (optional, default to 1)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['amazonGetAllSellerOffersBuybox'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
-    public function amazonGetAllSellerOffersBuyboxWithHttpInfo($asin, $domain = 'com', $zip = null, string $contentType = self::contentTypes['amazonGetAllSellerOffersBuybox'][0])
+    public function amazonGetAllSellerOffersBuyboxWithHttpInfo($asin, $domain = 'com', $zip = null, $page = 1, string $contentType = self::contentTypes['amazonGetAllSellerOffersBuybox'][0])
     {
-        $request = $this->amazonGetAllSellerOffersBuyboxRequest($asin, $domain, $zip, $contentType);
+        $request = $this->amazonGetAllSellerOffersBuyboxRequest($asin, $domain, $zip, $page, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -1722,14 +1724,15 @@ class AmazonApi
      * @param  string $asin (required)
      * @param  string $domain (optional, default to 'com')
      * @param  string $zip (optional)
+     * @param  int $page Offer page, 10 rows each (optional, default to 1)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['amazonGetAllSellerOffersBuybox'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function amazonGetAllSellerOffersBuyboxAsync($asin, $domain = 'com', $zip = null, string $contentType = self::contentTypes['amazonGetAllSellerOffersBuybox'][0])
+    public function amazonGetAllSellerOffersBuyboxAsync($asin, $domain = 'com', $zip = null, $page = 1, string $contentType = self::contentTypes['amazonGetAllSellerOffersBuybox'][0])
     {
-        return $this->amazonGetAllSellerOffersBuyboxAsyncWithHttpInfo($asin, $domain, $zip, $contentType)
+        return $this->amazonGetAllSellerOffersBuyboxAsyncWithHttpInfo($asin, $domain, $zip, $page, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -1745,15 +1748,16 @@ class AmazonApi
      * @param  string $asin (required)
      * @param  string $domain (optional, default to 'com')
      * @param  string $zip (optional)
+     * @param  int $page Offer page, 10 rows each (optional, default to 1)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['amazonGetAllSellerOffersBuybox'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function amazonGetAllSellerOffersBuyboxAsyncWithHttpInfo($asin, $domain = 'com', $zip = null, string $contentType = self::contentTypes['amazonGetAllSellerOffersBuybox'][0])
+    public function amazonGetAllSellerOffersBuyboxAsyncWithHttpInfo($asin, $domain = 'com', $zip = null, $page = 1, string $contentType = self::contentTypes['amazonGetAllSellerOffersBuybox'][0])
     {
         $returnType = 'mixed';
-        $request = $this->amazonGetAllSellerOffersBuyboxRequest($asin, $domain, $zip, $contentType);
+        $request = $this->amazonGetAllSellerOffersBuyboxRequest($asin, $domain, $zip, $page, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -1797,12 +1801,13 @@ class AmazonApi
      * @param  string $asin (required)
      * @param  string $domain (optional, default to 'com')
      * @param  string $zip (optional)
+     * @param  int $page Offer page, 10 rows each (optional, default to 1)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['amazonGetAllSellerOffersBuybox'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function amazonGetAllSellerOffersBuyboxRequest($asin, $domain = 'com', $zip = null, string $contentType = self::contentTypes['amazonGetAllSellerOffersBuybox'][0])
+    public function amazonGetAllSellerOffersBuyboxRequest($asin, $domain = 'com', $zip = null, $page = 1, string $contentType = self::contentTypes['amazonGetAllSellerOffersBuybox'][0])
     {
 
         // verify the required parameter 'asin' is set
@@ -1814,6 +1819,10 @@ class AmazonApi
 
 
 
+        if ($page !== null && $page < 1) {
+            throw new \InvalidArgumentException('invalid value for "$page" when calling AmazonApi.amazonGetAllSellerOffersBuybox, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/amazon/products/{asin}/offers';
         $formParams = [];
@@ -1836,6 +1845,15 @@ class AmazonApi
             $zip,
             'zip', // param base name
             'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $page,
+            'page', // param base name
+            'integer', // openApiType
             'form', // style
             true, // explode
             false // required

@@ -277,7 +277,7 @@ try {
 ## `amazonGetAllSellerOffersBuybox()`
 
 ```php
-amazonGetAllSellerOffersBuybox($asin, $domain, $zip): mixed
+amazonGetAllSellerOffersBuybox($asin, $domain, $zip, $page): mixed
 ```
 
 Get all seller offers (buybox)
@@ -306,9 +306,10 @@ $apiInstance = new ScrapeBadger\Api\AmazonApi(
 $asin = 'asin_example'; // string
 $domain = 'com'; // string
 $zip = 'zip_example'; // string
+$page = 1; // int | Offer page, 10 rows each
 
 try {
-    $result = $apiInstance->amazonGetAllSellerOffersBuybox($asin, $domain, $zip);
+    $result = $apiInstance->amazonGetAllSellerOffersBuybox($asin, $domain, $zip, $page);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling AmazonApi->amazonGetAllSellerOffersBuybox: ', $e->getMessage(), PHP_EOL;
@@ -322,6 +323,7 @@ try {
 | **asin** | **string**|  | |
 | **domain** | **string**|  | [optional] [default to &#39;com&#39;] |
 | **zip** | **string**|  | [optional] |
+| **page** | **int**| Offer page, 10 rows each | [optional] [default to 1] |
 
 ### Return type
 

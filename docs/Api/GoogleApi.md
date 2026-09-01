@@ -1598,12 +1598,12 @@ try {
 ## `googleMultiSellerOffersByBarcode()`
 
 ```php
-googleMultiSellerOffersByBarcode($barcode, $gl, $hl): mixed
+googleMultiSellerOffersByBarcode($barcode, $catalog_id, $gl, $hl, $domain): mixed
 ```
 
 Multi-seller offers by barcode
 
-Resolve a barcode to a product via Google web search, then return its Google Shopping seller offers (source + price per merchant).
+Google Shopping seller offers (source + price + link per merchant) for a product identified either by ``barcode`` (resolved via Google web search) or by its Google Shopping ``catalog_id`` (read straight off Google's product page, all seller pages fetched in parallel).
 
 ### Example
 
@@ -1625,11 +1625,13 @@ $apiInstance = new ScrapeBadger\Api\GoogleApi(
     $config
 );
 $barcode = 'barcode_example'; // string | Product barcode — GTIN-8 / UPC-A / EAN-13 / GTIN-14
+$catalog_id = 'catalog_id_example'; // string | Google Shopping catalogid (the `catalog_id` on /shopping/search tiles, or `prds=catalogid:<id>` in a Google Shopping URL). Alternative to `barcode`; exactly one of the two is required
 $gl = 'gl_example'; // string | Country code (ISO 3166 alpha-2)
 $hl = 'en'; // string | Language code
+$domain = 'google.com'; // string | Google domain
 
 try {
-    $result = $apiInstance->googleMultiSellerOffersByBarcode($barcode, $gl, $hl);
+    $result = $apiInstance->googleMultiSellerOffersByBarcode($barcode, $catalog_id, $gl, $hl, $domain);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling GoogleApi->googleMultiSellerOffersByBarcode: ', $e->getMessage(), PHP_EOL;
@@ -1640,9 +1642,11 @@ try {
 
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
-| **barcode** | **string**| Product barcode — GTIN-8 / UPC-A / EAN-13 / GTIN-14 | |
+| **barcode** | **string**| Product barcode — GTIN-8 / UPC-A / EAN-13 / GTIN-14 | [optional] |
+| **catalog_id** | **string**| Google Shopping catalogid (the &#x60;catalog_id&#x60; on /shopping/search tiles, or &#x60;prds&#x3D;catalogid:&lt;id&gt;&#x60; in a Google Shopping URL). Alternative to &#x60;barcode&#x60;; exactly one of the two is required | [optional] |
 | **gl** | **string**| Country code (ISO 3166 alpha-2) | [optional] |
 | **hl** | **string**| Language code | [optional] [default to &#39;en&#39;] |
+| **domain** | **string**| Google domain | [optional] [default to &#39;google.com&#39;] |
 
 ### Return type
 

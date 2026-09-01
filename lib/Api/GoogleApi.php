@@ -9490,18 +9490,20 @@ class GoogleApi
      *
      * Multi-seller offers by barcode
      *
-     * @param  string $barcode Product barcode — GTIN-8 / UPC-A / EAN-13 / GTIN-14 (required)
+     * @param  string $barcode Product barcode — GTIN-8 / UPC-A / EAN-13 / GTIN-14 (optional)
+     * @param  string $catalog_id Google Shopping catalogid (the &#x60;catalog_id&#x60; on /shopping/search tiles, or &#x60;prds&#x3D;catalogid:&lt;id&gt;&#x60; in a Google Shopping URL). Alternative to &#x60;barcode&#x60;; exactly one of the two is required (optional)
      * @param  string $gl Country code (ISO 3166 alpha-2) (optional)
      * @param  string $hl Language code (optional, default to 'en')
+     * @param  string $domain Google domain (optional, default to 'google.com')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googleMultiSellerOffersByBarcode'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return mixed|\ScrapeBadger\Model\HTTPValidationError
      */
-    public function googleMultiSellerOffersByBarcode($barcode, $gl = null, $hl = 'en', string $contentType = self::contentTypes['googleMultiSellerOffersByBarcode'][0])
+    public function googleMultiSellerOffersByBarcode($barcode = null, $catalog_id = null, $gl = null, $hl = 'en', $domain = 'google.com', string $contentType = self::contentTypes['googleMultiSellerOffersByBarcode'][0])
     {
-        list($response) = $this->googleMultiSellerOffersByBarcodeWithHttpInfo($barcode, $gl, $hl, $contentType);
+        list($response) = $this->googleMultiSellerOffersByBarcodeWithHttpInfo($barcode, $catalog_id, $gl, $hl, $domain, $contentType);
         return $response;
     }
 
@@ -9510,18 +9512,20 @@ class GoogleApi
      *
      * Multi-seller offers by barcode
      *
-     * @param  string $barcode Product barcode — GTIN-8 / UPC-A / EAN-13 / GTIN-14 (required)
+     * @param  string $barcode Product barcode — GTIN-8 / UPC-A / EAN-13 / GTIN-14 (optional)
+     * @param  string $catalog_id Google Shopping catalogid (the &#x60;catalog_id&#x60; on /shopping/search tiles, or &#x60;prds&#x3D;catalogid:&lt;id&gt;&#x60; in a Google Shopping URL). Alternative to &#x60;barcode&#x60;; exactly one of the two is required (optional)
      * @param  string $gl Country code (ISO 3166 alpha-2) (optional)
      * @param  string $hl Language code (optional, default to 'en')
+     * @param  string $domain Google domain (optional, default to 'google.com')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googleMultiSellerOffersByBarcode'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
-    public function googleMultiSellerOffersByBarcodeWithHttpInfo($barcode, $gl = null, $hl = 'en', string $contentType = self::contentTypes['googleMultiSellerOffersByBarcode'][0])
+    public function googleMultiSellerOffersByBarcodeWithHttpInfo($barcode = null, $catalog_id = null, $gl = null, $hl = 'en', $domain = 'google.com', string $contentType = self::contentTypes['googleMultiSellerOffersByBarcode'][0])
     {
-        $request = $this->googleMultiSellerOffersByBarcodeRequest($barcode, $gl, $hl, $contentType);
+        $request = $this->googleMultiSellerOffersByBarcodeRequest($barcode, $catalog_id, $gl, $hl, $domain, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -9672,17 +9676,19 @@ class GoogleApi
      *
      * Multi-seller offers by barcode
      *
-     * @param  string $barcode Product barcode — GTIN-8 / UPC-A / EAN-13 / GTIN-14 (required)
+     * @param  string $barcode Product barcode — GTIN-8 / UPC-A / EAN-13 / GTIN-14 (optional)
+     * @param  string $catalog_id Google Shopping catalogid (the &#x60;catalog_id&#x60; on /shopping/search tiles, or &#x60;prds&#x3D;catalogid:&lt;id&gt;&#x60; in a Google Shopping URL). Alternative to &#x60;barcode&#x60;; exactly one of the two is required (optional)
      * @param  string $gl Country code (ISO 3166 alpha-2) (optional)
      * @param  string $hl Language code (optional, default to 'en')
+     * @param  string $domain Google domain (optional, default to 'google.com')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googleMultiSellerOffersByBarcode'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function googleMultiSellerOffersByBarcodeAsync($barcode, $gl = null, $hl = 'en', string $contentType = self::contentTypes['googleMultiSellerOffersByBarcode'][0])
+    public function googleMultiSellerOffersByBarcodeAsync($barcode = null, $catalog_id = null, $gl = null, $hl = 'en', $domain = 'google.com', string $contentType = self::contentTypes['googleMultiSellerOffersByBarcode'][0])
     {
-        return $this->googleMultiSellerOffersByBarcodeAsyncWithHttpInfo($barcode, $gl, $hl, $contentType)
+        return $this->googleMultiSellerOffersByBarcodeAsyncWithHttpInfo($barcode, $catalog_id, $gl, $hl, $domain, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -9695,18 +9701,20 @@ class GoogleApi
      *
      * Multi-seller offers by barcode
      *
-     * @param  string $barcode Product barcode — GTIN-8 / UPC-A / EAN-13 / GTIN-14 (required)
+     * @param  string $barcode Product barcode — GTIN-8 / UPC-A / EAN-13 / GTIN-14 (optional)
+     * @param  string $catalog_id Google Shopping catalogid (the &#x60;catalog_id&#x60; on /shopping/search tiles, or &#x60;prds&#x3D;catalogid:&lt;id&gt;&#x60; in a Google Shopping URL). Alternative to &#x60;barcode&#x60;; exactly one of the two is required (optional)
      * @param  string $gl Country code (ISO 3166 alpha-2) (optional)
      * @param  string $hl Language code (optional, default to 'en')
+     * @param  string $domain Google domain (optional, default to 'google.com')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googleMultiSellerOffersByBarcode'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function googleMultiSellerOffersByBarcodeAsyncWithHttpInfo($barcode, $gl = null, $hl = 'en', string $contentType = self::contentTypes['googleMultiSellerOffersByBarcode'][0])
+    public function googleMultiSellerOffersByBarcodeAsyncWithHttpInfo($barcode = null, $catalog_id = null, $gl = null, $hl = 'en', $domain = 'google.com', string $contentType = self::contentTypes['googleMultiSellerOffersByBarcode'][0])
     {
         $returnType = 'mixed';
-        $request = $this->googleMultiSellerOffersByBarcodeRequest($barcode, $gl, $hl, $contentType);
+        $request = $this->googleMultiSellerOffersByBarcodeRequest($barcode, $catalog_id, $gl, $hl, $domain, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -9747,23 +9755,21 @@ class GoogleApi
     /**
      * Create request for operation 'googleMultiSellerOffersByBarcode'
      *
-     * @param  string $barcode Product barcode — GTIN-8 / UPC-A / EAN-13 / GTIN-14 (required)
+     * @param  string $barcode Product barcode — GTIN-8 / UPC-A / EAN-13 / GTIN-14 (optional)
+     * @param  string $catalog_id Google Shopping catalogid (the &#x60;catalog_id&#x60; on /shopping/search tiles, or &#x60;prds&#x3D;catalogid:&lt;id&gt;&#x60; in a Google Shopping URL). Alternative to &#x60;barcode&#x60;; exactly one of the two is required (optional)
      * @param  string $gl Country code (ISO 3166 alpha-2) (optional)
      * @param  string $hl Language code (optional, default to 'en')
+     * @param  string $domain Google domain (optional, default to 'google.com')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googleMultiSellerOffersByBarcode'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function googleMultiSellerOffersByBarcodeRequest($barcode, $gl = null, $hl = 'en', string $contentType = self::contentTypes['googleMultiSellerOffersByBarcode'][0])
+    public function googleMultiSellerOffersByBarcodeRequest($barcode = null, $catalog_id = null, $gl = null, $hl = 'en', $domain = 'google.com', string $contentType = self::contentTypes['googleMultiSellerOffersByBarcode'][0])
     {
 
-        // verify the required parameter 'barcode' is set
-        if ($barcode === null || (is_array($barcode) && count($barcode) === 0)) {
-            throw new \InvalidArgumentException(
-                'Missing the required parameter $barcode when calling googleMultiSellerOffersByBarcode'
-            );
-        }
+
+
 
 
 
@@ -9782,7 +9788,16 @@ class GoogleApi
             'string', // openApiType
             'form', // style
             true, // explode
-            true // required
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $catalog_id,
+            'catalog_id', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
         ) ?? []);
         // query params
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
@@ -9797,6 +9812,15 @@ class GoogleApi
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
             $hl,
             'hl', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $domain,
+            'domain', // param base name
             'string', // openApiType
             'form', // style
             true, // explode

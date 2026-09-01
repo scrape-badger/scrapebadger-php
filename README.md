@@ -445,8 +445,13 @@ Class | Method | HTTP request | Description
 *TikTokApi* | [**tiktokSearchHashtags**](docs/Api/TikTokApi.md#tiktoksearchhashtags) | **GET** /v1/tiktok/search/hashtags | Search hashtags
 *TikTokApi* | [**tiktokSearchTheTiktokAdLibrary**](docs/Api/TikTokApi.md#tiktoksearchthetiktokadlibrary) | **GET** /v1/tiktok/ads/search | Search the TikTok Ad Library
 *TikTokApi* | [**tiktokSearchTiktokAdvertisers**](docs/Api/TikTokApi.md#tiktoksearchtiktokadvertisers) | **GET** /v1/tiktok/ads/advertisers | Search TikTok advertisers
+*TikTokApi* | [**tiktokSearchTiktokShopProducts**](docs/Api/TikTokApi.md#tiktoksearchtiktokshopproducts) | **GET** /v1/tiktok/shop/search | Search TikTok Shop products
 *TikTokApi* | [**tiktokSearchUsers**](docs/Api/TikTokApi.md#tiktoksearchusers) | **GET** /v1/tiktok/search/users | Search users
 *TikTokApi* | [**tiktokSearchVideos**](docs/Api/TikTokApi.md#tiktoksearchvideos) | **GET** /v1/tiktok/search/videos | Search videos
+*TikTokApi* | [**tiktokTiktokShopBestSellers**](docs/Api/TikTokApi.md#tiktoktiktokshopbestsellers) | **GET** /v1/tiktok/shop/ranking | TikTok Shop best sellers
+*TikTokApi* | [**tiktokTiktokShopCategorySubcategoriesTopProducts**](docs/Api/TikTokApi.md#tiktoktiktokshopcategorysubcategoriestopproducts) | **GET** /v1/tiktok/shop/categories/{category_id} | TikTok Shop category: subcategories + top products
+*TikTokApi* | [**tiktokTiktokShopProductDetail**](docs/Api/TikTokApi.md#tiktoktiktokshopproductdetail) | **GET** /v1/tiktok/shop/products/{product_id} | TikTok Shop product detail
+*TikTokApi* | [**tiktokTiktokShopRootCategories**](docs/Api/TikTokApi.md#tiktoktiktokshoprootcategories) | **GET** /v1/tiktok/shop/categories | TikTok Shop root categories
 *TikTokApi* | [**tiktokTrendingHashtags**](docs/Api/TikTokApi.md#tiktoktrendinghashtags) | **GET** /v1/tiktok/trending/hashtags | Trending hashtags
 *TikTokApi* | [**tiktokTrendingSongs**](docs/Api/TikTokApi.md#tiktoktrendingsongs) | **GET** /v1/tiktok/trending/songs | Trending songs
 *TikTokApi* | [**tiktokTrendingVideos**](docs/Api/TikTokApi.md#tiktoktrendingvideos) | **GET** /v1/tiktok/trending/videos | Trending videos

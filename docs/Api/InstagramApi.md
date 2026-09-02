@@ -37,7 +37,7 @@ instagramAboutThisAccount($username): mixed
 
 About this account
 
-Country, join date and former usernames.
+**Temporarily unavailable.** The authenticated Instagram tier is offline, so this endpoint currently returns `503 temporarily_unavailable` (not billed, `Retry-After` set) — see https://docs.scrapebadger.com/instagram/overview. Country, join date and former usernames.
 
 ### Example
 
@@ -99,6 +99,8 @@ instagramBlendedTopSearch($query): mixed
 
 Blended top search
 
+**Temporarily unavailable.** The authenticated Instagram tier is offline, so this endpoint currently returns `503 temporarily_unavailable` (not billed, `Retry-After` set) — see https://docs.scrapebadger.com/instagram/overview.
+
 ### Example
 
 ```php
@@ -159,7 +161,7 @@ instagramGetActiveStories($username): mixed
 
 Get active stories
 
-Active stories (account pool only).
+**Temporarily unavailable.** The authenticated Instagram tier is offline, so this endpoint currently returns `503 temporarily_unavailable` (not billed, `Retry-After` set) — see https://docs.scrapebadger.com/instagram/overview. Active stories (account pool only).
 
 ### Example
 
@@ -220,6 +222,8 @@ instagramGetAudioTrack($audio_id): mixed
 ```
 
 Get audio track
+
+**Temporarily unavailable.** The authenticated Instagram tier is offline, so this endpoint currently returns `503 temporarily_unavailable` (not billed, `Retry-After` set) — see https://docs.scrapebadger.com/instagram/overview.
 
 ### Example
 
@@ -345,7 +349,7 @@ instagramGetFollowers($username, $amount, $cursor, $order): mixed
 
 Get followers
 
-Followers list, paginated (account pool).
+**Temporarily unavailable.** The authenticated Instagram tier is offline, so this endpoint currently returns `503 temporarily_unavailable` (not billed, `Retry-After` set) — see https://docs.scrapebadger.com/instagram/overview. Followers list, paginated (account pool).
 
 ### Example
 
@@ -413,6 +417,8 @@ instagramGetFollowing($username, $amount, $cursor): mixed
 
 Get following
 
+**Temporarily unavailable.** The authenticated Instagram tier is offline, so this endpoint currently returns `503 temporarily_unavailable` (not billed, `Retry-After` set) — see https://docs.scrapebadger.com/instagram/overview.
+
 ### Example
 
 ```php
@@ -477,6 +483,8 @@ instagramGetHashtagInfo($tag): mixed
 
 Get hashtag info
 
+**Temporarily unavailable.** The authenticated Instagram tier is offline, so this endpoint currently returns `503 temporarily_unavailable` (not billed, `Retry-After` set) — see https://docs.scrapebadger.com/instagram/overview.
+
 ### Example
 
 ```php
@@ -536,6 +544,8 @@ instagramGetHighlights($username): mixed
 ```
 
 Get highlights
+
+**Temporarily unavailable.** The authenticated Instagram tier is offline, so this endpoint currently returns `503 temporarily_unavailable` (not billed, `Retry-After` set) — see https://docs.scrapebadger.com/instagram/overview.
 
 ### Example
 
@@ -597,6 +607,8 @@ instagramGetLikers($code): mixed
 
 Get likers
 
+**Temporarily unavailable.** The authenticated Instagram tier is offline, so this endpoint currently returns `503 temporarily_unavailable` (not billed, `Retry-After` set) — see https://docs.scrapebadger.com/instagram/overview.
+
 ### Example
 
 ```php
@@ -656,6 +668,8 @@ instagramGetLocation($location_pk): mixed
 ```
 
 Get location
+
+**Temporarily unavailable.** The authenticated Instagram tier is offline, so this endpoint currently returns `503 temporarily_unavailable` (not billed, `Retry-After` set) — see https://docs.scrapebadger.com/instagram/overview.
 
 ### Example
 
@@ -841,6 +855,8 @@ instagramGetTaggedPosts($username, $amount, $cursor): mixed
 
 Get tagged posts
 
+**Temporarily unavailable.** The authenticated Instagram tier is offline, so this endpoint currently returns `503 temporarily_unavailable` (not billed, `Retry-After` set) — see https://docs.scrapebadger.com/instagram/overview.
+
 ### Example
 
 ```php
@@ -970,6 +986,8 @@ instagramGetUserReels($username, $amount, $cursor): mixed
 ```
 
 Get user reels
+
+**Temporarily unavailable.** The authenticated Instagram tier is offline, so this endpoint currently returns `503 temporarily_unavailable` (not billed, `Retry-After` set) — see https://docs.scrapebadger.com/instagram/overview.
 
 ### Example
 
@@ -1149,6 +1167,8 @@ instagramRecentHashtagPosts($tag, $amount, $cursor): mixed
 
 Recent hashtag posts
 
+**Temporarily unavailable.** The authenticated Instagram tier is offline, so this endpoint currently returns `503 temporarily_unavailable` (not billed, `Retry-After` set) — see https://docs.scrapebadger.com/instagram/overview.
+
 ### Example
 
 ```php
@@ -1213,6 +1233,8 @@ instagramRelatedProfiles($username): mixed
 
 Related profiles
 
+**Temporarily unavailable.** The authenticated Instagram tier is offline, so this endpoint currently returns `503 temporarily_unavailable` (not billed, `Retry-After` set) — see https://docs.scrapebadger.com/instagram/overview.
+
 ### Example
 
 ```php
@@ -1272,6 +1294,8 @@ instagramSearchHashtags($query): mixed
 ```
 
 Search hashtags
+
+**Temporarily unavailable.** The authenticated Instagram tier is offline, so this endpoint currently returns `503 temporarily_unavailable` (not billed, `Retry-After` set) — see https://docs.scrapebadger.com/instagram/overview.
 
 ### Example
 
@@ -1333,6 +1357,8 @@ instagramSearchUsers($query): mixed
 
 Search users
 
+**Temporarily unavailable.** The authenticated Instagram tier is offline, so this endpoint currently returns `503 temporarily_unavailable` (not billed, `Retry-After` set) — see https://docs.scrapebadger.com/instagram/overview.
+
 ### Example
 
 ```php
@@ -1392,6 +1418,8 @@ instagramTopHashtagPosts($tag, $amount, $cursor): mixed
 ```
 
 Top hashtag posts
+
+**Temporarily unavailable.** The authenticated Instagram tier is offline, so this endpoint currently returns `503 temporarily_unavailable` (not billed, `Retry-After` set) — see https://docs.scrapebadger.com/instagram/overview.
 
 ### Example
 

@@ -33,8 +33,11 @@ All URIs are relative to https://scrapebadger.com, except if the operation defin
 | [**tiktokSearchVideos()**](TikTokApi.md#tiktokSearchVideos) | **GET** /v1/tiktok/search/videos | Search videos |
 | [**tiktokTiktokShopBestSellers()**](TikTokApi.md#tiktokTiktokShopBestSellers) | **GET** /v1/tiktok/shop/ranking | TikTok Shop best sellers |
 | [**tiktokTiktokShopCategorySubcategoriesTopProducts()**](TikTokApi.md#tiktokTiktokShopCategorySubcategoriesTopProducts) | **GET** /v1/tiktok/shop/categories/{category_id} | TikTok Shop category: subcategories + top products |
+| [**tiktokTiktokShopDealsFeed()**](TikTokApi.md#tiktokTiktokShopDealsFeed) | **GET** /v1/tiktok/shop/deals/{deal} | TikTok Shop deals feed |
 | [**tiktokTiktokShopProductDetail()**](TikTokApi.md#tiktokTiktokShopProductDetail) | **GET** /v1/tiktok/shop/products/{product_id} | TikTok Shop product detail |
+| [**tiktokTiktokShopProductReviews()**](TikTokApi.md#tiktokTiktokShopProductReviews) | **GET** /v1/tiktok/shop/products/{product_id}/reviews | TikTok Shop product reviews |
 | [**tiktokTiktokShopRootCategories()**](TikTokApi.md#tiktokTiktokShopRootCategories) | **GET** /v1/tiktok/shop/categories | TikTok Shop root categories |
+| [**tiktokTiktokShopStoreProducts()**](TikTokApi.md#tiktokTiktokShopStoreProducts) | **GET** /v1/tiktok/shop/stores/{seller_id} | TikTok Shop store + products |
 | [**tiktokTrendingHashtags()**](TikTokApi.md#tiktokTrendingHashtags) | **GET** /v1/tiktok/trending/hashtags | Trending hashtags |
 | [**tiktokTrendingSongs()**](TikTokApi.md#tiktokTrendingSongs) | **GET** /v1/tiktok/trending/songs | Trending songs |
 | [**tiktokTrendingVideos()**](TikTokApi.md#tiktokTrendingVideos) | **GET** /v1/tiktok/trending/videos | Trending videos |
@@ -1620,12 +1623,12 @@ try {
 ## `tiktokSearchTiktokShopProducts()`
 
 ```php
-tiktokSearchTiktokShopProducts($q): mixed
+tiktokSearchTiktokShopProducts($q, $region, $offset): mixed
 ```
 
 Search TikTok Shop products
 
-Keyword search over TikTok Shop products (US): products with their bound video, matching shops, related searches and categories.
+Keyword search over TikTok Shop products: 30 per page with offset pagination (US); the first page also carries matching shops and related searches.
 
 ### Example
 
@@ -1647,9 +1650,11 @@ $apiInstance = new ScrapeBadger\Api\TikTokApi(
     $config
 );
 $q = 'q_example'; // string | Keyword, e.g. 'wireless earbuds'
+$region = 'US'; // string | Market: US, GB, ID
+$offset = 0; // int | Pass back next_offset for the next page (US)
 
 try {
-    $result = $apiInstance->tiktokSearchTiktokShopProducts($q);
+    $result = $apiInstance->tiktokSearchTiktokShopProducts($q, $region, $offset);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling TikTokApi->tiktokSearchTiktokShopProducts: ', $e->getMessage(), PHP_EOL;
@@ -1661,6 +1666,8 @@ try {
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
 | **q** | **string**| Keyword, e.g. &#39;wireless earbuds&#39; | |
+| **region** | **string**| Market: US, GB, ID | [optional] [default to &#39;US&#39;] |
+| **offset** | **int**| Pass back next_offset for the next page (US) | [optional] [default to 0] |
 
 ### Return type
 
@@ -1818,12 +1825,12 @@ try {
 ## `tiktokTiktokShopBestSellers()`
 
 ```php
-tiktokTiktokShopBestSellers($count): mixed
+tiktokTiktokShopBestSellers($region, $count): mixed
 ```
 
 TikTok Shop best sellers
 
-TikTok Shop's own ranking of the best-selling products of the past 30 days (US).
+TikTok Shop's own ranking of the best-selling products of the past 30 days (US only).
 
 ### Example
 
@@ -1844,10 +1851,11 @@ $apiInstance = new ScrapeBadger\Api\TikTokApi(
     new GuzzleHttp\Client(),
     $config
 );
+$region = 'US'; // string | Market: US, GB, ID
 $count = 20; // int | Max products to return
 
 try {
-    $result = $apiInstance->tiktokTiktokShopBestSellers($count);
+    $result = $apiInstance->tiktokTiktokShopBestSellers($region, $count);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling TikTokApi->tiktokTiktokShopBestSellers: ', $e->getMessage(), PHP_EOL;
@@ -1858,6 +1866,7 @@ try {
 
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
+| **region** | **string**| Market: US, GB, ID | [optional] [default to &#39;US&#39;] |
 | **count** | **int**| Max products to return | [optional] [default to 20] |
 
 ### Return type
@@ -1880,12 +1889,12 @@ try {
 ## `tiktokTiktokShopCategorySubcategoriesTopProducts()`
 
 ```php
-tiktokTiktokShopCategorySubcategoriesTopProducts($category_id): mixed
+tiktokTiktokShopCategorySubcategoriesTopProducts($category_id, $region): mixed
 ```
 
 TikTok Shop category: subcategories + top products
 
-A category's subcategories and its top products as TikTok Shop ranks them (US).
+A category's subcategories and its top products as TikTok Shop ranks them.
 
 ### Example
 
@@ -1907,9 +1916,10 @@ $apiInstance = new ScrapeBadger\Api\TikTokApi(
     $config
 );
 $category_id = 'category_id_example'; // string
+$region = 'US'; // string | Market: US, GB, ID
 
 try {
-    $result = $apiInstance->tiktokTiktokShopCategorySubcategoriesTopProducts($category_id);
+    $result = $apiInstance->tiktokTiktokShopCategorySubcategoriesTopProducts($category_id, $region);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling TikTokApi->tiktokTiktokShopCategorySubcategoriesTopProducts: ', $e->getMessage(), PHP_EOL;
@@ -1921,6 +1931,71 @@ try {
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
 | **category_id** | **string**|  | |
+| **region** | **string**| Market: US, GB, ID | [optional] [default to &#39;US&#39;] |
+
+### Return type
+
+**mixed**
+
+### Authorization
+
+[ApiKeyAuth](../../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `application/json`
+
+[[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
+[[Back to Model list]](../../README.md#models)
+[[Back to README]](../../README.md)
+
+## `tiktokTiktokShopDealsFeed()`
+
+```php
+tiktokTiktokShopDealsFeed($deal, $region): mixed
+```
+
+TikTok Shop deals feed
+
+A curated storefront feed: recommended-for-you, or premium-offers (US only).
+
+### Example
+
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+// Configure API key authorization: ApiKeyAuth
+$config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKey('X-API-Key', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// $config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKeyPrefix('X-API-Key', 'Bearer');
+
+
+$apiInstance = new ScrapeBadger\Api\TikTokApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client(),
+    $config
+);
+$deal = 'deal_example'; // string
+$region = 'US'; // string | Market: US, GB, ID
+
+try {
+    $result = $apiInstance->tiktokTiktokShopDealsFeed($deal, $region);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling TikTokApi->tiktokTiktokShopDealsFeed: ', $e->getMessage(), PHP_EOL;
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+| ------------- | ------------- | ------------- | ------------- |
+| **deal** | **string**|  | |
+| **region** | **string**| Market: US, GB, ID | [optional] [default to &#39;US&#39;] |
 
 ### Return type
 
@@ -1942,12 +2017,12 @@ try {
 ## `tiktokTiktokShopProductDetail()`
 
 ```php
-tiktokTiktokShopProductDetail($product_id): mixed
+tiktokTiktokShopProductDetail($product_id, $region): mixed
 ```
 
 TikTok Shop product detail
 
-Full TikTok Shop product page (US): description, images, price, SKUs with stock, reviews, shop and TikTok's AI summary.
+Full TikTok Shop product page: description, images, price, SKUs with stock, first reviews, shop and TikTok's AI summary.
 
 ### Example
 
@@ -1969,9 +2044,10 @@ $apiInstance = new ScrapeBadger\Api\TikTokApi(
     $config
 );
 $product_id = 'product_id_example'; // string
+$region = 'US'; // string | Market: US, GB, ID
 
 try {
-    $result = $apiInstance->tiktokTiktokShopProductDetail($product_id);
+    $result = $apiInstance->tiktokTiktokShopProductDetail($product_id, $region);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling TikTokApi->tiktokTiktokShopProductDetail: ', $e->getMessage(), PHP_EOL;
@@ -1983,6 +2059,83 @@ try {
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
 | **product_id** | **string**|  | |
+| **region** | **string**| Market: US, GB, ID | [optional] [default to &#39;US&#39;] |
+
+### Return type
+
+**mixed**
+
+### Authorization
+
+[ApiKeyAuth](../../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `application/json`
+
+[[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
+[[Back to Model list]](../../README.md#models)
+[[Back to README]](../../README.md)
+
+## `tiktokTiktokShopProductReviews()`
+
+```php
+tiktokTiktokShopProductReviews($product_id, $region, $page, $count, $sort, $rating, $with_media, $verified): mixed
+```
+
+TikTok Shop product reviews
+
+Paginated product reviews with the rating breakdown (US).
+
+### Example
+
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+// Configure API key authorization: ApiKeyAuth
+$config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKey('X-API-Key', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// $config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKeyPrefix('X-API-Key', 'Bearer');
+
+
+$apiInstance = new ScrapeBadger\Api\TikTokApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client(),
+    $config
+);
+$product_id = 'product_id_example'; // string
+$region = 'US'; // string | Market: US, GB, ID
+$page = 1; // int
+$count = 20; // int
+$sort = 'recommended'; // string | recommended | recent
+$rating = 56; // int | Only this star rating
+$with_media = false; // bool | Only reviews with photos/videos
+$verified = false; // bool | Only verified purchases
+
+try {
+    $result = $apiInstance->tiktokTiktokShopProductReviews($product_id, $region, $page, $count, $sort, $rating, $with_media, $verified);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling TikTokApi->tiktokTiktokShopProductReviews: ', $e->getMessage(), PHP_EOL;
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+| ------------- | ------------- | ------------- | ------------- |
+| **product_id** | **string**|  | |
+| **region** | **string**| Market: US, GB, ID | [optional] [default to &#39;US&#39;] |
+| **page** | **int**|  | [optional] [default to 1] |
+| **count** | **int**|  | [optional] [default to 20] |
+| **sort** | **string**| recommended | recent | [optional] [default to &#39;recommended&#39;] |
+| **rating** | **int**| Only this star rating | [optional] |
+| **with_media** | **bool**| Only reviews with photos/videos | [optional] [default to false] |
+| **verified** | **bool**| Only verified purchases | [optional] [default to false] |
 
 ### Return type
 
@@ -2004,12 +2157,12 @@ try {
 ## `tiktokTiktokShopRootCategories()`
 
 ```php
-tiktokTiktokShopRootCategories(): mixed
+tiktokTiktokShopRootCategories($region): mixed
 ```
 
 TikTok Shop root categories
 
-Top-level TikTok Shop categories (US). Drill down with /shop/categories/{category_id}.
+Top-level TikTok Shop categories of a market. Drill down with /shop/categories/{id}.
 
 ### Example
 
@@ -2030,9 +2183,10 @@ $apiInstance = new ScrapeBadger\Api\TikTokApi(
     new GuzzleHttp\Client(),
     $config
 );
+$region = 'US'; // string | Market: US, GB, ID
 
 try {
-    $result = $apiInstance->tiktokTiktokShopRootCategories();
+    $result = $apiInstance->tiktokTiktokShopRootCategories($region);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling TikTokApi->tiktokTiktokShopRootCategories: ', $e->getMessage(), PHP_EOL;
@@ -2041,7 +2195,77 @@ try {
 
 ### Parameters
 
-This endpoint does not need any parameter.
+| Name | Type | Description  | Notes |
+| ------------- | ------------- | ------------- | ------------- |
+| **region** | **string**| Market: US, GB, ID | [optional] [default to &#39;US&#39;] |
+
+### Return type
+
+**mixed**
+
+### Authorization
+
+[ApiKeyAuth](../../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `application/json`
+
+[[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
+[[Back to Model list]](../../README.md#models)
+[[Back to README]](../../README.md)
+
+## `tiktokTiktokShopStoreProducts()`
+
+```php
+tiktokTiktokShopStoreProducts($seller_id, $region, $cursor, $count): mixed
+```
+
+TikTok Shop store + products
+
+A store's stats and its cursor-paginated product catalogue (US).
+
+### Example
+
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+// Configure API key authorization: ApiKeyAuth
+$config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKey('X-API-Key', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// $config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKeyPrefix('X-API-Key', 'Bearer');
+
+
+$apiInstance = new ScrapeBadger\Api\TikTokApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client(),
+    $config
+);
+$seller_id = 'seller_id_example'; // string
+$region = 'US'; // string | Market: US, GB, ID
+$cursor = ''; // string | Pass back next_cursor for the next page
+$count = 20; // int
+
+try {
+    $result = $apiInstance->tiktokTiktokShopStoreProducts($seller_id, $region, $cursor, $count);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling TikTokApi->tiktokTiktokShopStoreProducts: ', $e->getMessage(), PHP_EOL;
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+| ------------- | ------------- | ------------- | ------------- |
+| **seller_id** | **string**|  | |
+| **region** | **string**| Market: US, GB, ID | [optional] [default to &#39;US&#39;] |
+| **cursor** | **string**| Pass back next_cursor for the next page | [optional] [default to &#39;&#39;] |
+| **count** | **int**|  | [optional] [default to 20] |
 
 ### Return type
 

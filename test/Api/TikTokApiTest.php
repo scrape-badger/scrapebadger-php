@@ -420,6 +420,18 @@ class TikTokApiTest extends TestCase
     }
 
     /**
+     * Test case for tiktokTiktokShopDealsFeed
+     *
+     * TikTok Shop deals feed.
+     *
+     */
+    public function testTiktokTiktokShopDealsFeed()
+    {
+        // TODO: implement
+        self::markTestIncomplete('Not implemented');
+    }
+
+    /**
      * Test case for tiktokTiktokShopProductDetail
      *
      * TikTok Shop product detail.
@@ -432,12 +444,36 @@ class TikTokApiTest extends TestCase
     }
 
     /**
+     * Test case for tiktokTiktokShopProductReviews
+     *
+     * TikTok Shop product reviews.
+     *
+     */
+    public function testTiktokTiktokShopProductReviews()
+    {
+        // TODO: implement
+        self::markTestIncomplete('Not implemented');
+    }
+
+    /**
      * Test case for tiktokTiktokShopRootCategories
      *
      * TikTok Shop root categories.
      *
      */
     public function testTiktokTiktokShopRootCategories()
+    {
+        // TODO: implement
+        self::markTestIncomplete('Not implemented');
+    }
+
+    /**
+     * Test case for tiktokTiktokShopStoreProducts
+     *
+     * TikTok Shop store + products.
+     *
+     */
+    public function testTiktokTiktokShopStoreProducts()
     {
         // TODO: implement
         self::markTestIncomplete('Not implemented');

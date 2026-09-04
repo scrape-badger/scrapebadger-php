@@ -96,7 +96,7 @@ try {
 ## `ebayCompletedSoldListings()`
 
 ```php
-ebayCompletedSoldListings($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $location): mixed
+ebayCompletedSoldListings($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $location, $language): mixed
 ```
 
 Completed / sold listings
@@ -132,9 +132,10 @@ $condition = 'condition_example'; // string | new|open_box|refurbished|used|for_
 $min_price = 3.4; // float
 $max_price = 3.4; // float
 $location = 'location_example'; // string | domestic|worldwide
+$language = 'language_example'; // string | english|japanese|chinese|korean
 
 try {
-    $result = $apiInstance->ebayCompletedSoldListings($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $location);
+    $result = $apiInstance->ebayCompletedSoldListings($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $location, $language);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling EBayApi->ebayCompletedSoldListings: ', $e->getMessage(), PHP_EOL;
@@ -155,6 +156,7 @@ try {
 | **min_price** | **float**|  | [optional] |
 | **max_price** | **float**|  | [optional] |
 | **location** | **string**| domestic|worldwide | [optional] |
+| **language** | **string**| english|japanese|chinese|korean | [optional] |
 
 ### Return type
 
@@ -806,7 +808,7 @@ This endpoint does not need any parameter.
 ## `ebaySearchListings()`
 
 ```php
-ebaySearchListings($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $buying_format, $min_price, $max_price, $free_shipping, $location): mixed
+ebaySearchListings($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $buying_format, $min_price, $max_price, $free_shipping, $location, $language): mixed
 ```
 
 Search listings
@@ -844,9 +846,10 @@ $min_price = 3.4; // float
 $max_price = 3.4; // float
 $free_shipping = false; // bool
 $location = 'location_example'; // string | domestic|worldwide
+$language = 'language_example'; // string | english|japanese|chinese|korean
 
 try {
-    $result = $apiInstance->ebaySearchListings($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $buying_format, $min_price, $max_price, $free_shipping, $location);
+    $result = $apiInstance->ebaySearchListings($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $buying_format, $min_price, $max_price, $free_shipping, $location, $language);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling EBayApi->ebaySearchListings: ', $e->getMessage(), PHP_EOL;
@@ -869,6 +872,7 @@ try {
 | **max_price** | **float**|  | [optional] |
 | **free_shipping** | **bool**|  | [optional] [default to false] |
 | **location** | **string**| domestic|worldwide | [optional] |
+| **language** | **string**| english|japanese|chinese|korean | [optional] |
 
 ### Return type
 

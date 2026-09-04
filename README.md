@@ -225,6 +225,7 @@ Class | Method | HTTP request | Description
 *EBayApi* | [**ebayKeywordSuggestions**](docs/Api/EBayApi.md#ebaykeywordsuggestions) | **GET** /v1/ebay/autocomplete | Keyword suggestions
 *EBayApi* | [**ebayListCategories**](docs/Api/EBayApi.md#ebaylistcategories) | **GET** /v1/ebay/categories | List categories
 *EBayApi* | [**ebayListMarkets**](docs/Api/EBayApi.md#ebaylistmarkets) | **GET** /v1/ebay/markets | List markets
+*EBayApi* | [**ebaySearchByImage**](docs/Api/EBayApi.md#ebaysearchbyimage) | **POST** /v1/ebay/search/by-image | Search by image
 *EBayApi* | [**ebaySearchListings**](docs/Api/EBayApi.md#ebaysearchlistings) | **GET** /v1/ebay/search | Search listings
 *FacebookApi* | [**facebookBrowseAMarketplaceCategory**](docs/Api/FacebookApi.md#facebookbrowseamarketplacecategory) | **GET** /v1/facebook/marketplace/category/{category} | Browse a Marketplace category
 *FacebookApi* | [**facebookGetAMarketplaceItem**](docs/Api/FacebookApi.md#facebookgetamarketplaceitem) | **GET** /v1/facebook/marketplace/item/{item_id} | Get a Marketplace item

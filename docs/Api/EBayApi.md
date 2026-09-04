@@ -16,6 +16,7 @@ All URIs are relative to https://scrapebadger.com, except if the operation defin
 | [**ebayKeywordSuggestions()**](EBayApi.md#ebayKeywordSuggestions) | **GET** /v1/ebay/autocomplete | Keyword suggestions |
 | [**ebayListCategories()**](EBayApi.md#ebayListCategories) | **GET** /v1/ebay/categories | List categories |
 | [**ebayListMarkets()**](EBayApi.md#ebayListMarkets) | **GET** /v1/ebay/markets | List markets |
+| [**ebaySearchByImage()**](EBayApi.md#ebaySearchByImage) | **POST** /v1/ebay/search/by-image | Search by image |
 | [**ebaySearchListings()**](EBayApi.md#ebaySearchListings) | **GET** /v1/ebay/search | Search listings |
 
 
@@ -799,6 +800,68 @@ This endpoint does not need any parameter.
 ### HTTP request headers
 
 - **Content-Type**: Not defined
+- **Accept**: `application/json`
+
+[[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
+[[Back to Model list]](../../README.md#models)
+[[Back to README]](../../README.md)
+
+## `ebaySearchByImage()`
+
+```php
+ebaySearchByImage($request_body): mixed
+```
+
+Search by image
+
+Search active listings by image, the way eBay's camera icon does.  No ``sort_by``: eBay ignores it on a visual results page.
+
+### Example
+
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+// Configure API key authorization: ApiKeyAuth
+$config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKey('X-API-Key', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// $config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKeyPrefix('X-API-Key', 'Bearer');
+
+
+$apiInstance = new ScrapeBadger\Api\EBayApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client(),
+    $config
+);
+$request_body = NULL; // array<string,mixed>
+
+try {
+    $result = $apiInstance->ebaySearchByImage($request_body);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling EBayApi->ebaySearchByImage: ', $e->getMessage(), PHP_EOL;
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+| ------------- | ------------- | ------------- | ------------- |
+| **request_body** | [**array<string,mixed>**](../Model/mixed.md)|  | |
+
+### Return type
+
+**mixed**
+
+### Authorization
+
+[ApiKeyAuth](../../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: `application/json`
 - **Accept**: `application/json`
 
 [[Back to top]](#) [[Back to API list]](../../README.md#endpoints)

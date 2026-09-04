@@ -216,6 +216,18 @@ class EBayApiTest extends TestCase
     }
 
     /**
+     * Test case for ebaySearchByImage
+     *
+     * Search by image.
+     *
+     */
+    public function testEbaySearchByImage()
+    {
+        // TODO: implement
+        self::markTestIncomplete('Not implemented');
+    }
+
+    /**
      * Test case for ebaySearchListings
      *
      * Search listings.

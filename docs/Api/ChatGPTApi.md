@@ -16,7 +16,7 @@ All URIs are relative to https://scrapebadger.com, except if the operation defin
 ## `chatgptAskChatgptAQuestion()`
 
 ```php
-chatgptAskChatgptAQuestion($prompt, $country, $web_search): mixed
+chatgptAskChatgptAQuestion($prompt, $country, $web_search, $image_url): mixed
 ```
 
 Ask ChatGPT a question
@@ -45,9 +45,10 @@ $apiInstance = new ScrapeBadger\Api\ChatGPTApi(
 $prompt = 'prompt_example'; // string | The prompt to send to ChatGPT (max 4096 characters).
 $country = 'country_example'; // string | ISO-3166 alpha-2 egress country, e.g. 'US', 'GB', 'DE'.
 $web_search = 'auto'; // string | auto (let ChatGPT decide) | force (ask it to browse) | off (answer from memory). `web_search_triggered` in the response always reports what actually happened.
+$image_url = 'image_url_example'; // string | Public http(s) URL of an image to attach to the prompt. ChatGPT reads it and answers about it. POST also accepts `image_base64`. Exactly one of the two.
 
 try {
-    $result = $apiInstance->chatgptAskChatgptAQuestion($prompt, $country, $web_search);
+    $result = $apiInstance->chatgptAskChatgptAQuestion($prompt, $country, $web_search, $image_url);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling ChatGPTApi->chatgptAskChatgptAQuestion: ', $e->getMessage(), PHP_EOL;
@@ -61,6 +62,7 @@ try {
 | **prompt** | **string**| The prompt to send to ChatGPT (max 4096 characters). | |
 | **country** | **string**| ISO-3166 alpha-2 egress country, e.g. &#39;US&#39;, &#39;GB&#39;, &#39;DE&#39;. | [optional] |
 | **web_search** | **string**| auto (let ChatGPT decide) | force (ask it to browse) | off (answer from memory). &#x60;web_search_triggered&#x60; in the response always reports what actually happened. | [optional] [default to &#39;auto&#39;] |
+| **image_url** | **string**| Public http(s) URL of an image to attach to the prompt. ChatGPT reads it and answers about it. POST also accepts &#x60;image_base64&#x60;. Exactly one of the two. | [optional] |
 
 ### Return type
 

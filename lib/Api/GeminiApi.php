@@ -145,15 +145,16 @@ class GeminiApi
      * @param  string $prompt The prompt to send to Gemini (max 4096 characters). (required)
      * @param  string $country ISO-3166 alpha-2 egress country, e.g. &#39;US&#39;, &#39;GB&#39;, &#39;DE&#39;. (optional)
      * @param  string $web_search auto (let Gemini decide) | force (ask it to browse) | off (answer from memory). &#x60;web_search_triggered&#x60; in the response always reports what actually happened. (optional, default to 'auto')
+     * @param  string $image_url Public http(s) URL of an image to attach to the prompt. Gemini reads it and answers about it. POST also accepts &#x60;image_base64&#x60;. Exactly one of the two. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['geminiAskGeminiAQuestion'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return mixed|\ScrapeBadger\Model\HTTPValidationError
      */
-    public function geminiAskGeminiAQuestion($prompt, $country = null, $web_search = 'auto', string $contentType = self::contentTypes['geminiAskGeminiAQuestion'][0])
+    public function geminiAskGeminiAQuestion($prompt, $country = null, $web_search = 'auto', $image_url = null, string $contentType = self::contentTypes['geminiAskGeminiAQuestion'][0])
     {
-        list($response) = $this->geminiAskGeminiAQuestionWithHttpInfo($prompt, $country, $web_search, $contentType);
+        list($response) = $this->geminiAskGeminiAQuestionWithHttpInfo($prompt, $country, $web_search, $image_url, $contentType);
         return $response;
     }
 
@@ -165,15 +166,16 @@ class GeminiApi
      * @param  string $prompt The prompt to send to Gemini (max 4096 characters). (required)
      * @param  string $country ISO-3166 alpha-2 egress country, e.g. &#39;US&#39;, &#39;GB&#39;, &#39;DE&#39;. (optional)
      * @param  string $web_search auto (let Gemini decide) | force (ask it to browse) | off (answer from memory). &#x60;web_search_triggered&#x60; in the response always reports what actually happened. (optional, default to 'auto')
+     * @param  string $image_url Public http(s) URL of an image to attach to the prompt. Gemini reads it and answers about it. POST also accepts &#x60;image_base64&#x60;. Exactly one of the two. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['geminiAskGeminiAQuestion'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
-    public function geminiAskGeminiAQuestionWithHttpInfo($prompt, $country = null, $web_search = 'auto', string $contentType = self::contentTypes['geminiAskGeminiAQuestion'][0])
+    public function geminiAskGeminiAQuestionWithHttpInfo($prompt, $country = null, $web_search = 'auto', $image_url = null, string $contentType = self::contentTypes['geminiAskGeminiAQuestion'][0])
     {
-        $request = $this->geminiAskGeminiAQuestionRequest($prompt, $country, $web_search, $contentType);
+        $request = $this->geminiAskGeminiAQuestionRequest($prompt, $country, $web_search, $image_url, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -327,14 +329,15 @@ class GeminiApi
      * @param  string $prompt The prompt to send to Gemini (max 4096 characters). (required)
      * @param  string $country ISO-3166 alpha-2 egress country, e.g. &#39;US&#39;, &#39;GB&#39;, &#39;DE&#39;. (optional)
      * @param  string $web_search auto (let Gemini decide) | force (ask it to browse) | off (answer from memory). &#x60;web_search_triggered&#x60; in the response always reports what actually happened. (optional, default to 'auto')
+     * @param  string $image_url Public http(s) URL of an image to attach to the prompt. Gemini reads it and answers about it. POST also accepts &#x60;image_base64&#x60;. Exactly one of the two. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['geminiAskGeminiAQuestion'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function geminiAskGeminiAQuestionAsync($prompt, $country = null, $web_search = 'auto', string $contentType = self::contentTypes['geminiAskGeminiAQuestion'][0])
+    public function geminiAskGeminiAQuestionAsync($prompt, $country = null, $web_search = 'auto', $image_url = null, string $contentType = self::contentTypes['geminiAskGeminiAQuestion'][0])
     {
-        return $this->geminiAskGeminiAQuestionAsyncWithHttpInfo($prompt, $country, $web_search, $contentType)
+        return $this->geminiAskGeminiAQuestionAsyncWithHttpInfo($prompt, $country, $web_search, $image_url, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -350,15 +353,16 @@ class GeminiApi
      * @param  string $prompt The prompt to send to Gemini (max 4096 characters). (required)
      * @param  string $country ISO-3166 alpha-2 egress country, e.g. &#39;US&#39;, &#39;GB&#39;, &#39;DE&#39;. (optional)
      * @param  string $web_search auto (let Gemini decide) | force (ask it to browse) | off (answer from memory). &#x60;web_search_triggered&#x60; in the response always reports what actually happened. (optional, default to 'auto')
+     * @param  string $image_url Public http(s) URL of an image to attach to the prompt. Gemini reads it and answers about it. POST also accepts &#x60;image_base64&#x60;. Exactly one of the two. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['geminiAskGeminiAQuestion'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function geminiAskGeminiAQuestionAsyncWithHttpInfo($prompt, $country = null, $web_search = 'auto', string $contentType = self::contentTypes['geminiAskGeminiAQuestion'][0])
+    public function geminiAskGeminiAQuestionAsyncWithHttpInfo($prompt, $country = null, $web_search = 'auto', $image_url = null, string $contentType = self::contentTypes['geminiAskGeminiAQuestion'][0])
     {
         $returnType = 'mixed';
-        $request = $this->geminiAskGeminiAQuestionRequest($prompt, $country, $web_search, $contentType);
+        $request = $this->geminiAskGeminiAQuestionRequest($prompt, $country, $web_search, $image_url, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -402,12 +406,13 @@ class GeminiApi
      * @param  string $prompt The prompt to send to Gemini (max 4096 characters). (required)
      * @param  string $country ISO-3166 alpha-2 egress country, e.g. &#39;US&#39;, &#39;GB&#39;, &#39;DE&#39;. (optional)
      * @param  string $web_search auto (let Gemini decide) | force (ask it to browse) | off (answer from memory). &#x60;web_search_triggered&#x60; in the response always reports what actually happened. (optional, default to 'auto')
+     * @param  string $image_url Public http(s) URL of an image to attach to the prompt. Gemini reads it and answers about it. POST also accepts &#x60;image_base64&#x60;. Exactly one of the two. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['geminiAskGeminiAQuestion'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function geminiAskGeminiAQuestionRequest($prompt, $country = null, $web_search = 'auto', string $contentType = self::contentTypes['geminiAskGeminiAQuestion'][0])
+    public function geminiAskGeminiAQuestionRequest($prompt, $country = null, $web_search = 'auto', $image_url = null, string $contentType = self::contentTypes['geminiAskGeminiAQuestion'][0])
     {
 
         // verify the required parameter 'prompt' is set
@@ -416,6 +421,7 @@ class GeminiApi
                 'Missing the required parameter $prompt when calling geminiAskGeminiAQuestion'
             );
         }
+
 
 
 
@@ -449,6 +455,15 @@ class GeminiApi
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
             $web_search,
             'web_search', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $image_url,
+            'image_url', // param base name
             'string', // openApiType
             'form', // style
             true, // explode

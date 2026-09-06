@@ -145,7 +145,7 @@ class GeminiApi
      * @param  string $prompt The prompt to send to Gemini (max 4096 characters). (required)
      * @param  string $country ISO-3166 alpha-2 egress country, e.g. &#39;US&#39;, &#39;GB&#39;, &#39;DE&#39;. (optional)
      * @param  string $web_search auto (let Gemini decide) | force (ask it to browse) | off (answer from memory). &#x60;web_search_triggered&#x60; in the response always reports what actually happened. (optional, default to 'auto')
-     * @param  string $image_url Public http(s) URL of an image to attach to the prompt. Gemini reads it and answers about it. POST also accepts &#x60;image_base64&#x60;. Exactly one of the two. (optional)
+     * @param  string $image_url UNAVAILABLE. Signed-out Gemini refuses image questions — it accepts the upload and then answers PERMISSION_DENIED to its own generate RPC, so this returns 422 immediately rather than charging for a render that cannot succeed. Use /v1/chatgpt/ask for image input. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['geminiAskGeminiAQuestion'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
@@ -166,7 +166,7 @@ class GeminiApi
      * @param  string $prompt The prompt to send to Gemini (max 4096 characters). (required)
      * @param  string $country ISO-3166 alpha-2 egress country, e.g. &#39;US&#39;, &#39;GB&#39;, &#39;DE&#39;. (optional)
      * @param  string $web_search auto (let Gemini decide) | force (ask it to browse) | off (answer from memory). &#x60;web_search_triggered&#x60; in the response always reports what actually happened. (optional, default to 'auto')
-     * @param  string $image_url Public http(s) URL of an image to attach to the prompt. Gemini reads it and answers about it. POST also accepts &#x60;image_base64&#x60;. Exactly one of the two. (optional)
+     * @param  string $image_url UNAVAILABLE. Signed-out Gemini refuses image questions — it accepts the upload and then answers PERMISSION_DENIED to its own generate RPC, so this returns 422 immediately rather than charging for a render that cannot succeed. Use /v1/chatgpt/ask for image input. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['geminiAskGeminiAQuestion'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
@@ -329,7 +329,7 @@ class GeminiApi
      * @param  string $prompt The prompt to send to Gemini (max 4096 characters). (required)
      * @param  string $country ISO-3166 alpha-2 egress country, e.g. &#39;US&#39;, &#39;GB&#39;, &#39;DE&#39;. (optional)
      * @param  string $web_search auto (let Gemini decide) | force (ask it to browse) | off (answer from memory). &#x60;web_search_triggered&#x60; in the response always reports what actually happened. (optional, default to 'auto')
-     * @param  string $image_url Public http(s) URL of an image to attach to the prompt. Gemini reads it and answers about it. POST also accepts &#x60;image_base64&#x60;. Exactly one of the two. (optional)
+     * @param  string $image_url UNAVAILABLE. Signed-out Gemini refuses image questions — it accepts the upload and then answers PERMISSION_DENIED to its own generate RPC, so this returns 422 immediately rather than charging for a render that cannot succeed. Use /v1/chatgpt/ask for image input. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['geminiAskGeminiAQuestion'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -353,7 +353,7 @@ class GeminiApi
      * @param  string $prompt The prompt to send to Gemini (max 4096 characters). (required)
      * @param  string $country ISO-3166 alpha-2 egress country, e.g. &#39;US&#39;, &#39;GB&#39;, &#39;DE&#39;. (optional)
      * @param  string $web_search auto (let Gemini decide) | force (ask it to browse) | off (answer from memory). &#x60;web_search_triggered&#x60; in the response always reports what actually happened. (optional, default to 'auto')
-     * @param  string $image_url Public http(s) URL of an image to attach to the prompt. Gemini reads it and answers about it. POST also accepts &#x60;image_base64&#x60;. Exactly one of the two. (optional)
+     * @param  string $image_url UNAVAILABLE. Signed-out Gemini refuses image questions — it accepts the upload and then answers PERMISSION_DENIED to its own generate RPC, so this returns 422 immediately rather than charging for a render that cannot succeed. Use /v1/chatgpt/ask for image input. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['geminiAskGeminiAQuestion'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -406,7 +406,7 @@ class GeminiApi
      * @param  string $prompt The prompt to send to Gemini (max 4096 characters). (required)
      * @param  string $country ISO-3166 alpha-2 egress country, e.g. &#39;US&#39;, &#39;GB&#39;, &#39;DE&#39;. (optional)
      * @param  string $web_search auto (let Gemini decide) | force (ask it to browse) | off (answer from memory). &#x60;web_search_triggered&#x60; in the response always reports what actually happened. (optional, default to 'auto')
-     * @param  string $image_url Public http(s) URL of an image to attach to the prompt. Gemini reads it and answers about it. POST also accepts &#x60;image_base64&#x60;. Exactly one of the two. (optional)
+     * @param  string $image_url UNAVAILABLE. Signed-out Gemini refuses image questions — it accepts the upload and then answers PERMISSION_DENIED to its own generate RPC, so this returns 422 immediately rather than charging for a render that cannot succeed. Use /v1/chatgpt/ask for image input. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['geminiAskGeminiAQuestion'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException

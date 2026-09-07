@@ -396,36 +396,12 @@ class TikTokApiTest extends TestCase
     }
 
     /**
-     * Test case for tiktokTiktokShopBestSellers
-     *
-     * TikTok Shop best sellers.
-     *
-     */
-    public function testTiktokTiktokShopBestSellers()
-    {
-        // TODO: implement
-        self::markTestIncomplete('Not implemented');
-    }
-
-    /**
      * Test case for tiktokTiktokShopCategorySubcategoriesTopProducts
      *
      * TikTok Shop category: subcategories + top products.
      *
      */
     public function testTiktokTiktokShopCategorySubcategoriesTopProducts()
-    {
-        // TODO: implement
-        self::markTestIncomplete('Not implemented');
-    }
-
-    /**
-     * Test case for tiktokTiktokShopDealsFeed
-     *
-     * TikTok Shop deals feed.
-     *
-     */
-    public function testTiktokTiktokShopDealsFeed()
     {
         // TODO: implement
         self::markTestIncomplete('Not implemented');

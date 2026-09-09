@@ -3116,17 +3116,18 @@ class FacebookApi
      * Get post comments
      *
      * @param  string $post_id post_id (required)
+     * @param  string $url Full post permalink/reel URL — overrides post_id (optional)
      * @param  string $after after (optional)
-     * @param  string $sort sort (optional, default to 'relevance')
+     * @param  string $sort relevance | newest (optional, default to 'relevance')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookGetPostComments'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return mixed|\ScrapeBadger\Model\HTTPValidationError
      */
-    public function facebookGetPostComments($post_id, $after = null, $sort = 'relevance', string $contentType = self::contentTypes['facebookGetPostComments'][0])
+    public function facebookGetPostComments($post_id, $url = null, $after = null, $sort = 'relevance', string $contentType = self::contentTypes['facebookGetPostComments'][0])
     {
-        list($response) = $this->facebookGetPostCommentsWithHttpInfo($post_id, $after, $sort, $contentType);
+        list($response) = $this->facebookGetPostCommentsWithHttpInfo($post_id, $url, $after, $sort, $contentType);
         return $response;
     }
 
@@ -3136,17 +3137,18 @@ class FacebookApi
      * Get post comments
      *
      * @param  string $post_id (required)
+     * @param  string $url Full post permalink/reel URL — overrides post_id (optional)
      * @param  string $after (optional)
-     * @param  string $sort (optional, default to 'relevance')
+     * @param  string $sort relevance | newest (optional, default to 'relevance')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookGetPostComments'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
-    public function facebookGetPostCommentsWithHttpInfo($post_id, $after = null, $sort = 'relevance', string $contentType = self::contentTypes['facebookGetPostComments'][0])
+    public function facebookGetPostCommentsWithHttpInfo($post_id, $url = null, $after = null, $sort = 'relevance', string $contentType = self::contentTypes['facebookGetPostComments'][0])
     {
-        $request = $this->facebookGetPostCommentsRequest($post_id, $after, $sort, $contentType);
+        $request = $this->facebookGetPostCommentsRequest($post_id, $url, $after, $sort, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -3298,16 +3300,17 @@ class FacebookApi
      * Get post comments
      *
      * @param  string $post_id (required)
+     * @param  string $url Full post permalink/reel URL — overrides post_id (optional)
      * @param  string $after (optional)
-     * @param  string $sort (optional, default to 'relevance')
+     * @param  string $sort relevance | newest (optional, default to 'relevance')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookGetPostComments'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function facebookGetPostCommentsAsync($post_id, $after = null, $sort = 'relevance', string $contentType = self::contentTypes['facebookGetPostComments'][0])
+    public function facebookGetPostCommentsAsync($post_id, $url = null, $after = null, $sort = 'relevance', string $contentType = self::contentTypes['facebookGetPostComments'][0])
     {
-        return $this->facebookGetPostCommentsAsyncWithHttpInfo($post_id, $after, $sort, $contentType)
+        return $this->facebookGetPostCommentsAsyncWithHttpInfo($post_id, $url, $after, $sort, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -3321,17 +3324,18 @@ class FacebookApi
      * Get post comments
      *
      * @param  string $post_id (required)
+     * @param  string $url Full post permalink/reel URL — overrides post_id (optional)
      * @param  string $after (optional)
-     * @param  string $sort (optional, default to 'relevance')
+     * @param  string $sort relevance | newest (optional, default to 'relevance')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookGetPostComments'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function facebookGetPostCommentsAsyncWithHttpInfo($post_id, $after = null, $sort = 'relevance', string $contentType = self::contentTypes['facebookGetPostComments'][0])
+    public function facebookGetPostCommentsAsyncWithHttpInfo($post_id, $url = null, $after = null, $sort = 'relevance', string $contentType = self::contentTypes['facebookGetPostComments'][0])
     {
         $returnType = 'mixed';
-        $request = $this->facebookGetPostCommentsRequest($post_id, $after, $sort, $contentType);
+        $request = $this->facebookGetPostCommentsRequest($post_id, $url, $after, $sort, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -3373,14 +3377,15 @@ class FacebookApi
      * Create request for operation 'facebookGetPostComments'
      *
      * @param  string $post_id (required)
+     * @param  string $url Full post permalink/reel URL — overrides post_id (optional)
      * @param  string $after (optional)
-     * @param  string $sort (optional, default to 'relevance')
+     * @param  string $sort relevance | newest (optional, default to 'relevance')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookGetPostComments'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function facebookGetPostCommentsRequest($post_id, $after = null, $sort = 'relevance', string $contentType = self::contentTypes['facebookGetPostComments'][0])
+    public function facebookGetPostCommentsRequest($post_id, $url = null, $after = null, $sort = 'relevance', string $contentType = self::contentTypes['facebookGetPostComments'][0])
     {
 
         // verify the required parameter 'post_id' is set
@@ -3393,6 +3398,7 @@ class FacebookApi
 
 
 
+
         $resourcePath = '/v1/facebook/posts/{post_id}/comments';
         $formParams = [];
         $queryParams = [];
@@ -3400,6 +3406,15 @@ class FacebookApi
         $httpBody = '';
         $multipart = false;
 
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $url,
+            'url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
         // query params
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
             $after,
@@ -3494,15 +3509,16 @@ class FacebookApi
      * Get post detail
      *
      * @param  string $post_id post_id (required)
+     * @param  string $url Full post permalink/reel URL — overrides post_id (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookGetPostDetail'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return mixed|\ScrapeBadger\Model\HTTPValidationError
      */
-    public function facebookGetPostDetail($post_id, string $contentType = self::contentTypes['facebookGetPostDetail'][0])
+    public function facebookGetPostDetail($post_id, $url = null, string $contentType = self::contentTypes['facebookGetPostDetail'][0])
     {
-        list($response) = $this->facebookGetPostDetailWithHttpInfo($post_id, $contentType);
+        list($response) = $this->facebookGetPostDetailWithHttpInfo($post_id, $url, $contentType);
         return $response;
     }
 
@@ -3512,15 +3528,16 @@ class FacebookApi
      * Get post detail
      *
      * @param  string $post_id (required)
+     * @param  string $url Full post permalink/reel URL — overrides post_id (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookGetPostDetail'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
-    public function facebookGetPostDetailWithHttpInfo($post_id, string $contentType = self::contentTypes['facebookGetPostDetail'][0])
+    public function facebookGetPostDetailWithHttpInfo($post_id, $url = null, string $contentType = self::contentTypes['facebookGetPostDetail'][0])
     {
-        $request = $this->facebookGetPostDetailRequest($post_id, $contentType);
+        $request = $this->facebookGetPostDetailRequest($post_id, $url, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -3672,14 +3689,15 @@ class FacebookApi
      * Get post detail
      *
      * @param  string $post_id (required)
+     * @param  string $url Full post permalink/reel URL — overrides post_id (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookGetPostDetail'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function facebookGetPostDetailAsync($post_id, string $contentType = self::contentTypes['facebookGetPostDetail'][0])
+    public function facebookGetPostDetailAsync($post_id, $url = null, string $contentType = self::contentTypes['facebookGetPostDetail'][0])
     {
-        return $this->facebookGetPostDetailAsyncWithHttpInfo($post_id, $contentType)
+        return $this->facebookGetPostDetailAsyncWithHttpInfo($post_id, $url, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -3693,15 +3711,16 @@ class FacebookApi
      * Get post detail
      *
      * @param  string $post_id (required)
+     * @param  string $url Full post permalink/reel URL — overrides post_id (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookGetPostDetail'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function facebookGetPostDetailAsyncWithHttpInfo($post_id, string $contentType = self::contentTypes['facebookGetPostDetail'][0])
+    public function facebookGetPostDetailAsyncWithHttpInfo($post_id, $url = null, string $contentType = self::contentTypes['facebookGetPostDetail'][0])
     {
         $returnType = 'mixed';
-        $request = $this->facebookGetPostDetailRequest($post_id, $contentType);
+        $request = $this->facebookGetPostDetailRequest($post_id, $url, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -3743,12 +3762,13 @@ class FacebookApi
      * Create request for operation 'facebookGetPostDetail'
      *
      * @param  string $post_id (required)
+     * @param  string $url Full post permalink/reel URL — overrides post_id (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookGetPostDetail'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function facebookGetPostDetailRequest($post_id, string $contentType = self::contentTypes['facebookGetPostDetail'][0])
+    public function facebookGetPostDetailRequest($post_id, $url = null, string $contentType = self::contentTypes['facebookGetPostDetail'][0])
     {
 
         // verify the required parameter 'post_id' is set
@@ -3759,6 +3779,7 @@ class FacebookApi
         }
 
 
+
         $resourcePath = '/v1/facebook/posts/{post_id}';
         $formParams = [];
         $queryParams = [];
@@ -3766,6 +3787,15 @@ class FacebookApi
         $httpBody = '';
         $multipart = false;
 
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $url,
+            'url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
 
         // path params

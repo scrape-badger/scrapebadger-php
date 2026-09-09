@@ -547,12 +547,12 @@ try {
 ## `facebookGetPostComments()`
 
 ```php
-facebookGetPostComments($post_id, $after, $sort): mixed
+facebookGetPostComments($post_id, $url, $after, $sort): mixed
 ```
 
 Get post comments
 
-Get a Facebook post's comment thread (paginated).
+Get a Facebook post's comment thread, 10 per page.  ``sort`` is ``relevance`` (Facebook's ranked order, the default) or ``newest``. Follow ``end_cursor`` while ``has_next_page`` to walk the whole thread; ``total_count`` is how many the post has.
 
 ### Example
 
@@ -574,11 +574,12 @@ $apiInstance = new ScrapeBadger\Api\FacebookApi(
     $config
 );
 $post_id = 'post_id_example'; // string
+$url = 'url_example'; // string | Full post permalink/reel URL — overrides post_id
 $after = 'after_example'; // string
-$sort = 'relevance'; // string
+$sort = 'relevance'; // string | relevance | newest
 
 try {
-    $result = $apiInstance->facebookGetPostComments($post_id, $after, $sort);
+    $result = $apiInstance->facebookGetPostComments($post_id, $url, $after, $sort);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling FacebookApi->facebookGetPostComments: ', $e->getMessage(), PHP_EOL;
@@ -590,8 +591,9 @@ try {
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
 | **post_id** | **string**|  | |
+| **url** | **string**| Full post permalink/reel URL — overrides post_id | [optional] |
 | **after** | **string**|  | [optional] |
-| **sort** | **string**|  | [optional] [default to &#39;relevance&#39;] |
+| **sort** | **string**| relevance | newest | [optional] [default to &#39;relevance&#39;] |
 
 ### Return type
 
@@ -613,12 +615,12 @@ try {
 ## `facebookGetPostDetail()`
 
 ```php
-facebookGetPostDetail($post_id): mixed
+facebookGetPostDetail($post_id, $url): mixed
 ```
 
 Get post detail
 
-Get a Facebook post's detail plus its top comments.
+Get a Facebook post's detail: text, media, author, date and the reaction / comment / share counts. The comments themselves come from ``/posts/{post_id}/comments``.
 
 ### Example
 
@@ -640,9 +642,10 @@ $apiInstance = new ScrapeBadger\Api\FacebookApi(
     $config
 );
 $post_id = 'post_id_example'; // string
+$url = 'url_example'; // string | Full post permalink/reel URL — overrides post_id
 
 try {
-    $result = $apiInstance->facebookGetPostDetail($post_id);
+    $result = $apiInstance->facebookGetPostDetail($post_id, $url);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling FacebookApi->facebookGetPostDetail: ', $e->getMessage(), PHP_EOL;
@@ -654,6 +657,7 @@ try {
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
 | **post_id** | **string**|  | |
+| **url** | **string**| Full post permalink/reel URL — overrides post_id | [optional] |
 
 ### Return type
 

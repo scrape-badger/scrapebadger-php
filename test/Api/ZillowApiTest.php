@@ -84,6 +84,18 @@ class ZillowApiTest extends TestCase
     }
 
     /**
+     * Test case for zillowGetMultifamilyBuilding
+     *
+     * Get multifamily building.
+     *
+     */
+    public function testZillowGetMultifamilyBuilding()
+    {
+        // TODO: implement
+        self::markTestIncomplete('Not implemented');
+    }
+
+    /**
      * Test case for zillowGetPropertyDetail
      *
      * Get property detail.

@@ -1175,12 +1175,12 @@ try {
 ## `facebookSearchMarketplace()`
 
 ```php
-facebookSearchMarketplace($query, $location, $min_price, $max_price, $days_since_listed, $sort_by, $item_condition, $delivery_method, $after): mixed
+facebookSearchMarketplace($query, $location, $min_price, $max_price, $days_since_listed, $sort_by, $item_condition, $delivery_method, $radius, $after): mixed
 ```
 
 Search Marketplace
 
-Search Facebook Marketplace listings by keyword and location.
+Search Facebook Marketplace listings by keyword and location.  ``location`` must be a Facebook location slug (``london``, ``newcastleupontyne``) or a numeric Facebook place id — the ``city_page_id`` on any listing is one. Human-readable names such as ``Durham, UK`` are rejected with a 400 rather than silently searching Facebook's San Francisco default.
 
 ### Example
 
@@ -1202,17 +1202,18 @@ $apiInstance = new ScrapeBadger\Api\FacebookApi(
     $config
 );
 $query = 'query_example'; // string | Search keywords
-$location = 'nyc'; // string | Marketplace location slug
+$location = 'nyc'; // string | Marketplace location slug or numeric place id
 $min_price = 56; // int
 $max_price = 56; // int
 $days_since_listed = 56; // int
 $sort_by = 'sort_by_example'; // string
 $item_condition = 'item_condition_example'; // string
 $delivery_method = 'delivery_method_example'; // string
+$radius = 56; // int | Search radius around the location (km, or miles in the US)
 $after = 'after_example'; // string
 
 try {
-    $result = $apiInstance->facebookSearchMarketplace($query, $location, $min_price, $max_price, $days_since_listed, $sort_by, $item_condition, $delivery_method, $after);
+    $result = $apiInstance->facebookSearchMarketplace($query, $location, $min_price, $max_price, $days_since_listed, $sort_by, $item_condition, $delivery_method, $radius, $after);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling FacebookApi->facebookSearchMarketplace: ', $e->getMessage(), PHP_EOL;
@@ -1224,13 +1225,14 @@ try {
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
 | **query** | **string**| Search keywords | |
-| **location** | **string**| Marketplace location slug | [optional] [default to &#39;nyc&#39;] |
+| **location** | **string**| Marketplace location slug or numeric place id | [optional] [default to &#39;nyc&#39;] |
 | **min_price** | **int**|  | [optional] |
 | **max_price** | **int**|  | [optional] |
 | **days_since_listed** | **int**|  | [optional] |
 | **sort_by** | **string**|  | [optional] |
 | **item_condition** | **string**|  | [optional] |
 | **delivery_method** | **string**|  | [optional] |
+| **radius** | **int**| Search radius around the location (km, or miles in the US) | [optional] |
 | **after** | **string**|  | [optional] |
 
 ### Return type

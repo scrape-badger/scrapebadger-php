@@ -521,6 +521,7 @@ Class | Method | HTTP request | Description
 *VintedApi* | [**vintedListPublicVintedMobileOperations**](docs/Api/VintedApi.md#vintedlistpublicvintedmobileoperations) | **GET** /v1/vinted/mobile/operations | List public Vinted mobile operations
 *VintedApi* | [**vintedReadVintedMobileData**](docs/Api/VintedApi.md#vintedreadvintedmobiledata) | **POST** /v1/vinted/mobile/{operation} | Read Vinted mobile data
 *VintedApi* | [**vintedSearchBrands**](docs/Api/VintedApi.md#vintedsearchbrands) | **GET** /v1/vinted/brands | Search brands
+*VintedApi* | [**vintedSearchByImage**](docs/Api/VintedApi.md#vintedsearchbyimage) | **POST** /v1/vinted/search_by_image | Search by image
 *VintedApi* | [**vintedSearchVintedItems**](docs/Api/VintedApi.md#vintedsearchvinteditems) | **GET** /v1/vinted/search | Search Vinted items
 *VintedApi* | [**vintedVintedScraperHealthCheck**](docs/Api/VintedApi.md#vintedvintedscraperhealthcheck) | **GET** /v1/vinted/health | Vinted scraper health check
 *VintedApi* | [**vintedVintedScraperHealthCheckHead**](docs/Api/VintedApi.md#vintedvintedscraperhealthcheckhead) | **HEAD** /v1/vinted/health | Vinted scraper health check
@@ -633,6 +634,7 @@ Class | Method | HTTP request | Description
 - [TweetDeliveryLogResponse](docs/Model/TweetDeliveryLogResponse.md)
 - [ValidationError](docs/Model/ValidationError.md)
 - [ValidationErrorLocInner](docs/Model/ValidationErrorLocInner.md)
+- [VintedImageSearchRequest](docs/Model/VintedImageSearchRequest.md)
 - [VintedMobileReadRequest](docs/Model/VintedMobileReadRequest.md)
 - [WebhookCreate](docs/Model/WebhookCreate.md)
 - [WebhookListItem](docs/Model/WebhookListItem.md)

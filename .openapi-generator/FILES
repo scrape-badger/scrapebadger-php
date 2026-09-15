@@ -61,6 +61,7 @@ docs/Model/TweetDeliveryLogListResponse.md
 docs/Model/TweetDeliveryLogResponse.md
 docs/Model/ValidationError.md
 docs/Model/ValidationErrorLocInner.md
+docs/Model/VintedImageSearchRequest.md
 docs/Model/VintedMobileReadRequest.md
 docs/Model/WebhookCreate.md
 docs/Model/WebhookListItem.md
@@ -130,6 +131,7 @@ lib/Model/TweetDeliveryLogListResponse.php
 lib/Model/TweetDeliveryLogResponse.php
 lib/Model/ValidationError.php
 lib/Model/ValidationErrorLocInner.php
+lib/Model/VintedImageSearchRequest.php
 lib/Model/VintedMobileReadRequest.php
 lib/Model/WebhookCreate.php
 lib/Model/WebhookListItem.php
@@ -196,6 +198,7 @@ test/Model/TweetDeliveryLogListResponseTest.php
 test/Model/TweetDeliveryLogResponseTest.php
 test/Model/ValidationErrorLocInnerTest.php
 test/Model/ValidationErrorTest.php
+test/Model/VintedImageSearchRequestTest.php
 test/Model/VintedMobileReadRequestTest.php
 test/Model/WebhookCreateTest.php
 test/Model/WebhookListItemTest.php

@@ -10,6 +10,8 @@ All URIs are relative to https://scrapebadger.com, except if the operation defin
 | [**vintedListColors()**](VintedApi.md#vintedListColors) | **GET** /v1/vinted/colors | List colors |
 | [**vintedListItemConditions()**](VintedApi.md#vintedListItemConditions) | **GET** /v1/vinted/statuses | List item conditions |
 | [**vintedListMarkets()**](VintedApi.md#vintedListMarkets) | **GET** /v1/vinted/markets | List markets |
+| [**vintedListPublicVintedMobileOperations()**](VintedApi.md#vintedListPublicVintedMobileOperations) | **GET** /v1/vinted/mobile/operations | List public Vinted mobile operations |
+| [**vintedReadVintedMobileData()**](VintedApi.md#vintedReadVintedMobileData) | **POST** /v1/vinted/mobile/{operation} | Read Vinted mobile data |
 | [**vintedSearchBrands()**](VintedApi.md#vintedSearchBrands) | **GET** /v1/vinted/brands | Search brands |
 | [**vintedSearchVintedItems()**](VintedApi.md#vintedSearchVintedItems) | **GET** /v1/vinted/search | Search Vinted items |
 | [**vintedVintedScraperHealthCheck()**](VintedApi.md#vintedVintedScraperHealthCheck) | **GET** /v1/vinted/health | Vinted scraper health check |
@@ -395,6 +397,129 @@ This endpoint does not need any parameter.
 [[Back to Model list]](../../README.md#models)
 [[Back to README]](../../README.md)
 
+## `vintedListPublicVintedMobileOperations()`
+
+```php
+vintedListPublicVintedMobileOperations(): mixed
+```
+
+List public Vinted mobile operations
+
+Discover public read operations, parameters and runnable examples. Free.
+
+### Example
+
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+// Configure API key authorization: ApiKeyAuth
+$config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKey('X-API-Key', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// $config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKeyPrefix('X-API-Key', 'Bearer');
+
+
+$apiInstance = new ScrapeBadger\Api\VintedApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client(),
+    $config
+);
+
+try {
+    $result = $apiInstance->vintedListPublicVintedMobileOperations();
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling VintedApi->vintedListPublicVintedMobileOperations: ', $e->getMessage(), PHP_EOL;
+}
+```
+
+### Parameters
+
+This endpoint does not need any parameter.
+
+### Return type
+
+**mixed**
+
+### Authorization
+
+[ApiKeyAuth](../../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `application/json`
+
+[[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
+[[Back to Model list]](../../README.md#models)
+[[Back to README]](../../README.md)
+
+## `vintedReadVintedMobileData()`
+
+```php
+vintedReadVintedMobileData($operation, $vinted_mobile_read_request): mixed
+```
+
+Read Vinted mobile data
+
+Read catalog, listing, seller, review, sold-comparable, pricing, reference, shipping-reference, homepage or help data. No Vinted account is required. This is an allowlisted read API, including read-only upstream POST queries. Returns operation, market, and the upstream JSON under data. One credit. Sold comparable prices are not guaranteed final negotiated sale prices.
+
+### Example
+
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+// Configure API key authorization: ApiKeyAuth
+$config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKey('X-API-Key', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// $config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKeyPrefix('X-API-Key', 'Bearer');
+
+
+$apiInstance = new ScrapeBadger\Api\VintedApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client(),
+    $config
+);
+$operation = 'operation_example'; // string
+$vinted_mobile_read_request = new \ScrapeBadger\Model\VintedMobileReadRequest(); // \ScrapeBadger\Model\VintedMobileReadRequest
+
+try {
+    $result = $apiInstance->vintedReadVintedMobileData($operation, $vinted_mobile_read_request);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling VintedApi->vintedReadVintedMobileData: ', $e->getMessage(), PHP_EOL;
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+| ------------- | ------------- | ------------- | ------------- |
+| **operation** | **string**|  | |
+| **vinted_mobile_read_request** | [**\ScrapeBadger\Model\VintedMobileReadRequest**](../Model/VintedMobileReadRequest.md)|  | |
+
+### Return type
+
+**mixed**
+
+### Authorization
+
+[ApiKeyAuth](../../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: `application/json`
+- **Accept**: `application/json`
+
+[[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
+[[Back to Model list]](../../README.md#models)
+[[Back to README]](../../README.md)
+
 ## `vintedSearchBrands()`
 
 ```php
@@ -462,7 +587,7 @@ try {
 ## `vintedSearchVintedItems()`
 
 ```php
-vintedSearchVintedItems($query, $market, $seller_country, $page, $per_page, $price_from, $price_to, $brand_ids, $catalog_ids, $color_ids, $status_ids, $order): mixed
+vintedSearchVintedItems($query, $market, $seller_country, $page, $per_page, $price_from, $price_to, $brand_ids, $catalog_ids, $color_ids, $size_ids, $material_ids, $time, $search_session_id, $status_ids, $order): mixed
 ```
 
 Search Vinted items
@@ -498,11 +623,15 @@ $price_to = 3.4; // float
 $brand_ids = 'brand_ids_example'; // string
 $catalog_ids = 'catalog_ids_example'; // string | Comma-separated Vinted catalog (category) IDs to restrict the search to, e.g. '1904' or '1904,79'. Vinted applies this before searching, so pagination totals reflect the filtered set. A catalog ID is the `catalog[]` value in a Vinted category URL (vinted.fr/catalog?catalog[]=1904).
 $color_ids = 'color_ids_example'; // string | Comma-separated color IDs
+$size_ids = 'size_ids_example'; // string | Comma-separated size IDs
+$material_ids = 'material_ids_example'; // string | Comma-separated material IDs
+$time = 56; // int | Pagination time returned by the preceding page
+$search_session_id = 'search_session_id_example'; // string | Reuse across pages of one search
 $status_ids = 'status_ids_example'; // string | Comma-separated condition/status IDs
 $order = 'order_example'; // string
 
 try {
-    $result = $apiInstance->vintedSearchVintedItems($query, $market, $seller_country, $page, $per_page, $price_from, $price_to, $brand_ids, $catalog_ids, $color_ids, $status_ids, $order);
+    $result = $apiInstance->vintedSearchVintedItems($query, $market, $seller_country, $page, $per_page, $price_from, $price_to, $brand_ids, $catalog_ids, $color_ids, $size_ids, $material_ids, $time, $search_session_id, $status_ids, $order);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling VintedApi->vintedSearchVintedItems: ', $e->getMessage(), PHP_EOL;
@@ -523,6 +652,10 @@ try {
 | **brand_ids** | **string**|  | [optional] |
 | **catalog_ids** | **string**| Comma-separated Vinted catalog (category) IDs to restrict the search to, e.g. &#39;1904&#39; or &#39;1904,79&#39;. Vinted applies this before searching, so pagination totals reflect the filtered set. A catalog ID is the &#x60;catalog[]&#x60; value in a Vinted category URL (vinted.fr/catalog?catalog[]&#x3D;1904). | [optional] |
 | **color_ids** | **string**| Comma-separated color IDs | [optional] |
+| **size_ids** | **string**| Comma-separated size IDs | [optional] |
+| **material_ids** | **string**| Comma-separated material IDs | [optional] |
+| **time** | **int**| Pagination time returned by the preceding page | [optional] |
+| **search_session_id** | **string**| Reuse across pages of one search | [optional] |
 | **status_ids** | **string**| Comma-separated condition/status IDs | [optional] |
 | **order** | **string**|  | [optional] |
 

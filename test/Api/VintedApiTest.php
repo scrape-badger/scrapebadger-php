@@ -144,6 +144,30 @@ class VintedApiTest extends TestCase
     }
 
     /**
+     * Test case for vintedListPublicVintedMobileOperations
+     *
+     * List public Vinted mobile operations.
+     *
+     */
+    public function testVintedListPublicVintedMobileOperations()
+    {
+        // TODO: implement
+        self::markTestIncomplete('Not implemented');
+    }
+
+    /**
+     * Test case for vintedReadVintedMobileData
+     *
+     * Read Vinted mobile data.
+     *
+     */
+    public function testVintedReadVintedMobileData()
+    {
+        // TODO: implement
+        self::markTestIncomplete('Not implemented');
+    }
+
+    /**
      * Test case for vintedSearchBrands
      *
      * Search brands.

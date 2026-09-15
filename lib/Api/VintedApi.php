@@ -89,6 +89,12 @@ class VintedApi
         'vintedListMarkets' => [
             'application/json',
         ],
+        'vintedListPublicVintedMobileOperations' => [
+            'application/json',
+        ],
+        'vintedReadVintedMobileData' => [
+            'application/json',
+        ],
         'vintedSearchBrands' => [
             'application/json',
         ],
@@ -2257,6 +2263,666 @@ class VintedApi
     }
 
     /**
+     * Operation vintedListPublicVintedMobileOperations
+     *
+     * List public Vinted mobile operations
+     *
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['vintedListPublicVintedMobileOperations'] to see the possible values for this operation
+     *
+     * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return mixed
+     */
+    public function vintedListPublicVintedMobileOperations(string $contentType = self::contentTypes['vintedListPublicVintedMobileOperations'][0])
+    {
+        list($response) = $this->vintedListPublicVintedMobileOperationsWithHttpInfo($contentType);
+        return $response;
+    }
+
+    /**
+     * Operation vintedListPublicVintedMobileOperationsWithHttpInfo
+     *
+     * List public Vinted mobile operations
+     *
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['vintedListPublicVintedMobileOperations'] to see the possible values for this operation
+     *
+     * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of mixed, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function vintedListPublicVintedMobileOperationsWithHttpInfo(string $contentType = self::contentTypes['vintedListPublicVintedMobileOperations'][0])
+    {
+        $request = $this->vintedListPublicVintedMobileOperationsRequest($contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    if ('mixed' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('mixed' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, 'mixed', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+            }
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            $returnType = 'mixed';
+            if ($returnType === '\SplFileObject') {
+                $content = $response->getBody(); //stream goes to serializer
+            } else {
+                $content = (string) $response->getBody();
+                if ($returnType !== 'string') {
+                    try {
+                        $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                    } catch (\JsonException $exception) {
+                        throw new ApiException(
+                            sprintf(
+                                'Error JSON decoding server response (%s)',
+                                $request->getUri()
+                            ),
+                            $statusCode,
+                            $response->getHeaders(),
+                            $content
+                        );
+                    }
+                }
+            }
+
+            return [
+                ObjectSerializer::deserialize($content, $returnType, []),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            ];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        'mixed',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation vintedListPublicVintedMobileOperationsAsync
+     *
+     * List public Vinted mobile operations
+     *
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['vintedListPublicVintedMobileOperations'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function vintedListPublicVintedMobileOperationsAsync(string $contentType = self::contentTypes['vintedListPublicVintedMobileOperations'][0])
+    {
+        return $this->vintedListPublicVintedMobileOperationsAsyncWithHttpInfo($contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation vintedListPublicVintedMobileOperationsAsyncWithHttpInfo
+     *
+     * List public Vinted mobile operations
+     *
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['vintedListPublicVintedMobileOperations'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function vintedListPublicVintedMobileOperationsAsyncWithHttpInfo(string $contentType = self::contentTypes['vintedListPublicVintedMobileOperations'][0])
+    {
+        $returnType = 'mixed';
+        $request = $this->vintedListPublicVintedMobileOperationsRequest($contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'vintedListPublicVintedMobileOperations'
+     *
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['vintedListPublicVintedMobileOperations'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function vintedListPublicVintedMobileOperationsRequest(string $contentType = self::contentTypes['vintedListPublicVintedMobileOperations'][0])
+    {
+
+
+        $resourcePath = '/v1/vinted/mobile/operations';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+        // this endpoint requires API key authentication
+        $apiKey = $this->config->getApiKeyWithPrefix('X-API-Key');
+        if ($apiKey !== null) {
+            $headers['X-API-Key'] = $apiKey;
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'GET',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation vintedReadVintedMobileData
+     *
+     * Read Vinted mobile data
+     *
+     * @param  string $operation operation (required)
+     * @param  \ScrapeBadger\Model\VintedMobileReadRequest $vinted_mobile_read_request vinted_mobile_read_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['vintedReadVintedMobileData'] to see the possible values for this operation
+     *
+     * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     */
+    public function vintedReadVintedMobileData($operation, $vinted_mobile_read_request, string $contentType = self::contentTypes['vintedReadVintedMobileData'][0])
+    {
+        list($response) = $this->vintedReadVintedMobileDataWithHttpInfo($operation, $vinted_mobile_read_request, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation vintedReadVintedMobileDataWithHttpInfo
+     *
+     * Read Vinted mobile data
+     *
+     * @param  string $operation (required)
+     * @param  \ScrapeBadger\Model\VintedMobileReadRequest $vinted_mobile_read_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['vintedReadVintedMobileData'] to see the possible values for this operation
+     *
+     * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function vintedReadVintedMobileDataWithHttpInfo($operation, $vinted_mobile_read_request, string $contentType = self::contentTypes['vintedReadVintedMobileData'][0])
+    {
+        $request = $this->vintedReadVintedMobileDataRequest($operation, $vinted_mobile_read_request, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    if ('mixed' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('mixed' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, 'mixed', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                case 422:
+                    if ('\ScrapeBadger\Model\HTTPValidationError' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\HTTPValidationError' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\HTTPValidationError', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+            }
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            $returnType = 'mixed';
+            if ($returnType === '\SplFileObject') {
+                $content = $response->getBody(); //stream goes to serializer
+            } else {
+                $content = (string) $response->getBody();
+                if ($returnType !== 'string') {
+                    try {
+                        $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                    } catch (\JsonException $exception) {
+                        throw new ApiException(
+                            sprintf(
+                                'Error JSON decoding server response (%s)',
+                                $request->getUri()
+                            ),
+                            $statusCode,
+                            $response->getHeaders(),
+                            $content
+                        );
+                    }
+                }
+            }
+
+            return [
+                ObjectSerializer::deserialize($content, $returnType, []),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            ];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        'mixed',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\HTTPValidationError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation vintedReadVintedMobileDataAsync
+     *
+     * Read Vinted mobile data
+     *
+     * @param  string $operation (required)
+     * @param  \ScrapeBadger\Model\VintedMobileReadRequest $vinted_mobile_read_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['vintedReadVintedMobileData'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function vintedReadVintedMobileDataAsync($operation, $vinted_mobile_read_request, string $contentType = self::contentTypes['vintedReadVintedMobileData'][0])
+    {
+        return $this->vintedReadVintedMobileDataAsyncWithHttpInfo($operation, $vinted_mobile_read_request, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation vintedReadVintedMobileDataAsyncWithHttpInfo
+     *
+     * Read Vinted mobile data
+     *
+     * @param  string $operation (required)
+     * @param  \ScrapeBadger\Model\VintedMobileReadRequest $vinted_mobile_read_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['vintedReadVintedMobileData'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function vintedReadVintedMobileDataAsyncWithHttpInfo($operation, $vinted_mobile_read_request, string $contentType = self::contentTypes['vintedReadVintedMobileData'][0])
+    {
+        $returnType = 'mixed';
+        $request = $this->vintedReadVintedMobileDataRequest($operation, $vinted_mobile_read_request, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'vintedReadVintedMobileData'
+     *
+     * @param  string $operation (required)
+     * @param  \ScrapeBadger\Model\VintedMobileReadRequest $vinted_mobile_read_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['vintedReadVintedMobileData'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function vintedReadVintedMobileDataRequest($operation, $vinted_mobile_read_request, string $contentType = self::contentTypes['vintedReadVintedMobileData'][0])
+    {
+
+        // verify the required parameter 'operation' is set
+        if ($operation === null || (is_array($operation) && count($operation) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $operation when calling vintedReadVintedMobileData'
+            );
+        }
+
+        // verify the required parameter 'vinted_mobile_read_request' is set
+        if ($vinted_mobile_read_request === null || (is_array($vinted_mobile_read_request) && count($vinted_mobile_read_request) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $vinted_mobile_read_request when calling vintedReadVintedMobileData'
+            );
+        }
+
+
+        $resourcePath = '/v1/vinted/mobile/{operation}';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+        // path params
+        if ($operation !== null) {
+            $resourcePath = str_replace(
+                '{' . 'operation' . '}',
+                ObjectSerializer::toPathValue($operation),
+                $resourcePath
+            );
+        }
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (isset($vinted_mobile_read_request)) {
+            if (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the body
+                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($vinted_mobile_read_request));
+            } else {
+                $httpBody = $vinted_mobile_read_request;
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+        // this endpoint requires API key authentication
+        $apiKey = $this->config->getApiKeyWithPrefix('X-API-Key');
+        if ($apiKey !== null) {
+            $headers['X-API-Key'] = $apiKey;
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'POST',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
      * Operation vintedSearchBrands
      *
      * Search brands
@@ -2635,6 +3301,10 @@ class VintedApi
      * @param  string $brand_ids brand_ids (optional)
      * @param  string $catalog_ids Comma-separated Vinted catalog (category) IDs to restrict the search to, e.g. &#39;1904&#39; or &#39;1904,79&#39;. Vinted applies this before searching, so pagination totals reflect the filtered set. A catalog ID is the &#x60;catalog[]&#x60; value in a Vinted category URL (vinted.fr/catalog?catalog[]&#x3D;1904). (optional)
      * @param  string $color_ids Comma-separated color IDs (optional)
+     * @param  string $size_ids Comma-separated size IDs (optional)
+     * @param  string $material_ids Comma-separated material IDs (optional)
+     * @param  int $time Pagination time returned by the preceding page (optional)
+     * @param  string $search_session_id Reuse across pages of one search (optional)
      * @param  string $status_ids Comma-separated condition/status IDs (optional)
      * @param  string $order order (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['vintedSearchVintedItems'] to see the possible values for this operation
@@ -2643,9 +3313,9 @@ class VintedApi
      * @throws \InvalidArgumentException
      * @return mixed|\ScrapeBadger\Model\HTTPValidationError
      */
-    public function vintedSearchVintedItems($query, $market = 'fr', $seller_country = null, $page = 1, $per_page = 20, $price_from = null, $price_to = null, $brand_ids = null, $catalog_ids = null, $color_ids = null, $status_ids = null, $order = null, string $contentType = self::contentTypes['vintedSearchVintedItems'][0])
+    public function vintedSearchVintedItems($query, $market = 'fr', $seller_country = null, $page = 1, $per_page = 20, $price_from = null, $price_to = null, $brand_ids = null, $catalog_ids = null, $color_ids = null, $size_ids = null, $material_ids = null, $time = null, $search_session_id = null, $status_ids = null, $order = null, string $contentType = self::contentTypes['vintedSearchVintedItems'][0])
     {
-        list($response) = $this->vintedSearchVintedItemsWithHttpInfo($query, $market, $seller_country, $page, $per_page, $price_from, $price_to, $brand_ids, $catalog_ids, $color_ids, $status_ids, $order, $contentType);
+        list($response) = $this->vintedSearchVintedItemsWithHttpInfo($query, $market, $seller_country, $page, $per_page, $price_from, $price_to, $brand_ids, $catalog_ids, $color_ids, $size_ids, $material_ids, $time, $search_session_id, $status_ids, $order, $contentType);
         return $response;
     }
 
@@ -2664,6 +3334,10 @@ class VintedApi
      * @param  string $brand_ids (optional)
      * @param  string $catalog_ids Comma-separated Vinted catalog (category) IDs to restrict the search to, e.g. &#39;1904&#39; or &#39;1904,79&#39;. Vinted applies this before searching, so pagination totals reflect the filtered set. A catalog ID is the &#x60;catalog[]&#x60; value in a Vinted category URL (vinted.fr/catalog?catalog[]&#x3D;1904). (optional)
      * @param  string $color_ids Comma-separated color IDs (optional)
+     * @param  string $size_ids Comma-separated size IDs (optional)
+     * @param  string $material_ids Comma-separated material IDs (optional)
+     * @param  int $time Pagination time returned by the preceding page (optional)
+     * @param  string $search_session_id Reuse across pages of one search (optional)
      * @param  string $status_ids Comma-separated condition/status IDs (optional)
      * @param  string $order (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['vintedSearchVintedItems'] to see the possible values for this operation
@@ -2672,9 +3346,9 @@ class VintedApi
      * @throws \InvalidArgumentException
      * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
-    public function vintedSearchVintedItemsWithHttpInfo($query, $market = 'fr', $seller_country = null, $page = 1, $per_page = 20, $price_from = null, $price_to = null, $brand_ids = null, $catalog_ids = null, $color_ids = null, $status_ids = null, $order = null, string $contentType = self::contentTypes['vintedSearchVintedItems'][0])
+    public function vintedSearchVintedItemsWithHttpInfo($query, $market = 'fr', $seller_country = null, $page = 1, $per_page = 20, $price_from = null, $price_to = null, $brand_ids = null, $catalog_ids = null, $color_ids = null, $size_ids = null, $material_ids = null, $time = null, $search_session_id = null, $status_ids = null, $order = null, string $contentType = self::contentTypes['vintedSearchVintedItems'][0])
     {
-        $request = $this->vintedSearchVintedItemsRequest($query, $market, $seller_country, $page, $per_page, $price_from, $price_to, $brand_ids, $catalog_ids, $color_ids, $status_ids, $order, $contentType);
+        $request = $this->vintedSearchVintedItemsRequest($query, $market, $seller_country, $page, $per_page, $price_from, $price_to, $brand_ids, $catalog_ids, $color_ids, $size_ids, $material_ids, $time, $search_session_id, $status_ids, $order, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -2835,6 +3509,10 @@ class VintedApi
      * @param  string $brand_ids (optional)
      * @param  string $catalog_ids Comma-separated Vinted catalog (category) IDs to restrict the search to, e.g. &#39;1904&#39; or &#39;1904,79&#39;. Vinted applies this before searching, so pagination totals reflect the filtered set. A catalog ID is the &#x60;catalog[]&#x60; value in a Vinted category URL (vinted.fr/catalog?catalog[]&#x3D;1904). (optional)
      * @param  string $color_ids Comma-separated color IDs (optional)
+     * @param  string $size_ids Comma-separated size IDs (optional)
+     * @param  string $material_ids Comma-separated material IDs (optional)
+     * @param  int $time Pagination time returned by the preceding page (optional)
+     * @param  string $search_session_id Reuse across pages of one search (optional)
      * @param  string $status_ids Comma-separated condition/status IDs (optional)
      * @param  string $order (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['vintedSearchVintedItems'] to see the possible values for this operation
@@ -2842,9 +3520,9 @@ class VintedApi
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function vintedSearchVintedItemsAsync($query, $market = 'fr', $seller_country = null, $page = 1, $per_page = 20, $price_from = null, $price_to = null, $brand_ids = null, $catalog_ids = null, $color_ids = null, $status_ids = null, $order = null, string $contentType = self::contentTypes['vintedSearchVintedItems'][0])
+    public function vintedSearchVintedItemsAsync($query, $market = 'fr', $seller_country = null, $page = 1, $per_page = 20, $price_from = null, $price_to = null, $brand_ids = null, $catalog_ids = null, $color_ids = null, $size_ids = null, $material_ids = null, $time = null, $search_session_id = null, $status_ids = null, $order = null, string $contentType = self::contentTypes['vintedSearchVintedItems'][0])
     {
-        return $this->vintedSearchVintedItemsAsyncWithHttpInfo($query, $market, $seller_country, $page, $per_page, $price_from, $price_to, $brand_ids, $catalog_ids, $color_ids, $status_ids, $order, $contentType)
+        return $this->vintedSearchVintedItemsAsyncWithHttpInfo($query, $market, $seller_country, $page, $per_page, $price_from, $price_to, $brand_ids, $catalog_ids, $color_ids, $size_ids, $material_ids, $time, $search_session_id, $status_ids, $order, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -2867,6 +3545,10 @@ class VintedApi
      * @param  string $brand_ids (optional)
      * @param  string $catalog_ids Comma-separated Vinted catalog (category) IDs to restrict the search to, e.g. &#39;1904&#39; or &#39;1904,79&#39;. Vinted applies this before searching, so pagination totals reflect the filtered set. A catalog ID is the &#x60;catalog[]&#x60; value in a Vinted category URL (vinted.fr/catalog?catalog[]&#x3D;1904). (optional)
      * @param  string $color_ids Comma-separated color IDs (optional)
+     * @param  string $size_ids Comma-separated size IDs (optional)
+     * @param  string $material_ids Comma-separated material IDs (optional)
+     * @param  int $time Pagination time returned by the preceding page (optional)
+     * @param  string $search_session_id Reuse across pages of one search (optional)
      * @param  string $status_ids Comma-separated condition/status IDs (optional)
      * @param  string $order (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['vintedSearchVintedItems'] to see the possible values for this operation
@@ -2874,10 +3556,10 @@ class VintedApi
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function vintedSearchVintedItemsAsyncWithHttpInfo($query, $market = 'fr', $seller_country = null, $page = 1, $per_page = 20, $price_from = null, $price_to = null, $brand_ids = null, $catalog_ids = null, $color_ids = null, $status_ids = null, $order = null, string $contentType = self::contentTypes['vintedSearchVintedItems'][0])
+    public function vintedSearchVintedItemsAsyncWithHttpInfo($query, $market = 'fr', $seller_country = null, $page = 1, $per_page = 20, $price_from = null, $price_to = null, $brand_ids = null, $catalog_ids = null, $color_ids = null, $size_ids = null, $material_ids = null, $time = null, $search_session_id = null, $status_ids = null, $order = null, string $contentType = self::contentTypes['vintedSearchVintedItems'][0])
     {
         $returnType = 'mixed';
-        $request = $this->vintedSearchVintedItemsRequest($query, $market, $seller_country, $page, $per_page, $price_from, $price_to, $brand_ids, $catalog_ids, $color_ids, $status_ids, $order, $contentType);
+        $request = $this->vintedSearchVintedItemsRequest($query, $market, $seller_country, $page, $per_page, $price_from, $price_to, $brand_ids, $catalog_ids, $color_ids, $size_ids, $material_ids, $time, $search_session_id, $status_ids, $order, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -2928,6 +3610,10 @@ class VintedApi
      * @param  string $brand_ids (optional)
      * @param  string $catalog_ids Comma-separated Vinted catalog (category) IDs to restrict the search to, e.g. &#39;1904&#39; or &#39;1904,79&#39;. Vinted applies this before searching, so pagination totals reflect the filtered set. A catalog ID is the &#x60;catalog[]&#x60; value in a Vinted category URL (vinted.fr/catalog?catalog[]&#x3D;1904). (optional)
      * @param  string $color_ids Comma-separated color IDs (optional)
+     * @param  string $size_ids Comma-separated size IDs (optional)
+     * @param  string $material_ids Comma-separated material IDs (optional)
+     * @param  int $time Pagination time returned by the preceding page (optional)
+     * @param  string $search_session_id Reuse across pages of one search (optional)
      * @param  string $status_ids Comma-separated condition/status IDs (optional)
      * @param  string $order (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['vintedSearchVintedItems'] to see the possible values for this operation
@@ -2935,7 +3621,7 @@ class VintedApi
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function vintedSearchVintedItemsRequest($query, $market = 'fr', $seller_country = null, $page = 1, $per_page = 20, $price_from = null, $price_to = null, $brand_ids = null, $catalog_ids = null, $color_ids = null, $status_ids = null, $order = null, string $contentType = self::contentTypes['vintedSearchVintedItems'][0])
+    public function vintedSearchVintedItemsRequest($query, $market = 'fr', $seller_country = null, $page = 1, $per_page = 20, $price_from = null, $price_to = null, $brand_ids = null, $catalog_ids = null, $color_ids = null, $size_ids = null, $material_ids = null, $time = null, $search_session_id = null, $status_ids = null, $order = null, string $contentType = self::contentTypes['vintedSearchVintedItems'][0])
     {
 
         // verify the required parameter 'query' is set
@@ -2962,6 +3648,13 @@ class VintedApi
 
 
 
+
+
+
+        if ($time !== null && $time < 0) {
+            throw new \InvalidArgumentException('invalid value for "$time" when calling VintedApi.vintedSearchVintedItems, must be bigger than or equal to 0.');
+        }
+        
 
 
 
@@ -3058,6 +3751,42 @@ class VintedApi
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
             $color_ids,
             'color_ids', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $size_ids,
+            'size_ids', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $material_ids,
+            'material_ids', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $time,
+            'time', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $search_session_id,
+            'search_session_id', // param base name
             'string', // openApiType
             'form', // style
             true, // explode

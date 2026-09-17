@@ -426,7 +426,7 @@ $categories = 'categories_example'; // string | Comma-separated category IDs
 $sizes = 'sizes_example'; // string | Comma-separated size IDs
 $conditions = 'conditions_example'; // string | Comma-separated condition slugs (brand_new, used_excellent, ...)
 $gender = 'gender_example'; // string | male | female
-$sort = 'sort_example'; // string | relevance | newlyListed | priceAscending | priceDescending
+$sort = 'sort_example'; // string | relevance (default) | priceAscending | priceDescending
 
 try {
     $result = $apiInstance->depopSearchDepopProducts($query, $market, $per_page, $cursor, $price_min, $price_max, $brands, $categories, $sizes, $conditions, $gender, $sort);
@@ -451,7 +451,7 @@ try {
 | **sizes** | **string**| Comma-separated size IDs | [optional] |
 | **conditions** | **string**| Comma-separated condition slugs (brand_new, used_excellent, ...) | [optional] |
 | **gender** | **string**| male | female | [optional] |
-| **sort** | **string**| relevance | newlyListed | priceAscending | priceDescending | [optional] |
+| **sort** | **string**| relevance (default) | priceAscending | priceDescending | [optional] |
 
 ### Return type
 

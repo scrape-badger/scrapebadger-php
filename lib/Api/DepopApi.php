@@ -2160,7 +2160,7 @@ class DepopApi
      * @param  string $sizes Comma-separated size IDs (optional)
      * @param  string $conditions Comma-separated condition slugs (brand_new, used_excellent, ...) (optional)
      * @param  string $gender male | female (optional)
-     * @param  string $sort relevance | newlyListed | priceAscending | priceDescending (optional)
+     * @param  string $sort relevance (default) | priceAscending | priceDescending (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['depopSearchDepopProducts'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
@@ -2189,7 +2189,7 @@ class DepopApi
      * @param  string $sizes Comma-separated size IDs (optional)
      * @param  string $conditions Comma-separated condition slugs (brand_new, used_excellent, ...) (optional)
      * @param  string $gender male | female (optional)
-     * @param  string $sort relevance | newlyListed | priceAscending | priceDescending (optional)
+     * @param  string $sort relevance (default) | priceAscending | priceDescending (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['depopSearchDepopProducts'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
@@ -2360,7 +2360,7 @@ class DepopApi
      * @param  string $sizes Comma-separated size IDs (optional)
      * @param  string $conditions Comma-separated condition slugs (brand_new, used_excellent, ...) (optional)
      * @param  string $gender male | female (optional)
-     * @param  string $sort relevance | newlyListed | priceAscending | priceDescending (optional)
+     * @param  string $sort relevance (default) | priceAscending | priceDescending (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['depopSearchDepopProducts'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -2392,7 +2392,7 @@ class DepopApi
      * @param  string $sizes Comma-separated size IDs (optional)
      * @param  string $conditions Comma-separated condition slugs (brand_new, used_excellent, ...) (optional)
      * @param  string $gender male | female (optional)
-     * @param  string $sort relevance | newlyListed | priceAscending | priceDescending (optional)
+     * @param  string $sort relevance (default) | priceAscending | priceDescending (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['depopSearchDepopProducts'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -2453,7 +2453,7 @@ class DepopApi
      * @param  string $sizes Comma-separated size IDs (optional)
      * @param  string $conditions Comma-separated condition slugs (brand_new, used_excellent, ...) (optional)
      * @param  string $gender male | female (optional)
-     * @param  string $sort relevance | newlyListed | priceAscending | priceDescending (optional)
+     * @param  string $sort relevance (default) | priceAscending | priceDescending (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['depopSearchDepopProducts'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException

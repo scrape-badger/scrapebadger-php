@@ -169,7 +169,7 @@ class VintedApi
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return \ScrapeBadger\Model\ItemDetailResponse|\ScrapeBadger\Model\HTTPValidationError
      */
     public function vintedGetItemDetails($item_id, $market = 'fr', string $contentType = self::contentTypes['vintedGetItemDetails'][0])
     {
@@ -188,7 +188,7 @@ class VintedApi
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \ScrapeBadger\Model\ItemDetailResponse|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
     public function vintedGetItemDetailsWithHttpInfo($item_id, $market = 'fr', string $contentType = self::contentTypes['vintedGetItemDetails'][0])
     {
@@ -219,11 +219,11 @@ class VintedApi
 
             switch($statusCode) {
                 case 200:
-                    if ('mixed' === '\SplFileObject') {
+                    if ('\ScrapeBadger\Model\ItemDetailResponse' === '\SplFileObject') {
                         $content = $response->getBody(); //stream goes to serializer
                     } else {
                         $content = (string) $response->getBody();
-                        if ('mixed' !== 'string') {
+                        if ('\ScrapeBadger\Model\ItemDetailResponse' !== 'string') {
                             try {
                                 $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
                             } catch (\JsonException $exception) {
@@ -241,7 +241,7 @@ class VintedApi
                     }
 
                     return [
-                        ObjectSerializer::deserialize($content, 'mixed', []),
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\ItemDetailResponse', []),
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
@@ -287,7 +287,7 @@ class VintedApi
                 );
             }
 
-            $returnType = 'mixed';
+            $returnType = '\ScrapeBadger\Model\ItemDetailResponse';
             if ($returnType === '\SplFileObject') {
                 $content = $response->getBody(); //stream goes to serializer
             } else {
@@ -320,7 +320,7 @@ class VintedApi
                 case 200:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        'mixed',
+                        '\ScrapeBadger\Model\ItemDetailResponse',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -374,7 +374,7 @@ class VintedApi
      */
     public function vintedGetItemDetailsAsyncWithHttpInfo($item_id, $market = 'fr', string $contentType = self::contentTypes['vintedGetItemDetails'][0])
     {
-        $returnType = 'mixed';
+        $returnType = '\ScrapeBadger\Model\ItemDetailResponse';
         $request = $this->vintedGetItemDetailsRequest($item_id, $market, $contentType);
 
         return $this->client
@@ -532,7 +532,7 @@ class VintedApi
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return \ScrapeBadger\Model\UserProfileResponse|\ScrapeBadger\Model\HTTPValidationError
      */
     public function vintedGetUserProfile($user_id, $market = 'fr', string $contentType = self::contentTypes['vintedGetUserProfile'][0])
     {
@@ -551,7 +551,7 @@ class VintedApi
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \ScrapeBadger\Model\UserProfileResponse|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
     public function vintedGetUserProfileWithHttpInfo($user_id, $market = 'fr', string $contentType = self::contentTypes['vintedGetUserProfile'][0])
     {
@@ -582,11 +582,11 @@ class VintedApi
 
             switch($statusCode) {
                 case 200:
-                    if ('mixed' === '\SplFileObject') {
+                    if ('\ScrapeBadger\Model\UserProfileResponse' === '\SplFileObject') {
                         $content = $response->getBody(); //stream goes to serializer
                     } else {
                         $content = (string) $response->getBody();
-                        if ('mixed' !== 'string') {
+                        if ('\ScrapeBadger\Model\UserProfileResponse' !== 'string') {
                             try {
                                 $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
                             } catch (\JsonException $exception) {
@@ -604,7 +604,7 @@ class VintedApi
                     }
 
                     return [
-                        ObjectSerializer::deserialize($content, 'mixed', []),
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\UserProfileResponse', []),
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
@@ -650,7 +650,7 @@ class VintedApi
                 );
             }
 
-            $returnType = 'mixed';
+            $returnType = '\ScrapeBadger\Model\UserProfileResponse';
             if ($returnType === '\SplFileObject') {
                 $content = $response->getBody(); //stream goes to serializer
             } else {
@@ -683,7 +683,7 @@ class VintedApi
                 case 200:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        'mixed',
+                        '\ScrapeBadger\Model\UserProfileResponse',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -737,7 +737,7 @@ class VintedApi
      */
     public function vintedGetUserProfileAsyncWithHttpInfo($user_id, $market = 'fr', string $contentType = self::contentTypes['vintedGetUserProfile'][0])
     {
-        $returnType = 'mixed';
+        $returnType = '\ScrapeBadger\Model\UserProfileResponse';
         $request = $this->vintedGetUserProfileRequest($user_id, $market, $contentType);
 
         return $this->client
@@ -897,7 +897,7 @@ class VintedApi
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return \ScrapeBadger\Model\UserItemsResponse|\ScrapeBadger\Model\HTTPValidationError
      */
     public function vintedGetUserSListedItems($user_id, $market = 'fr', $page = 1, $per_page = 20, string $contentType = self::contentTypes['vintedGetUserSListedItems'][0])
     {
@@ -918,7 +918,7 @@ class VintedApi
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \ScrapeBadger\Model\UserItemsResponse|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
     public function vintedGetUserSListedItemsWithHttpInfo($user_id, $market = 'fr', $page = 1, $per_page = 20, string $contentType = self::contentTypes['vintedGetUserSListedItems'][0])
     {
@@ -949,11 +949,11 @@ class VintedApi
 
             switch($statusCode) {
                 case 200:
-                    if ('mixed' === '\SplFileObject') {
+                    if ('\ScrapeBadger\Model\UserItemsResponse' === '\SplFileObject') {
                         $content = $response->getBody(); //stream goes to serializer
                     } else {
                         $content = (string) $response->getBody();
-                        if ('mixed' !== 'string') {
+                        if ('\ScrapeBadger\Model\UserItemsResponse' !== 'string') {
                             try {
                                 $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
                             } catch (\JsonException $exception) {
@@ -971,7 +971,7 @@ class VintedApi
                     }
 
                     return [
-                        ObjectSerializer::deserialize($content, 'mixed', []),
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\UserItemsResponse', []),
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
@@ -1017,7 +1017,7 @@ class VintedApi
                 );
             }
 
-            $returnType = 'mixed';
+            $returnType = '\ScrapeBadger\Model\UserItemsResponse';
             if ($returnType === '\SplFileObject') {
                 $content = $response->getBody(); //stream goes to serializer
             } else {
@@ -1050,7 +1050,7 @@ class VintedApi
                 case 200:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        'mixed',
+                        '\ScrapeBadger\Model\UserItemsResponse',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -1108,7 +1108,7 @@ class VintedApi
      */
     public function vintedGetUserSListedItemsAsyncWithHttpInfo($user_id, $market = 'fr', $page = 1, $per_page = 20, string $contentType = self::contentTypes['vintedGetUserSListedItems'][0])
     {
-        $returnType = 'mixed';
+        $returnType = '\ScrapeBadger\Model\UserItemsResponse';
         $request = $this->vintedGetUserSListedItemsRequest($user_id, $market, $page, $per_page, $contentType);
 
         return $this->client
@@ -1296,7 +1296,7 @@ class VintedApi
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return \ScrapeBadger\Model\ColorsResponse|\ScrapeBadger\Model\HTTPValidationError
      */
     public function vintedListColors($market = 'fr', string $contentType = self::contentTypes['vintedListColors'][0])
     {
@@ -1314,7 +1314,7 @@ class VintedApi
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \ScrapeBadger\Model\ColorsResponse|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
     public function vintedListColorsWithHttpInfo($market = 'fr', string $contentType = self::contentTypes['vintedListColors'][0])
     {
@@ -1345,11 +1345,11 @@ class VintedApi
 
             switch($statusCode) {
                 case 200:
-                    if ('mixed' === '\SplFileObject') {
+                    if ('\ScrapeBadger\Model\ColorsResponse' === '\SplFileObject') {
                         $content = $response->getBody(); //stream goes to serializer
                     } else {
                         $content = (string) $response->getBody();
-                        if ('mixed' !== 'string') {
+                        if ('\ScrapeBadger\Model\ColorsResponse' !== 'string') {
                             try {
                                 $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
                             } catch (\JsonException $exception) {
@@ -1367,7 +1367,7 @@ class VintedApi
                     }
 
                     return [
-                        ObjectSerializer::deserialize($content, 'mixed', []),
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\ColorsResponse', []),
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
@@ -1413,7 +1413,7 @@ class VintedApi
                 );
             }
 
-            $returnType = 'mixed';
+            $returnType = '\ScrapeBadger\Model\ColorsResponse';
             if ($returnType === '\SplFileObject') {
                 $content = $response->getBody(); //stream goes to serializer
             } else {
@@ -1446,7 +1446,7 @@ class VintedApi
                 case 200:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        'mixed',
+                        '\ScrapeBadger\Model\ColorsResponse',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -1498,7 +1498,7 @@ class VintedApi
      */
     public function vintedListColorsAsyncWithHttpInfo($market = 'fr', string $contentType = self::contentTypes['vintedListColors'][0])
     {
-        $returnType = 'mixed';
+        $returnType = '\ScrapeBadger\Model\ColorsResponse';
         $request = $this->vintedListColorsRequest($market, $contentType);
 
         return $this->client
@@ -1639,7 +1639,7 @@ class VintedApi
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return \ScrapeBadger\Model\StatusesResponse|\ScrapeBadger\Model\HTTPValidationError
      */
     public function vintedListItemConditions($market = 'fr', string $contentType = self::contentTypes['vintedListItemConditions'][0])
     {
@@ -1657,7 +1657,7 @@ class VintedApi
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \ScrapeBadger\Model\StatusesResponse|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
     public function vintedListItemConditionsWithHttpInfo($market = 'fr', string $contentType = self::contentTypes['vintedListItemConditions'][0])
     {
@@ -1688,11 +1688,11 @@ class VintedApi
 
             switch($statusCode) {
                 case 200:
-                    if ('mixed' === '\SplFileObject') {
+                    if ('\ScrapeBadger\Model\StatusesResponse' === '\SplFileObject') {
                         $content = $response->getBody(); //stream goes to serializer
                     } else {
                         $content = (string) $response->getBody();
-                        if ('mixed' !== 'string') {
+                        if ('\ScrapeBadger\Model\StatusesResponse' !== 'string') {
                             try {
                                 $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
                             } catch (\JsonException $exception) {
@@ -1710,7 +1710,7 @@ class VintedApi
                     }
 
                     return [
-                        ObjectSerializer::deserialize($content, 'mixed', []),
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\StatusesResponse', []),
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
@@ -1756,7 +1756,7 @@ class VintedApi
                 );
             }
 
-            $returnType = 'mixed';
+            $returnType = '\ScrapeBadger\Model\StatusesResponse';
             if ($returnType === '\SplFileObject') {
                 $content = $response->getBody(); //stream goes to serializer
             } else {
@@ -1789,7 +1789,7 @@ class VintedApi
                 case 200:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        'mixed',
+                        '\ScrapeBadger\Model\StatusesResponse',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -1841,7 +1841,7 @@ class VintedApi
      */
     public function vintedListItemConditionsAsyncWithHttpInfo($market = 'fr', string $contentType = self::contentTypes['vintedListItemConditions'][0])
     {
-        $returnType = 'mixed';
+        $returnType = '\ScrapeBadger\Model\StatusesResponse';
         $request = $this->vintedListItemConditionsRequest($market, $contentType);
 
         return $this->client
@@ -1981,7 +1981,7 @@ class VintedApi
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed
+     * @return \ScrapeBadger\Model\MarketsResponse
      */
     public function vintedListMarkets(string $contentType = self::contentTypes['vintedListMarkets'][0])
     {
@@ -1998,7 +1998,7 @@ class VintedApi
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \ScrapeBadger\Model\MarketsResponse, HTTP status code, HTTP response headers (array of strings)
      */
     public function vintedListMarketsWithHttpInfo(string $contentType = self::contentTypes['vintedListMarkets'][0])
     {
@@ -2029,11 +2029,11 @@ class VintedApi
 
             switch($statusCode) {
                 case 200:
-                    if ('mixed' === '\SplFileObject') {
+                    if ('\ScrapeBadger\Model\MarketsResponse' === '\SplFileObject') {
                         $content = $response->getBody(); //stream goes to serializer
                     } else {
                         $content = (string) $response->getBody();
-                        if ('mixed' !== 'string') {
+                        if ('\ScrapeBadger\Model\MarketsResponse' !== 'string') {
                             try {
                                 $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
                             } catch (\JsonException $exception) {
@@ -2051,7 +2051,7 @@ class VintedApi
                     }
 
                     return [
-                        ObjectSerializer::deserialize($content, 'mixed', []),
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\MarketsResponse', []),
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
@@ -2070,7 +2070,7 @@ class VintedApi
                 );
             }
 
-            $returnType = 'mixed';
+            $returnType = '\ScrapeBadger\Model\MarketsResponse';
             if ($returnType === '\SplFileObject') {
                 $content = $response->getBody(); //stream goes to serializer
             } else {
@@ -2103,7 +2103,7 @@ class VintedApi
                 case 200:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        'mixed',
+                        '\ScrapeBadger\Model\MarketsResponse',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -2145,7 +2145,7 @@ class VintedApi
      */
     public function vintedListMarketsAsyncWithHttpInfo(string $contentType = self::contentTypes['vintedListMarkets'][0])
     {
-        $returnType = 'mixed';
+        $returnType = '\ScrapeBadger\Model\MarketsResponse';
         $request = $this->vintedListMarketsRequest($contentType);
 
         return $this->client
@@ -2936,7 +2936,7 @@ class VintedApi
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return \ScrapeBadger\Model\BrandsResponse|\ScrapeBadger\Model\HTTPValidationError
      */
     public function vintedSearchBrands($keyword, $market = 'fr', string $contentType = self::contentTypes['vintedSearchBrands'][0])
     {
@@ -2955,7 +2955,7 @@ class VintedApi
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \ScrapeBadger\Model\BrandsResponse|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
     public function vintedSearchBrandsWithHttpInfo($keyword, $market = 'fr', string $contentType = self::contentTypes['vintedSearchBrands'][0])
     {
@@ -2986,11 +2986,11 @@ class VintedApi
 
             switch($statusCode) {
                 case 200:
-                    if ('mixed' === '\SplFileObject') {
+                    if ('\ScrapeBadger\Model\BrandsResponse' === '\SplFileObject') {
                         $content = $response->getBody(); //stream goes to serializer
                     } else {
                         $content = (string) $response->getBody();
-                        if ('mixed' !== 'string') {
+                        if ('\ScrapeBadger\Model\BrandsResponse' !== 'string') {
                             try {
                                 $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
                             } catch (\JsonException $exception) {
@@ -3008,7 +3008,7 @@ class VintedApi
                     }
 
                     return [
-                        ObjectSerializer::deserialize($content, 'mixed', []),
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\BrandsResponse', []),
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
@@ -3054,7 +3054,7 @@ class VintedApi
                 );
             }
 
-            $returnType = 'mixed';
+            $returnType = '\ScrapeBadger\Model\BrandsResponse';
             if ($returnType === '\SplFileObject') {
                 $content = $response->getBody(); //stream goes to serializer
             } else {
@@ -3087,7 +3087,7 @@ class VintedApi
                 case 200:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        'mixed',
+                        '\ScrapeBadger\Model\BrandsResponse',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -3141,7 +3141,7 @@ class VintedApi
      */
     public function vintedSearchBrandsAsyncWithHttpInfo($keyword, $market = 'fr', string $contentType = self::contentTypes['vintedSearchBrands'][0])
     {
-        $returnType = 'mixed';
+        $returnType = '\ScrapeBadger\Model\BrandsResponse';
         $request = $this->vintedSearchBrandsRequest($keyword, $market, $contentType);
 
         return $this->client
@@ -3299,7 +3299,7 @@ class VintedApi
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return \ScrapeBadger\Model\SearchResponse|\ScrapeBadger\Model\HTTPValidationError
      */
     public function vintedSearchByImage($vinted_image_search_request, string $contentType = self::contentTypes['vintedSearchByImage'][0])
     {
@@ -3317,7 +3317,7 @@ class VintedApi
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \ScrapeBadger\Model\SearchResponse|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
     public function vintedSearchByImageWithHttpInfo($vinted_image_search_request, string $contentType = self::contentTypes['vintedSearchByImage'][0])
     {
@@ -3348,11 +3348,11 @@ class VintedApi
 
             switch($statusCode) {
                 case 200:
-                    if ('mixed' === '\SplFileObject') {
+                    if ('\ScrapeBadger\Model\SearchResponse' === '\SplFileObject') {
                         $content = $response->getBody(); //stream goes to serializer
                     } else {
                         $content = (string) $response->getBody();
-                        if ('mixed' !== 'string') {
+                        if ('\ScrapeBadger\Model\SearchResponse' !== 'string') {
                             try {
                                 $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
                             } catch (\JsonException $exception) {
@@ -3370,7 +3370,7 @@ class VintedApi
                     }
 
                     return [
-                        ObjectSerializer::deserialize($content, 'mixed', []),
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\SearchResponse', []),
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
@@ -3416,7 +3416,7 @@ class VintedApi
                 );
             }
 
-            $returnType = 'mixed';
+            $returnType = '\ScrapeBadger\Model\SearchResponse';
             if ($returnType === '\SplFileObject') {
                 $content = $response->getBody(); //stream goes to serializer
             } else {
@@ -3449,7 +3449,7 @@ class VintedApi
                 case 200:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        'mixed',
+                        '\ScrapeBadger\Model\SearchResponse',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -3501,7 +3501,7 @@ class VintedApi
      */
     public function vintedSearchByImageAsyncWithHttpInfo($vinted_image_search_request, string $contentType = self::contentTypes['vintedSearchByImage'][0])
     {
-        $returnType = 'mixed';
+        $returnType = '\ScrapeBadger\Model\SearchResponse';
         $request = $this->vintedSearchByImageRequest($vinted_image_search_request, $contentType);
 
         return $this->client
@@ -3661,7 +3661,7 @@ class VintedApi
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return \ScrapeBadger\Model\SearchResponse|\ScrapeBadger\Model\HTTPValidationError
      */
     public function vintedSearchVintedItems($query, $market = 'fr', $seller_country = null, $page = 1, $per_page = 20, $price_from = null, $price_to = null, $brand_ids = null, $catalog_ids = null, $color_ids = null, $size_ids = null, $material_ids = null, $time = null, $search_session_id = null, $status_ids = null, $order = null, string $contentType = self::contentTypes['vintedSearchVintedItems'][0])
     {
@@ -3694,7 +3694,7 @@ class VintedApi
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \ScrapeBadger\Model\SearchResponse|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
     public function vintedSearchVintedItemsWithHttpInfo($query, $market = 'fr', $seller_country = null, $page = 1, $per_page = 20, $price_from = null, $price_to = null, $brand_ids = null, $catalog_ids = null, $color_ids = null, $size_ids = null, $material_ids = null, $time = null, $search_session_id = null, $status_ids = null, $order = null, string $contentType = self::contentTypes['vintedSearchVintedItems'][0])
     {
@@ -3725,11 +3725,11 @@ class VintedApi
 
             switch($statusCode) {
                 case 200:
-                    if ('mixed' === '\SplFileObject') {
+                    if ('\ScrapeBadger\Model\SearchResponse' === '\SplFileObject') {
                         $content = $response->getBody(); //stream goes to serializer
                     } else {
                         $content = (string) $response->getBody();
-                        if ('mixed' !== 'string') {
+                        if ('\ScrapeBadger\Model\SearchResponse' !== 'string') {
                             try {
                                 $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
                             } catch (\JsonException $exception) {
@@ -3747,7 +3747,7 @@ class VintedApi
                     }
 
                     return [
-                        ObjectSerializer::deserialize($content, 'mixed', []),
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\SearchResponse', []),
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
@@ -3793,7 +3793,7 @@ class VintedApi
                 );
             }
 
-            $returnType = 'mixed';
+            $returnType = '\ScrapeBadger\Model\SearchResponse';
             if ($returnType === '\SplFileObject') {
                 $content = $response->getBody(); //stream goes to serializer
             } else {
@@ -3826,7 +3826,7 @@ class VintedApi
                 case 200:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        'mixed',
+                        '\ScrapeBadger\Model\SearchResponse',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -3908,7 +3908,7 @@ class VintedApi
      */
     public function vintedSearchVintedItemsAsyncWithHttpInfo($query, $market = 'fr', $seller_country = null, $page = 1, $per_page = 20, $price_from = null, $price_to = null, $brand_ids = null, $catalog_ids = null, $color_ids = null, $size_ids = null, $material_ids = null, $time = null, $search_session_id = null, $status_ids = null, $order = null, string $contentType = self::contentTypes['vintedSearchVintedItems'][0])
     {
-        $returnType = 'mixed';
+        $returnType = '\ScrapeBadger\Model\SearchResponse';
         $request = $this->vintedSearchVintedItemsRequest($query, $market, $seller_country, $page, $per_page, $price_from, $price_to, $brand_ids, $catalog_ids, $color_ids, $size_ids, $material_ids, $time, $search_session_id, $status_ids, $order, $contentType);
 
         return $this->client

@@ -22,7 +22,7 @@ All URIs are relative to https://scrapebadger.com, except if the operation defin
 ## `vintedGetItemDetails()`
 
 ```php
-vintedGetItemDetails($item_id, $market): mixed
+vintedGetItemDetails($item_id, $market): \ScrapeBadger\Model\ItemDetailResponse
 ```
 
 Get item details
@@ -68,7 +68,7 @@ try {
 
 ### Return type
 
-**mixed**
+[**\ScrapeBadger\Model\ItemDetailResponse**](../Model/ItemDetailResponse.md)
 
 ### Authorization
 
@@ -86,7 +86,7 @@ try {
 ## `vintedGetUserProfile()`
 
 ```php
-vintedGetUserProfile($user_id, $market): mixed
+vintedGetUserProfile($user_id, $market): \ScrapeBadger\Model\UserProfileResponse
 ```
 
 Get user profile
@@ -132,7 +132,7 @@ try {
 
 ### Return type
 
-**mixed**
+[**\ScrapeBadger\Model\UserProfileResponse**](../Model/UserProfileResponse.md)
 
 ### Authorization
 
@@ -150,7 +150,7 @@ try {
 ## `vintedGetUserSListedItems()`
 
 ```php
-vintedGetUserSListedItems($user_id, $market, $page, $per_page): mixed
+vintedGetUserSListedItems($user_id, $market, $page, $per_page): \ScrapeBadger\Model\UserItemsResponse
 ```
 
 Get user's listed items
@@ -200,7 +200,7 @@ try {
 
 ### Return type
 
-**mixed**
+[**\ScrapeBadger\Model\UserItemsResponse**](../Model/UserItemsResponse.md)
 
 ### Authorization
 
@@ -218,7 +218,7 @@ try {
 ## `vintedListColors()`
 
 ```php
-vintedListColors($market): mixed
+vintedListColors($market): \ScrapeBadger\Model\ColorsResponse
 ```
 
 List colors
@@ -262,7 +262,7 @@ try {
 
 ### Return type
 
-**mixed**
+[**\ScrapeBadger\Model\ColorsResponse**](../Model/ColorsResponse.md)
 
 ### Authorization
 
@@ -280,7 +280,7 @@ try {
 ## `vintedListItemConditions()`
 
 ```php
-vintedListItemConditions($market): mixed
+vintedListItemConditions($market): \ScrapeBadger\Model\StatusesResponse
 ```
 
 List item conditions
@@ -324,7 +324,7 @@ try {
 
 ### Return type
 
-**mixed**
+[**\ScrapeBadger\Model\StatusesResponse**](../Model/StatusesResponse.md)
 
 ### Authorization
 
@@ -342,7 +342,7 @@ try {
 ## `vintedListMarkets()`
 
 ```php
-vintedListMarkets(): mixed
+vintedListMarkets(): \ScrapeBadger\Model\MarketsResponse
 ```
 
 List markets
@@ -383,7 +383,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-**mixed**
+[**\ScrapeBadger\Model\MarketsResponse**](../Model/MarketsResponse.md)
 
 ### Authorization
 
@@ -524,7 +524,7 @@ try {
 ## `vintedSearchBrands()`
 
 ```php
-vintedSearchBrands($keyword, $market): mixed
+vintedSearchBrands($keyword, $market): \ScrapeBadger\Model\BrandsResponse
 ```
 
 Search brands
@@ -570,7 +570,7 @@ try {
 
 ### Return type
 
-**mixed**
+[**\ScrapeBadger\Model\BrandsResponse**](../Model/BrandsResponse.md)
 
 ### Authorization
 
@@ -588,7 +588,7 @@ try {
 ## `vintedSearchByImage()`
 
 ```php
-vintedSearchByImage($vinted_image_search_request): mixed
+vintedSearchByImage($vinted_image_search_request): \ScrapeBadger\Model\SearchResponse
 ```
 
 Search by image
@@ -632,7 +632,7 @@ try {
 
 ### Return type
 
-**mixed**
+[**\ScrapeBadger\Model\SearchResponse**](../Model/SearchResponse.md)
 
 ### Authorization
 
@@ -650,7 +650,7 @@ try {
 ## `vintedSearchVintedItems()`
 
 ```php
-vintedSearchVintedItems($query, $market, $seller_country, $page, $per_page, $price_from, $price_to, $brand_ids, $catalog_ids, $color_ids, $size_ids, $material_ids, $time, $search_session_id, $status_ids, $order): mixed
+vintedSearchVintedItems($query, $market, $seller_country, $page, $per_page, $price_from, $price_to, $brand_ids, $catalog_ids, $color_ids, $size_ids, $material_ids, $time, $search_session_id, $status_ids, $order): \ScrapeBadger\Model\SearchResponse
 ```
 
 Search Vinted items
@@ -724,7 +724,7 @@ try {
 
 ### Return type
 
-**mixed**
+[**\ScrapeBadger\Model\SearchResponse**](../Model/SearchResponse.md)
 
 ### Authorization
 

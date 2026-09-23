@@ -2328,9 +2328,9 @@ class AmazonApi
      *
      * @param  string $asin asin (required)
      * @param  string $domain domain (optional, default to 'com')
-     * @param  int $page Review page (1-100, ~10 reviews/page) (optional, default to 1)
+     * @param  int $page Review page (10 reviews/page) (optional, default to 1)
      * @param  string $sort_by helpful | recent (optional, default to 'helpful')
-     * @param  string $star one_star..five_star | positive | critical (optional)
+     * @param  string $star 1-5 | one_star..five_star | positive | critical | all_stars (optional)
      * @param  bool $verified_only verified_only (optional, default to false)
      * @param  bool $media_only media_only (optional, default to false)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['amazonGetProductReviews'] to see the possible values for this operation
@@ -2352,9 +2352,9 @@ class AmazonApi
      *
      * @param  string $asin (required)
      * @param  string $domain (optional, default to 'com')
-     * @param  int $page Review page (1-100, ~10 reviews/page) (optional, default to 1)
+     * @param  int $page Review page (10 reviews/page) (optional, default to 1)
      * @param  string $sort_by helpful | recent (optional, default to 'helpful')
-     * @param  string $star one_star..five_star | positive | critical (optional)
+     * @param  string $star 1-5 | one_star..five_star | positive | critical | all_stars (optional)
      * @param  bool $verified_only (optional, default to false)
      * @param  bool $media_only (optional, default to false)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['amazonGetProductReviews'] to see the possible values for this operation
@@ -2518,9 +2518,9 @@ class AmazonApi
      *
      * @param  string $asin (required)
      * @param  string $domain (optional, default to 'com')
-     * @param  int $page Review page (1-100, ~10 reviews/page) (optional, default to 1)
+     * @param  int $page Review page (10 reviews/page) (optional, default to 1)
      * @param  string $sort_by helpful | recent (optional, default to 'helpful')
-     * @param  string $star one_star..five_star | positive | critical (optional)
+     * @param  string $star 1-5 | one_star..five_star | positive | critical | all_stars (optional)
      * @param  bool $verified_only (optional, default to false)
      * @param  bool $media_only (optional, default to false)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['amazonGetProductReviews'] to see the possible values for this operation
@@ -2545,9 +2545,9 @@ class AmazonApi
      *
      * @param  string $asin (required)
      * @param  string $domain (optional, default to 'com')
-     * @param  int $page Review page (1-100, ~10 reviews/page) (optional, default to 1)
+     * @param  int $page Review page (10 reviews/page) (optional, default to 1)
      * @param  string $sort_by helpful | recent (optional, default to 'helpful')
-     * @param  string $star one_star..five_star | positive | critical (optional)
+     * @param  string $star 1-5 | one_star..five_star | positive | critical | all_stars (optional)
      * @param  bool $verified_only (optional, default to false)
      * @param  bool $media_only (optional, default to false)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['amazonGetProductReviews'] to see the possible values for this operation
@@ -2601,9 +2601,9 @@ class AmazonApi
      *
      * @param  string $asin (required)
      * @param  string $domain (optional, default to 'com')
-     * @param  int $page Review page (1-100, ~10 reviews/page) (optional, default to 1)
+     * @param  int $page Review page (10 reviews/page) (optional, default to 1)
      * @param  string $sort_by helpful | recent (optional, default to 'helpful')
-     * @param  string $star one_star..five_star | positive | critical (optional)
+     * @param  string $star 1-5 | one_star..five_star | positive | critical | all_stars (optional)
      * @param  bool $verified_only (optional, default to false)
      * @param  bool $media_only (optional, default to false)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['amazonGetProductReviews'] to see the possible values for this operation

@@ -418,7 +418,7 @@ amazonGetProductReviews($asin, $domain, $page, $sort_by, $star, $verified_only, 
 
 Get product reviews
 
-Customer reviews for an ASIN (featured + paginated, with filters).
+Customer reviews for an ASIN, filtered, sorted and paginated.  Reviews come from the product page's public featured block, which is the only review surface Amazon serves anonymously — a subset of the full history (``ratings_total`` reports the true total). ``pagination`` gives the filtered count and the last page, so paging past it returns an empty list. An unrecognised ``star`` or ``sort_by`` is rejected with 422 rather than silently answered with unfiltered reviews.
 
 ### Example
 
@@ -441,9 +441,9 @@ $apiInstance = new ScrapeBadger\Api\AmazonApi(
 );
 $asin = 'asin_example'; // string
 $domain = 'com'; // string
-$page = 1; // int | Review page (1-100, ~10 reviews/page)
+$page = 1; // int | Review page (10 reviews/page)
 $sort_by = 'helpful'; // string | helpful | recent
-$star = 'star_example'; // string | one_star..five_star | positive | critical
+$star = 'star_example'; // string | 1-5 | one_star..five_star | positive | critical | all_stars
 $verified_only = false; // bool
 $media_only = false; // bool
 
@@ -461,9 +461,9 @@ try {
 | ------------- | ------------- | ------------- | ------------- |
 | **asin** | **string**|  | |
 | **domain** | **string**|  | [optional] [default to &#39;com&#39;] |
-| **page** | **int**| Review page (1-100, ~10 reviews/page) | [optional] [default to 1] |
+| **page** | **int**| Review page (10 reviews/page) | [optional] [default to 1] |
 | **sort_by** | **string**| helpful | recent | [optional] [default to &#39;helpful&#39;] |
-| **star** | **string**| one_star..five_star | positive | critical | [optional] |
+| **star** | **string**| 1-5 | one_star..five_star | positive | critical | all_stars | [optional] |
 | **verified_only** | **bool**|  | [optional] [default to false] |
 | **media_only** | **bool**|  | [optional] [default to false] |
 

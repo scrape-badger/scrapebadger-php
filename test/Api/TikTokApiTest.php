@@ -72,6 +72,18 @@ class TikTokApiTest extends TestCase
     }
 
     /**
+     * Test case for tiktokBestSellingTiktokShopProducts
+     *
+     * Best-selling TikTok Shop products.
+     *
+     */
+    public function testTiktokBestSellingTiktokShopProducts()
+    {
+        // TODO: implement
+        self::markTestIncomplete('Not implemented');
+    }
+
+    /**
      * Test case for tiktokGeneralSearch
      *
      * General search.
@@ -396,6 +408,18 @@ class TikTokApiTest extends TestCase
     }
 
     /**
+     * Test case for tiktokTiktokShopCategoryProducts
+     *
+     * TikTok Shop category products.
+     *
+     */
+    public function testTiktokTiktokShopCategoryProducts()
+    {
+        // TODO: implement
+        self::markTestIncomplete('Not implemented');
+    }
+
+    /**
      * Test case for tiktokTiktokShopCategorySubcategoriesTopProducts
      *
      * TikTok Shop category: subcategories + top products.
@@ -432,6 +456,18 @@ class TikTokApiTest extends TestCase
     }
 
     /**
+     * Test case for tiktokTiktokShopRegionalMallFeed
+     *
+     * TikTok Shop regional mall feed.
+     *
+     */
+    public function testTiktokTiktokShopRegionalMallFeed()
+    {
+        // TODO: implement
+        self::markTestIncomplete('Not implemented');
+    }
+
+    /**
      * Test case for tiktokTiktokShopRootCategories
      *
      * TikTok Shop root categories.
@@ -450,6 +486,18 @@ class TikTokApiTest extends TestCase
      *
      */
     public function testTiktokTiktokShopStoreProducts()
+    {
+        // TODO: implement
+        self::markTestIncomplete('Not implemented');
+    }
+
+    /**
+     * Test case for tiktokTiktokShopThemeRanking
+     *
+     * TikTok Shop theme ranking.
+     *
+     */
+    public function testTiktokTiktokShopThemeRanking()
     {
         // TODO: implement
         self::markTestIncomplete('Not implemented');

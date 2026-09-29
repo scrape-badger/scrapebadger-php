@@ -4,6 +4,7 @@ All URIs are relative to https://scrapebadger.com, except if the operation defin
 
 | Method | HTTP request | Description |
 | ------------- | ------------- | ------------- |
+| [**tiktokBestSellingTiktokShopProducts()**](TikTokApi.md#tiktokBestSellingTiktokShopProducts) | **GET** /v1/tiktok/shop/bestsellers | Best-selling TikTok Shop products |
 | [**tiktokGeneralSearch()**](TikTokApi.md#tiktokGeneralSearch) | **GET** /v1/tiktok/search | General search |
 | [**tiktokGetCommentReplies()**](TikTokApi.md#tiktokGetCommentReplies) | **GET** /v1/tiktok/comments/{comment_id}/replies | Get comment replies |
 | [**tiktokGetComments()**](TikTokApi.md#tiktokGetComments) | **GET** /v1/tiktok/videos/{video_id}/comments | Get comments |
@@ -31,15 +32,86 @@ All URIs are relative to https://scrapebadger.com, except if the operation defin
 | [**tiktokSearchTiktokShopProducts()**](TikTokApi.md#tiktokSearchTiktokShopProducts) | **GET** /v1/tiktok/shop/search | Search TikTok Shop products |
 | [**tiktokSearchUsers()**](TikTokApi.md#tiktokSearchUsers) | **GET** /v1/tiktok/search/users | Search users |
 | [**tiktokSearchVideos()**](TikTokApi.md#tiktokSearchVideos) | **GET** /v1/tiktok/search/videos | Search videos |
+| [**tiktokTiktokShopCategoryProducts()**](TikTokApi.md#tiktokTiktokShopCategoryProducts) | **GET** /v1/tiktok/shop/categories/{category_id}/products | TikTok Shop category products |
 | [**tiktokTiktokShopCategorySubcategoriesTopProducts()**](TikTokApi.md#tiktokTiktokShopCategorySubcategoriesTopProducts) | **GET** /v1/tiktok/shop/categories/{category_id} | TikTok Shop category: subcategories + top products |
 | [**tiktokTiktokShopProductDetail()**](TikTokApi.md#tiktokTiktokShopProductDetail) | **GET** /v1/tiktok/shop/products/{product_id} | TikTok Shop product detail |
 | [**tiktokTiktokShopProductReviews()**](TikTokApi.md#tiktokTiktokShopProductReviews) | **GET** /v1/tiktok/shop/products/{product_id}/reviews | TikTok Shop product reviews |
+| [**tiktokTiktokShopRegionalMallFeed()**](TikTokApi.md#tiktokTiktokShopRegionalMallFeed) | **GET** /v1/tiktok/shop/mall | TikTok Shop regional mall feed |
 | [**tiktokTiktokShopRootCategories()**](TikTokApi.md#tiktokTiktokShopRootCategories) | **GET** /v1/tiktok/shop/categories | TikTok Shop root categories |
 | [**tiktokTiktokShopStoreProducts()**](TikTokApi.md#tiktokTiktokShopStoreProducts) | **GET** /v1/tiktok/shop/stores/{seller_id} | TikTok Shop store + products |
+| [**tiktokTiktokShopThemeRanking()**](TikTokApi.md#tiktokTiktokShopThemeRanking) | **GET** /v1/tiktok/shop/rankings/{rank_id} | TikTok Shop theme ranking |
 | [**tiktokTrendingHashtags()**](TikTokApi.md#tiktokTrendingHashtags) | **GET** /v1/tiktok/trending/hashtags | Trending hashtags |
 | [**tiktokTrendingSongs()**](TikTokApi.md#tiktokTrendingSongs) | **GET** /v1/tiktok/trending/songs | Trending songs |
 | [**tiktokTrendingVideos()**](TikTokApi.md#tiktokTrendingVideos) | **GET** /v1/tiktok/trending/videos | Trending videos |
 
+
+## `tiktokBestSellingTiktokShopProducts()`
+
+```php
+tiktokBestSellingTiktokShopProducts($region, $category_id, $pages, $limit): mixed
+```
+
+Best-selling TikTok Shop products
+
+Sales-ranked best-selling products, available for every operating market.  Ranked by real sold_count (source: sales_ranked); works for SG/MY/JP where TikTok's curated /shop/rankings are not exposed. Omit category_id for a market-wide list.
+
+### Example
+
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+// Configure API key authorization: ApiKeyAuth
+$config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKey('X-API-Key', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// $config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKeyPrefix('X-API-Key', 'Bearer');
+
+
+$apiInstance = new ScrapeBadger\Api\TikTokApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client(),
+    $config
+);
+$region = 'US'; // string | Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint
+$category_id = 'category_id_example'; // string
+$pages = 2; // int
+$limit = 20; // int
+
+try {
+    $result = $apiInstance->tiktokBestSellingTiktokShopProducts($region, $category_id, $pages, $limit);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling TikTokApi->tiktokBestSellingTiktokShopProducts: ', $e->getMessage(), PHP_EOL;
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+| ------------- | ------------- | ------------- | ------------- |
+| **region** | **string**| Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint | [optional] [default to &#39;US&#39;] |
+| **category_id** | **string**|  | [optional] |
+| **pages** | **int**|  | [optional] [default to 2] |
+| **limit** | **int**|  | [optional] [default to 20] |
+
+### Return type
+
+**mixed**
+
+### Authorization
+
+[ApiKeyAuth](../../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `application/json`
+
+[[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
+[[Back to Model list]](../../README.md#models)
+[[Back to README]](../../README.md)
 
 ## `tiktokGeneralSearch()`
 
@@ -1621,7 +1693,7 @@ try {
 ## `tiktokSearchTiktokShopProducts()`
 
 ```php
-tiktokSearchTiktokShopProducts($q, $region, $offset): mixed
+tiktokSearchTiktokShopProducts($q, $region, $page_token, $offset): mixed
 ```
 
 Search TikTok Shop products
@@ -1648,11 +1720,12 @@ $apiInstance = new ScrapeBadger\Api\TikTokApi(
     $config
 );
 $q = 'q_example'; // string | Keyword, e.g. 'wireless earbuds'
-$region = 'US'; // string | Market: US, GB, ID
+$region = 'US'; // string | Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint
+$page_token = 'page_token_example'; // string
 $offset = 0; // int | Pass back next_offset for the next page (US)
 
 try {
-    $result = $apiInstance->tiktokSearchTiktokShopProducts($q, $region, $offset);
+    $result = $apiInstance->tiktokSearchTiktokShopProducts($q, $region, $page_token, $offset);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling TikTokApi->tiktokSearchTiktokShopProducts: ', $e->getMessage(), PHP_EOL;
@@ -1664,7 +1737,8 @@ try {
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
 | **q** | **string**| Keyword, e.g. &#39;wireless earbuds&#39; | |
-| **region** | **string**| Market: US, GB, ID | [optional] [default to &#39;US&#39;] |
+| **region** | **string**| Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint | [optional] [default to &#39;US&#39;] |
+| **page_token** | **string**|  | [optional] |
 | **offset** | **int**| Pass back next_offset for the next page (US) | [optional] [default to 0] |
 
 ### Return type
@@ -1820,6 +1894,74 @@ try {
 [[Back to Model list]](../../README.md#models)
 [[Back to README]](../../README.md)
 
+## `tiktokTiktokShopCategoryProducts()`
+
+```php
+tiktokTiktokShopCategoryProducts($category_id, $region, $count, $exclude_product_ids): mixed
+```
+
+TikTok Shop category products
+
+Category recommendations. Pass accumulated exclusion IDs for the next page; these are not sales rankings.
+
+### Example
+
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+// Configure API key authorization: ApiKeyAuth
+$config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKey('X-API-Key', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// $config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKeyPrefix('X-API-Key', 'Bearer');
+
+
+$apiInstance = new ScrapeBadger\Api\TikTokApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client(),
+    $config
+);
+$category_id = 'category_id_example'; // string
+$region = 'US'; // string | Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint
+$count = 20; // int
+$exclude_product_ids = array('exclude_product_ids_example'); // string[] | Repeat for every next_exclude_product_ids value
+
+try {
+    $result = $apiInstance->tiktokTiktokShopCategoryProducts($category_id, $region, $count, $exclude_product_ids);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling TikTokApi->tiktokTiktokShopCategoryProducts: ', $e->getMessage(), PHP_EOL;
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+| ------------- | ------------- | ------------- | ------------- |
+| **category_id** | **string**|  | |
+| **region** | **string**| Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint | [optional] [default to &#39;US&#39;] |
+| **count** | **int**|  | [optional] [default to 20] |
+| **exclude_product_ids** | [**string[]**](../Model/string.md)| Repeat for every next_exclude_product_ids value | [optional] |
+
+### Return type
+
+**mixed**
+
+### Authorization
+
+[ApiKeyAuth](../../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `application/json`
+
+[[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
+[[Back to Model list]](../../README.md#models)
+[[Back to README]](../../README.md)
+
 ## `tiktokTiktokShopCategorySubcategoriesTopProducts()`
 
 ```php
@@ -1850,7 +1992,7 @@ $apiInstance = new ScrapeBadger\Api\TikTokApi(
     $config
 );
 $category_id = 'category_id_example'; // string
-$region = 'US'; // string | Market: US, GB, ID
+$region = 'US'; // string | Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint
 
 try {
     $result = $apiInstance->tiktokTiktokShopCategorySubcategoriesTopProducts($category_id, $region);
@@ -1865,7 +2007,7 @@ try {
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
 | **category_id** | **string**|  | |
-| **region** | **string**| Market: US, GB, ID | [optional] [default to &#39;US&#39;] |
+| **region** | **string**| Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint | [optional] [default to &#39;US&#39;] |
 
 ### Return type
 
@@ -1914,7 +2056,7 @@ $apiInstance = new ScrapeBadger\Api\TikTokApi(
     $config
 );
 $product_id = 'product_id_example'; // string
-$region = 'US'; // string | Market: US, GB, ID
+$region = 'US'; // string | Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint
 
 try {
     $result = $apiInstance->tiktokTiktokShopProductDetail($product_id, $region);
@@ -1929,7 +2071,7 @@ try {
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
 | **product_id** | **string**|  | |
-| **region** | **string**| Market: US, GB, ID | [optional] [default to &#39;US&#39;] |
+| **region** | **string**| Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint | [optional] [default to &#39;US&#39;] |
 
 ### Return type
 
@@ -1956,7 +2098,7 @@ tiktokTiktokShopProductReviews($product_id, $region, $page, $count, $sort, $rati
 
 TikTok Shop product reviews
 
-Paginated product reviews with the rating breakdown (US).
+Paginated product reviews with rating breakdown (US and ID). Indonesia supports recent/recommended ordering, star and media filters; verified=true is not supported.
 
 ### Example
 
@@ -1978,7 +2120,7 @@ $apiInstance = new ScrapeBadger\Api\TikTokApi(
     $config
 );
 $product_id = 'product_id_example'; // string
-$region = 'US'; // string | Market: US, GB, ID
+$region = 'US'; // string | Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint
 $page = 1; // int
 $count = 20; // int
 $sort = 'recommended'; // string | recommended | recent
@@ -1999,13 +2141,79 @@ try {
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
 | **product_id** | **string**|  | |
-| **region** | **string**| Market: US, GB, ID | [optional] [default to &#39;US&#39;] |
+| **region** | **string**| Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint | [optional] [default to &#39;US&#39;] |
 | **page** | **int**|  | [optional] [default to 1] |
 | **count** | **int**|  | [optional] [default to 20] |
 | **sort** | **string**| recommended | recent | [optional] [default to &#39;recommended&#39;] |
 | **rating** | **int**| Only this star rating | [optional] |
 | **with_media** | **bool**| Only reviews with photos/videos | [optional] [default to false] |
 | **verified** | **bool**| Only verified purchases | [optional] [default to false] |
+
+### Return type
+
+**mixed**
+
+### Authorization
+
+[ApiKeyAuth](../../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `application/json`
+
+[[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
+[[Back to Model list]](../../README.md#models)
+[[Back to README]](../../README.md)
+
+## `tiktokTiktokShopRegionalMallFeed()`
+
+```php
+tiktokTiktokShopRegionalMallFeed($region, $tab_id, $page_token): mixed
+```
+
+TikTok Shop regional mall feed
+
+Mall navigation and recommendations with a 15-minute continuation token.  ID, SG, MY, PH, TH, VN and JP are locally verified. Tabs are not a complete category taxonomy.
+
+### Example
+
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+// Configure API key authorization: ApiKeyAuth
+$config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKey('X-API-Key', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// $config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKeyPrefix('X-API-Key', 'Bearer');
+
+
+$apiInstance = new ScrapeBadger\Api\TikTokApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client(),
+    $config
+);
+$region = 'US'; // string | Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint
+$tab_id = 0; // int
+$page_token = 'page_token_example'; // string
+
+try {
+    $result = $apiInstance->tiktokTiktokShopRegionalMallFeed($region, $tab_id, $page_token);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling TikTokApi->tiktokTiktokShopRegionalMallFeed: ', $e->getMessage(), PHP_EOL;
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+| ------------- | ------------- | ------------- | ------------- |
+| **region** | **string**| Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint | [optional] [default to &#39;US&#39;] |
+| **tab_id** | **int**|  | [optional] [default to 0] |
+| **page_token** | **string**|  | [optional] |
 
 ### Return type
 
@@ -2053,7 +2261,7 @@ $apiInstance = new ScrapeBadger\Api\TikTokApi(
     new GuzzleHttp\Client(),
     $config
 );
-$region = 'US'; // string | Market: US, GB, ID
+$region = 'US'; // string | Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint
 
 try {
     $result = $apiInstance->tiktokTiktokShopRootCategories($region);
@@ -2067,7 +2275,7 @@ try {
 
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
-| **region** | **string**| Market: US, GB, ID | [optional] [default to &#39;US&#39;] |
+| **region** | **string**| Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint | [optional] [default to &#39;US&#39;] |
 
 ### Return type
 
@@ -2116,7 +2324,7 @@ $apiInstance = new ScrapeBadger\Api\TikTokApi(
     $config
 );
 $seller_id = 'seller_id_example'; // string
-$region = 'US'; // string | Market: US, GB, ID
+$region = 'US'; // string | Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint
 $cursor = ''; // string | Pass back next_cursor for the next page
 $count = 20; // int
 
@@ -2133,8 +2341,78 @@ try {
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
 | **seller_id** | **string**|  | |
-| **region** | **string**| Market: US, GB, ID | [optional] [default to &#39;US&#39;] |
+| **region** | **string**| Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint | [optional] [default to &#39;US&#39;] |
 | **cursor** | **string**| Pass back next_cursor for the next page | [optional] [default to &#39;&#39;] |
+| **count** | **int**|  | [optional] [default to 20] |
+
+### Return type
+
+**mixed**
+
+### Authorization
+
+[ApiKeyAuth](../../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `application/json`
+
+[[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
+[[Back to Model list]](../../README.md#models)
+[[Back to README]](../../README.md)
+
+## `tiktokTiktokShopThemeRanking()`
+
+```php
+tiktokTiktokShopThemeRanking($rank_id, $region, $rank_type, $cursor, $count): mixed
+```
+
+TikTok Shop theme ranking
+
+Native category/theme ranking. ID, PH, TH and VN are locally verified.  Types: 1 high seller, 2 trending, 3 ratings. Coverage depends on the configured guest profile; a category recommendation feed is not used as a substitute.
+
+### Example
+
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+// Configure API key authorization: ApiKeyAuth
+$config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKey('X-API-Key', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// $config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKeyPrefix('X-API-Key', 'Bearer');
+
+
+$apiInstance = new ScrapeBadger\Api\TikTokApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client(),
+    $config
+);
+$rank_id = 'rank_id_example'; // string
+$region = 'US'; // string | Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint
+$rank_type = 1; // int
+$cursor = 0; // int
+$count = 20; // int
+
+try {
+    $result = $apiInstance->tiktokTiktokShopThemeRanking($rank_id, $region, $rank_type, $cursor, $count);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling TikTokApi->tiktokTiktokShopThemeRanking: ', $e->getMessage(), PHP_EOL;
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+| ------------- | ------------- | ------------- | ------------- |
+| **rank_id** | **string**|  | |
+| **region** | **string**| Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint | [optional] [default to &#39;US&#39;] |
+| **rank_type** | **int**|  | [optional] [default to 1] |
+| **cursor** | **int**|  | [optional] [default to 0] |
 | **count** | **int**|  | [optional] [default to 20] |
 
 ### Return type

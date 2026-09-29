@@ -71,6 +71,9 @@ class TikTokApi
 
     /** @var string[] $contentTypes **/
     public const contentTypes = [
+        'tiktokBestSellingTiktokShopProducts' => [
+            'application/json',
+        ],
         'tiktokGeneralSearch' => [
             'application/json',
         ],
@@ -152,6 +155,9 @@ class TikTokApi
         'tiktokSearchVideos' => [
             'application/json',
         ],
+        'tiktokTiktokShopCategoryProducts' => [
+            'application/json',
+        ],
         'tiktokTiktokShopCategorySubcategoriesTopProducts' => [
             'application/json',
         ],
@@ -161,10 +167,16 @@ class TikTokApi
         'tiktokTiktokShopProductReviews' => [
             'application/json',
         ],
+        'tiktokTiktokShopRegionalMallFeed' => [
+            'application/json',
+        ],
         'tiktokTiktokShopRootCategories' => [
             'application/json',
         ],
         'tiktokTiktokShopStoreProducts' => [
+            'application/json',
+        ],
+        'tiktokTiktokShopThemeRanking' => [
             'application/json',
         ],
         'tiktokTrendingHashtags' => [
@@ -222,6 +234,409 @@ class TikTokApi
     public function getConfig()
     {
         return $this->config;
+    }
+
+    /**
+     * Operation tiktokBestSellingTiktokShopProducts
+     *
+     * Best-selling TikTok Shop products
+     *
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
+     * @param  string $category_id category_id (optional)
+     * @param  int $pages pages (optional, default to 2)
+     * @param  int $limit limit (optional, default to 20)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokBestSellingTiktokShopProducts'] to see the possible values for this operation
+     *
+     * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     */
+    public function tiktokBestSellingTiktokShopProducts($region = 'US', $category_id = null, $pages = 2, $limit = 20, string $contentType = self::contentTypes['tiktokBestSellingTiktokShopProducts'][0])
+    {
+        list($response) = $this->tiktokBestSellingTiktokShopProductsWithHttpInfo($region, $category_id, $pages, $limit, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation tiktokBestSellingTiktokShopProductsWithHttpInfo
+     *
+     * Best-selling TikTok Shop products
+     *
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
+     * @param  string $category_id (optional)
+     * @param  int $pages (optional, default to 2)
+     * @param  int $limit (optional, default to 20)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokBestSellingTiktokShopProducts'] to see the possible values for this operation
+     *
+     * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function tiktokBestSellingTiktokShopProductsWithHttpInfo($region = 'US', $category_id = null, $pages = 2, $limit = 20, string $contentType = self::contentTypes['tiktokBestSellingTiktokShopProducts'][0])
+    {
+        $request = $this->tiktokBestSellingTiktokShopProductsRequest($region, $category_id, $pages, $limit, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    if ('mixed' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('mixed' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, 'mixed', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                case 422:
+                    if ('\ScrapeBadger\Model\HTTPValidationError' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\HTTPValidationError' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\HTTPValidationError', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+            }
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            $returnType = 'mixed';
+            if ($returnType === '\SplFileObject') {
+                $content = $response->getBody(); //stream goes to serializer
+            } else {
+                $content = (string) $response->getBody();
+                if ($returnType !== 'string') {
+                    try {
+                        $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                    } catch (\JsonException $exception) {
+                        throw new ApiException(
+                            sprintf(
+                                'Error JSON decoding server response (%s)',
+                                $request->getUri()
+                            ),
+                            $statusCode,
+                            $response->getHeaders(),
+                            $content
+                        );
+                    }
+                }
+            }
+
+            return [
+                ObjectSerializer::deserialize($content, $returnType, []),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            ];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        'mixed',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\HTTPValidationError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation tiktokBestSellingTiktokShopProductsAsync
+     *
+     * Best-selling TikTok Shop products
+     *
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
+     * @param  string $category_id (optional)
+     * @param  int $pages (optional, default to 2)
+     * @param  int $limit (optional, default to 20)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokBestSellingTiktokShopProducts'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function tiktokBestSellingTiktokShopProductsAsync($region = 'US', $category_id = null, $pages = 2, $limit = 20, string $contentType = self::contentTypes['tiktokBestSellingTiktokShopProducts'][0])
+    {
+        return $this->tiktokBestSellingTiktokShopProductsAsyncWithHttpInfo($region, $category_id, $pages, $limit, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation tiktokBestSellingTiktokShopProductsAsyncWithHttpInfo
+     *
+     * Best-selling TikTok Shop products
+     *
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
+     * @param  string $category_id (optional)
+     * @param  int $pages (optional, default to 2)
+     * @param  int $limit (optional, default to 20)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokBestSellingTiktokShopProducts'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function tiktokBestSellingTiktokShopProductsAsyncWithHttpInfo($region = 'US', $category_id = null, $pages = 2, $limit = 20, string $contentType = self::contentTypes['tiktokBestSellingTiktokShopProducts'][0])
+    {
+        $returnType = 'mixed';
+        $request = $this->tiktokBestSellingTiktokShopProductsRequest($region, $category_id, $pages, $limit, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'tiktokBestSellingTiktokShopProducts'
+     *
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
+     * @param  string $category_id (optional)
+     * @param  int $pages (optional, default to 2)
+     * @param  int $limit (optional, default to 20)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokBestSellingTiktokShopProducts'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function tiktokBestSellingTiktokShopProductsRequest($region = 'US', $category_id = null, $pages = 2, $limit = 20, string $contentType = self::contentTypes['tiktokBestSellingTiktokShopProducts'][0])
+    {
+
+
+        if ($category_id !== null && !preg_match("/^[1-9][0-9]{0,18}$/", $category_id)) {
+            throw new \InvalidArgumentException("invalid value for \"category_id\" when calling TikTokApi.tiktokBestSellingTiktokShopProducts, must conform to the pattern /^[1-9][0-9]{0,18}$/.");
+        }
+        
+        if ($pages !== null && $pages > 4) {
+            throw new \InvalidArgumentException('invalid value for "$pages" when calling TikTokApi.tiktokBestSellingTiktokShopProducts, must be smaller than or equal to 4.');
+        }
+        if ($pages !== null && $pages < 1) {
+            throw new \InvalidArgumentException('invalid value for "$pages" when calling TikTokApi.tiktokBestSellingTiktokShopProducts, must be bigger than or equal to 1.');
+        }
+        
+        if ($limit !== null && $limit > 100) {
+            throw new \InvalidArgumentException('invalid value for "$limit" when calling TikTokApi.tiktokBestSellingTiktokShopProducts, must be smaller than or equal to 100.');
+        }
+        if ($limit !== null && $limit < 1) {
+            throw new \InvalidArgumentException('invalid value for "$limit" when calling TikTokApi.tiktokBestSellingTiktokShopProducts, must be bigger than or equal to 1.');
+        }
+        
+
+        $resourcePath = '/v1/tiktok/shop/bestsellers';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $region,
+            'region', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $category_id,
+            'category_id', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $pages,
+            'pages', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $limit,
+            'limit', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+
+
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+        // this endpoint requires API key authentication
+        $apiKey = $this->config->getApiKeyWithPrefix('X-API-Key');
+        if ($apiKey !== null) {
+            $headers['X-API-Key'] = $apiKey;
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'GET',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
     }
 
     /**
@@ -9268,7 +9683,8 @@ class TikTokApi
      * Search TikTok Shop products
      *
      * @param  string $q Keyword, e.g. &#39;wireless earbuds&#39; (required)
-     * @param  string $region Market: US, GB, ID (optional, default to 'US')
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
+     * @param  string $page_token page_token (optional)
      * @param  int $offset Pass back next_offset for the next page (US) (optional, default to 0)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokSearchTiktokShopProducts'] to see the possible values for this operation
      *
@@ -9276,9 +9692,9 @@ class TikTokApi
      * @throws \InvalidArgumentException
      * @return mixed|\ScrapeBadger\Model\HTTPValidationError
      */
-    public function tiktokSearchTiktokShopProducts($q, $region = 'US', $offset = 0, string $contentType = self::contentTypes['tiktokSearchTiktokShopProducts'][0])
+    public function tiktokSearchTiktokShopProducts($q, $region = 'US', $page_token = null, $offset = 0, string $contentType = self::contentTypes['tiktokSearchTiktokShopProducts'][0])
     {
-        list($response) = $this->tiktokSearchTiktokShopProductsWithHttpInfo($q, $region, $offset, $contentType);
+        list($response) = $this->tiktokSearchTiktokShopProductsWithHttpInfo($q, $region, $page_token, $offset, $contentType);
         return $response;
     }
 
@@ -9288,7 +9704,8 @@ class TikTokApi
      * Search TikTok Shop products
      *
      * @param  string $q Keyword, e.g. &#39;wireless earbuds&#39; (required)
-     * @param  string $region Market: US, GB, ID (optional, default to 'US')
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
+     * @param  string $page_token (optional)
      * @param  int $offset Pass back next_offset for the next page (US) (optional, default to 0)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokSearchTiktokShopProducts'] to see the possible values for this operation
      *
@@ -9296,9 +9713,9 @@ class TikTokApi
      * @throws \InvalidArgumentException
      * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
-    public function tiktokSearchTiktokShopProductsWithHttpInfo($q, $region = 'US', $offset = 0, string $contentType = self::contentTypes['tiktokSearchTiktokShopProducts'][0])
+    public function tiktokSearchTiktokShopProductsWithHttpInfo($q, $region = 'US', $page_token = null, $offset = 0, string $contentType = self::contentTypes['tiktokSearchTiktokShopProducts'][0])
     {
-        $request = $this->tiktokSearchTiktokShopProductsRequest($q, $region, $offset, $contentType);
+        $request = $this->tiktokSearchTiktokShopProductsRequest($q, $region, $page_token, $offset, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -9450,16 +9867,17 @@ class TikTokApi
      * Search TikTok Shop products
      *
      * @param  string $q Keyword, e.g. &#39;wireless earbuds&#39; (required)
-     * @param  string $region Market: US, GB, ID (optional, default to 'US')
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
+     * @param  string $page_token (optional)
      * @param  int $offset Pass back next_offset for the next page (US) (optional, default to 0)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokSearchTiktokShopProducts'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function tiktokSearchTiktokShopProductsAsync($q, $region = 'US', $offset = 0, string $contentType = self::contentTypes['tiktokSearchTiktokShopProducts'][0])
+    public function tiktokSearchTiktokShopProductsAsync($q, $region = 'US', $page_token = null, $offset = 0, string $contentType = self::contentTypes['tiktokSearchTiktokShopProducts'][0])
     {
-        return $this->tiktokSearchTiktokShopProductsAsyncWithHttpInfo($q, $region, $offset, $contentType)
+        return $this->tiktokSearchTiktokShopProductsAsyncWithHttpInfo($q, $region, $page_token, $offset, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -9473,17 +9891,18 @@ class TikTokApi
      * Search TikTok Shop products
      *
      * @param  string $q Keyword, e.g. &#39;wireless earbuds&#39; (required)
-     * @param  string $region Market: US, GB, ID (optional, default to 'US')
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
+     * @param  string $page_token (optional)
      * @param  int $offset Pass back next_offset for the next page (US) (optional, default to 0)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokSearchTiktokShopProducts'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function tiktokSearchTiktokShopProductsAsyncWithHttpInfo($q, $region = 'US', $offset = 0, string $contentType = self::contentTypes['tiktokSearchTiktokShopProducts'][0])
+    public function tiktokSearchTiktokShopProductsAsyncWithHttpInfo($q, $region = 'US', $page_token = null, $offset = 0, string $contentType = self::contentTypes['tiktokSearchTiktokShopProducts'][0])
     {
         $returnType = 'mixed';
-        $request = $this->tiktokSearchTiktokShopProductsRequest($q, $region, $offset, $contentType);
+        $request = $this->tiktokSearchTiktokShopProductsRequest($q, $region, $page_token, $offset, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -9525,14 +9944,15 @@ class TikTokApi
      * Create request for operation 'tiktokSearchTiktokShopProducts'
      *
      * @param  string $q Keyword, e.g. &#39;wireless earbuds&#39; (required)
-     * @param  string $region Market: US, GB, ID (optional, default to 'US')
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
+     * @param  string $page_token (optional)
      * @param  int $offset Pass back next_offset for the next page (US) (optional, default to 0)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokSearchTiktokShopProducts'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function tiktokSearchTiktokShopProductsRequest($q, $region = 'US', $offset = 0, string $contentType = self::contentTypes['tiktokSearchTiktokShopProducts'][0])
+    public function tiktokSearchTiktokShopProductsRequest($q, $region = 'US', $page_token = null, $offset = 0, string $contentType = self::contentTypes['tiktokSearchTiktokShopProducts'][0])
     {
 
         // verify the required parameter 'q' is set
@@ -9546,6 +9966,10 @@ class TikTokApi
         }
         
 
+        if ($page_token !== null && !preg_match("/^[a-f0-9]{32}$/", $page_token)) {
+            throw new \InvalidArgumentException("invalid value for \"page_token\" when calling TikTokApi.tiktokSearchTiktokShopProducts, must conform to the pattern /^[a-f0-9]{32}$/.");
+        }
+        
         if ($offset !== null && $offset < 0) {
             throw new \InvalidArgumentException('invalid value for "$offset" when calling TikTokApi.tiktokSearchTiktokShopProducts, must be bigger than or equal to 0.');
         }
@@ -9571,6 +9995,15 @@ class TikTokApi
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
             $region,
             'region', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $page_token,
+            'page_token', // param base name
             'string', // openApiType
             'form', // style
             true, // explode
@@ -10448,12 +10881,411 @@ class TikTokApi
     }
 
     /**
+     * Operation tiktokTiktokShopCategoryProducts
+     *
+     * TikTok Shop category products
+     *
+     * @param  string $category_id category_id (required)
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
+     * @param  int $count count (optional, default to 20)
+     * @param  string[] $exclude_product_ids Repeat for every next_exclude_product_ids value (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopCategoryProducts'] to see the possible values for this operation
+     *
+     * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     */
+    public function tiktokTiktokShopCategoryProducts($category_id, $region = 'US', $count = 20, $exclude_product_ids = null, string $contentType = self::contentTypes['tiktokTiktokShopCategoryProducts'][0])
+    {
+        list($response) = $this->tiktokTiktokShopCategoryProductsWithHttpInfo($category_id, $region, $count, $exclude_product_ids, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation tiktokTiktokShopCategoryProductsWithHttpInfo
+     *
+     * TikTok Shop category products
+     *
+     * @param  string $category_id (required)
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
+     * @param  int $count (optional, default to 20)
+     * @param  string[] $exclude_product_ids Repeat for every next_exclude_product_ids value (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopCategoryProducts'] to see the possible values for this operation
+     *
+     * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function tiktokTiktokShopCategoryProductsWithHttpInfo($category_id, $region = 'US', $count = 20, $exclude_product_ids = null, string $contentType = self::contentTypes['tiktokTiktokShopCategoryProducts'][0])
+    {
+        $request = $this->tiktokTiktokShopCategoryProductsRequest($category_id, $region, $count, $exclude_product_ids, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    if ('mixed' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('mixed' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, 'mixed', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                case 422:
+                    if ('\ScrapeBadger\Model\HTTPValidationError' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\HTTPValidationError' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\HTTPValidationError', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+            }
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            $returnType = 'mixed';
+            if ($returnType === '\SplFileObject') {
+                $content = $response->getBody(); //stream goes to serializer
+            } else {
+                $content = (string) $response->getBody();
+                if ($returnType !== 'string') {
+                    try {
+                        $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                    } catch (\JsonException $exception) {
+                        throw new ApiException(
+                            sprintf(
+                                'Error JSON decoding server response (%s)',
+                                $request->getUri()
+                            ),
+                            $statusCode,
+                            $response->getHeaders(),
+                            $content
+                        );
+                    }
+                }
+            }
+
+            return [
+                ObjectSerializer::deserialize($content, $returnType, []),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            ];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        'mixed',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\HTTPValidationError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation tiktokTiktokShopCategoryProductsAsync
+     *
+     * TikTok Shop category products
+     *
+     * @param  string $category_id (required)
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
+     * @param  int $count (optional, default to 20)
+     * @param  string[] $exclude_product_ids Repeat for every next_exclude_product_ids value (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopCategoryProducts'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function tiktokTiktokShopCategoryProductsAsync($category_id, $region = 'US', $count = 20, $exclude_product_ids = null, string $contentType = self::contentTypes['tiktokTiktokShopCategoryProducts'][0])
+    {
+        return $this->tiktokTiktokShopCategoryProductsAsyncWithHttpInfo($category_id, $region, $count, $exclude_product_ids, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation tiktokTiktokShopCategoryProductsAsyncWithHttpInfo
+     *
+     * TikTok Shop category products
+     *
+     * @param  string $category_id (required)
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
+     * @param  int $count (optional, default to 20)
+     * @param  string[] $exclude_product_ids Repeat for every next_exclude_product_ids value (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopCategoryProducts'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function tiktokTiktokShopCategoryProductsAsyncWithHttpInfo($category_id, $region = 'US', $count = 20, $exclude_product_ids = null, string $contentType = self::contentTypes['tiktokTiktokShopCategoryProducts'][0])
+    {
+        $returnType = 'mixed';
+        $request = $this->tiktokTiktokShopCategoryProductsRequest($category_id, $region, $count, $exclude_product_ids, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'tiktokTiktokShopCategoryProducts'
+     *
+     * @param  string $category_id (required)
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
+     * @param  int $count (optional, default to 20)
+     * @param  string[] $exclude_product_ids Repeat for every next_exclude_product_ids value (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopCategoryProducts'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function tiktokTiktokShopCategoryProductsRequest($category_id, $region = 'US', $count = 20, $exclude_product_ids = null, string $contentType = self::contentTypes['tiktokTiktokShopCategoryProducts'][0])
+    {
+
+        // verify the required parameter 'category_id' is set
+        if ($category_id === null || (is_array($category_id) && count($category_id) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $category_id when calling tiktokTiktokShopCategoryProducts'
+            );
+        }
+
+
+        if ($count !== null && $count > 40) {
+            throw new \InvalidArgumentException('invalid value for "$count" when calling TikTokApi.tiktokTiktokShopCategoryProducts, must be smaller than or equal to 40.');
+        }
+        if ($count !== null && $count < 1) {
+            throw new \InvalidArgumentException('invalid value for "$count" when calling TikTokApi.tiktokTiktokShopCategoryProducts, must be bigger than or equal to 1.');
+        }
+        
+
+
+        $resourcePath = '/v1/tiktok/shop/categories/{category_id}/products';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $region,
+            'region', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $count,
+            'count', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $exclude_product_ids,
+            'exclude_product_ids', // param base name
+            'array', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+
+
+        // path params
+        if ($category_id !== null) {
+            $resourcePath = str_replace(
+                '{' . 'category_id' . '}',
+                ObjectSerializer::toPathValue($category_id),
+                $resourcePath
+            );
+        }
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+        // this endpoint requires API key authentication
+        $apiKey = $this->config->getApiKeyWithPrefix('X-API-Key');
+        if ($apiKey !== null) {
+            $headers['X-API-Key'] = $apiKey;
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'GET',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
      * Operation tiktokTiktokShopCategorySubcategoriesTopProducts
      *
      * TikTok Shop category: subcategories + top products
      *
      * @param  string $category_id category_id (required)
-     * @param  string $region Market: US, GB, ID (optional, default to 'US')
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopCategorySubcategoriesTopProducts'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
@@ -10472,7 +11304,7 @@ class TikTokApi
      * TikTok Shop category: subcategories + top products
      *
      * @param  string $category_id (required)
-     * @param  string $region Market: US, GB, ID (optional, default to 'US')
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopCategorySubcategoriesTopProducts'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
@@ -10633,7 +11465,7 @@ class TikTokApi
      * TikTok Shop category: subcategories + top products
      *
      * @param  string $category_id (required)
-     * @param  string $region Market: US, GB, ID (optional, default to 'US')
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopCategorySubcategoriesTopProducts'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -10655,7 +11487,7 @@ class TikTokApi
      * TikTok Shop category: subcategories + top products
      *
      * @param  string $category_id (required)
-     * @param  string $region Market: US, GB, ID (optional, default to 'US')
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopCategorySubcategoriesTopProducts'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -10706,7 +11538,7 @@ class TikTokApi
      * Create request for operation 'tiktokTiktokShopCategorySubcategoriesTopProducts'
      *
      * @param  string $category_id (required)
-     * @param  string $region Market: US, GB, ID (optional, default to 'US')
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopCategorySubcategoriesTopProducts'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -10816,7 +11648,7 @@ class TikTokApi
      * TikTok Shop product detail
      *
      * @param  string $product_id product_id (required)
-     * @param  string $region Market: US, GB, ID (optional, default to 'US')
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopProductDetail'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
@@ -10835,7 +11667,7 @@ class TikTokApi
      * TikTok Shop product detail
      *
      * @param  string $product_id (required)
-     * @param  string $region Market: US, GB, ID (optional, default to 'US')
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopProductDetail'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
@@ -10996,7 +11828,7 @@ class TikTokApi
      * TikTok Shop product detail
      *
      * @param  string $product_id (required)
-     * @param  string $region Market: US, GB, ID (optional, default to 'US')
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopProductDetail'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -11018,7 +11850,7 @@ class TikTokApi
      * TikTok Shop product detail
      *
      * @param  string $product_id (required)
-     * @param  string $region Market: US, GB, ID (optional, default to 'US')
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopProductDetail'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -11069,7 +11901,7 @@ class TikTokApi
      * Create request for operation 'tiktokTiktokShopProductDetail'
      *
      * @param  string $product_id (required)
-     * @param  string $region Market: US, GB, ID (optional, default to 'US')
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopProductDetail'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -11179,7 +12011,7 @@ class TikTokApi
      * TikTok Shop product reviews
      *
      * @param  string $product_id product_id (required)
-     * @param  string $region Market: US, GB, ID (optional, default to 'US')
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
      * @param  int $page page (optional, default to 1)
      * @param  int $count count (optional, default to 20)
      * @param  string $sort recommended | recent (optional, default to 'recommended')
@@ -11204,7 +12036,7 @@ class TikTokApi
      * TikTok Shop product reviews
      *
      * @param  string $product_id (required)
-     * @param  string $region Market: US, GB, ID (optional, default to 'US')
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
      * @param  int $page (optional, default to 1)
      * @param  int $count (optional, default to 20)
      * @param  string $sort recommended | recent (optional, default to 'recommended')
@@ -11371,7 +12203,7 @@ class TikTokApi
      * TikTok Shop product reviews
      *
      * @param  string $product_id (required)
-     * @param  string $region Market: US, GB, ID (optional, default to 'US')
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
      * @param  int $page (optional, default to 1)
      * @param  int $count (optional, default to 20)
      * @param  string $sort recommended | recent (optional, default to 'recommended')
@@ -11399,7 +12231,7 @@ class TikTokApi
      * TikTok Shop product reviews
      *
      * @param  string $product_id (required)
-     * @param  string $region Market: US, GB, ID (optional, default to 'US')
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
      * @param  int $page (optional, default to 1)
      * @param  int $count (optional, default to 20)
      * @param  string $sort recommended | recent (optional, default to 'recommended')
@@ -11456,7 +12288,7 @@ class TikTokApi
      * Create request for operation 'tiktokTiktokShopProductReviews'
      *
      * @param  string $product_id (required)
-     * @param  string $region Market: US, GB, ID (optional, default to 'US')
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
      * @param  int $page (optional, default to 1)
      * @param  int $count (optional, default to 20)
      * @param  string $sort recommended | recent (optional, default to 'recommended')
@@ -11642,11 +12474,390 @@ class TikTokApi
     }
 
     /**
+     * Operation tiktokTiktokShopRegionalMallFeed
+     *
+     * TikTok Shop regional mall feed
+     *
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
+     * @param  int $tab_id tab_id (optional, default to 0)
+     * @param  string $page_token page_token (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopRegionalMallFeed'] to see the possible values for this operation
+     *
+     * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     */
+    public function tiktokTiktokShopRegionalMallFeed($region = 'US', $tab_id = 0, $page_token = null, string $contentType = self::contentTypes['tiktokTiktokShopRegionalMallFeed'][0])
+    {
+        list($response) = $this->tiktokTiktokShopRegionalMallFeedWithHttpInfo($region, $tab_id, $page_token, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation tiktokTiktokShopRegionalMallFeedWithHttpInfo
+     *
+     * TikTok Shop regional mall feed
+     *
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
+     * @param  int $tab_id (optional, default to 0)
+     * @param  string $page_token (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopRegionalMallFeed'] to see the possible values for this operation
+     *
+     * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function tiktokTiktokShopRegionalMallFeedWithHttpInfo($region = 'US', $tab_id = 0, $page_token = null, string $contentType = self::contentTypes['tiktokTiktokShopRegionalMallFeed'][0])
+    {
+        $request = $this->tiktokTiktokShopRegionalMallFeedRequest($region, $tab_id, $page_token, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    if ('mixed' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('mixed' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, 'mixed', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                case 422:
+                    if ('\ScrapeBadger\Model\HTTPValidationError' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\HTTPValidationError' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\HTTPValidationError', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+            }
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            $returnType = 'mixed';
+            if ($returnType === '\SplFileObject') {
+                $content = $response->getBody(); //stream goes to serializer
+            } else {
+                $content = (string) $response->getBody();
+                if ($returnType !== 'string') {
+                    try {
+                        $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                    } catch (\JsonException $exception) {
+                        throw new ApiException(
+                            sprintf(
+                                'Error JSON decoding server response (%s)',
+                                $request->getUri()
+                            ),
+                            $statusCode,
+                            $response->getHeaders(),
+                            $content
+                        );
+                    }
+                }
+            }
+
+            return [
+                ObjectSerializer::deserialize($content, $returnType, []),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            ];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        'mixed',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\HTTPValidationError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation tiktokTiktokShopRegionalMallFeedAsync
+     *
+     * TikTok Shop regional mall feed
+     *
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
+     * @param  int $tab_id (optional, default to 0)
+     * @param  string $page_token (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopRegionalMallFeed'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function tiktokTiktokShopRegionalMallFeedAsync($region = 'US', $tab_id = 0, $page_token = null, string $contentType = self::contentTypes['tiktokTiktokShopRegionalMallFeed'][0])
+    {
+        return $this->tiktokTiktokShopRegionalMallFeedAsyncWithHttpInfo($region, $tab_id, $page_token, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation tiktokTiktokShopRegionalMallFeedAsyncWithHttpInfo
+     *
+     * TikTok Shop regional mall feed
+     *
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
+     * @param  int $tab_id (optional, default to 0)
+     * @param  string $page_token (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopRegionalMallFeed'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function tiktokTiktokShopRegionalMallFeedAsyncWithHttpInfo($region = 'US', $tab_id = 0, $page_token = null, string $contentType = self::contentTypes['tiktokTiktokShopRegionalMallFeed'][0])
+    {
+        $returnType = 'mixed';
+        $request = $this->tiktokTiktokShopRegionalMallFeedRequest($region, $tab_id, $page_token, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'tiktokTiktokShopRegionalMallFeed'
+     *
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
+     * @param  int $tab_id (optional, default to 0)
+     * @param  string $page_token (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopRegionalMallFeed'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function tiktokTiktokShopRegionalMallFeedRequest($region = 'US', $tab_id = 0, $page_token = null, string $contentType = self::contentTypes['tiktokTiktokShopRegionalMallFeed'][0])
+    {
+
+
+        if ($tab_id !== null && $tab_id < 0) {
+            throw new \InvalidArgumentException('invalid value for "$tab_id" when calling TikTokApi.tiktokTiktokShopRegionalMallFeed, must be bigger than or equal to 0.');
+        }
+        
+        if ($page_token !== null && !preg_match("/^[a-f0-9]{32}$/", $page_token)) {
+            throw new \InvalidArgumentException("invalid value for \"page_token\" when calling TikTokApi.tiktokTiktokShopRegionalMallFeed, must conform to the pattern /^[a-f0-9]{32}$/.");
+        }
+        
+
+        $resourcePath = '/v1/tiktok/shop/mall';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $region,
+            'region', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $tab_id,
+            'tab_id', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $page_token,
+            'page_token', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+
+
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+        // this endpoint requires API key authentication
+        $apiKey = $this->config->getApiKeyWithPrefix('X-API-Key');
+        if ($apiKey !== null) {
+            $headers['X-API-Key'] = $apiKey;
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'GET',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
      * Operation tiktokTiktokShopRootCategories
      *
      * TikTok Shop root categories
      *
-     * @param  string $region Market: US, GB, ID (optional, default to 'US')
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopRootCategories'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
@@ -11664,7 +12875,7 @@ class TikTokApi
      *
      * TikTok Shop root categories
      *
-     * @param  string $region Market: US, GB, ID (optional, default to 'US')
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopRootCategories'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
@@ -11824,7 +13035,7 @@ class TikTokApi
      *
      * TikTok Shop root categories
      *
-     * @param  string $region Market: US, GB, ID (optional, default to 'US')
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopRootCategories'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -11845,7 +13056,7 @@ class TikTokApi
      *
      * TikTok Shop root categories
      *
-     * @param  string $region Market: US, GB, ID (optional, default to 'US')
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopRootCategories'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -11895,7 +13106,7 @@ class TikTokApi
     /**
      * Create request for operation 'tiktokTiktokShopRootCategories'
      *
-     * @param  string $region Market: US, GB, ID (optional, default to 'US')
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopRootCategories'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -11990,7 +13201,7 @@ class TikTokApi
      * TikTok Shop store + products
      *
      * @param  string $seller_id seller_id (required)
-     * @param  string $region Market: US, GB, ID (optional, default to 'US')
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
      * @param  string $cursor Pass back next_cursor for the next page (optional, default to '')
      * @param  int $count count (optional, default to 20)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopStoreProducts'] to see the possible values for this operation
@@ -12011,7 +13222,7 @@ class TikTokApi
      * TikTok Shop store + products
      *
      * @param  string $seller_id (required)
-     * @param  string $region Market: US, GB, ID (optional, default to 'US')
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
      * @param  string $cursor Pass back next_cursor for the next page (optional, default to '')
      * @param  int $count (optional, default to 20)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopStoreProducts'] to see the possible values for this operation
@@ -12174,7 +13385,7 @@ class TikTokApi
      * TikTok Shop store + products
      *
      * @param  string $seller_id (required)
-     * @param  string $region Market: US, GB, ID (optional, default to 'US')
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
      * @param  string $cursor Pass back next_cursor for the next page (optional, default to '')
      * @param  int $count (optional, default to 20)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopStoreProducts'] to see the possible values for this operation
@@ -12198,7 +13409,7 @@ class TikTokApi
      * TikTok Shop store + products
      *
      * @param  string $seller_id (required)
-     * @param  string $region Market: US, GB, ID (optional, default to 'US')
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
      * @param  string $cursor Pass back next_cursor for the next page (optional, default to '')
      * @param  int $count (optional, default to 20)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopStoreProducts'] to see the possible values for this operation
@@ -12251,7 +13462,7 @@ class TikTokApi
      * Create request for operation 'tiktokTiktokShopStoreProducts'
      *
      * @param  string $seller_id (required)
-     * @param  string $region Market: US, GB, ID (optional, default to 'US')
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
      * @param  string $cursor Pass back next_cursor for the next page (optional, default to '')
      * @param  int $count (optional, default to 20)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopStoreProducts'] to see the possible values for this operation
@@ -12320,6 +13531,429 @@ class TikTokApi
             $resourcePath = str_replace(
                 '{' . 'seller_id' . '}',
                 ObjectSerializer::toPathValue($seller_id),
+                $resourcePath
+            );
+        }
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+        // this endpoint requires API key authentication
+        $apiKey = $this->config->getApiKeyWithPrefix('X-API-Key');
+        if ($apiKey !== null) {
+            $headers['X-API-Key'] = $apiKey;
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'GET',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation tiktokTiktokShopThemeRanking
+     *
+     * TikTok Shop theme ranking
+     *
+     * @param  string $rank_id rank_id (required)
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
+     * @param  int $rank_type rank_type (optional, default to 1)
+     * @param  int $cursor cursor (optional, default to 0)
+     * @param  int $count count (optional, default to 20)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopThemeRanking'] to see the possible values for this operation
+     *
+     * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     */
+    public function tiktokTiktokShopThemeRanking($rank_id, $region = 'US', $rank_type = 1, $cursor = 0, $count = 20, string $contentType = self::contentTypes['tiktokTiktokShopThemeRanking'][0])
+    {
+        list($response) = $this->tiktokTiktokShopThemeRankingWithHttpInfo($rank_id, $region, $rank_type, $cursor, $count, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation tiktokTiktokShopThemeRankingWithHttpInfo
+     *
+     * TikTok Shop theme ranking
+     *
+     * @param  string $rank_id (required)
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
+     * @param  int $rank_type (optional, default to 1)
+     * @param  int $cursor (optional, default to 0)
+     * @param  int $count (optional, default to 20)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopThemeRanking'] to see the possible values for this operation
+     *
+     * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function tiktokTiktokShopThemeRankingWithHttpInfo($rank_id, $region = 'US', $rank_type = 1, $cursor = 0, $count = 20, string $contentType = self::contentTypes['tiktokTiktokShopThemeRanking'][0])
+    {
+        $request = $this->tiktokTiktokShopThemeRankingRequest($rank_id, $region, $rank_type, $cursor, $count, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    if ('mixed' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('mixed' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, 'mixed', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                case 422:
+                    if ('\ScrapeBadger\Model\HTTPValidationError' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\HTTPValidationError' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\HTTPValidationError', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+            }
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            $returnType = 'mixed';
+            if ($returnType === '\SplFileObject') {
+                $content = $response->getBody(); //stream goes to serializer
+            } else {
+                $content = (string) $response->getBody();
+                if ($returnType !== 'string') {
+                    try {
+                        $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                    } catch (\JsonException $exception) {
+                        throw new ApiException(
+                            sprintf(
+                                'Error JSON decoding server response (%s)',
+                                $request->getUri()
+                            ),
+                            $statusCode,
+                            $response->getHeaders(),
+                            $content
+                        );
+                    }
+                }
+            }
+
+            return [
+                ObjectSerializer::deserialize($content, $returnType, []),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            ];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        'mixed',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\HTTPValidationError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation tiktokTiktokShopThemeRankingAsync
+     *
+     * TikTok Shop theme ranking
+     *
+     * @param  string $rank_id (required)
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
+     * @param  int $rank_type (optional, default to 1)
+     * @param  int $cursor (optional, default to 0)
+     * @param  int $count (optional, default to 20)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopThemeRanking'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function tiktokTiktokShopThemeRankingAsync($rank_id, $region = 'US', $rank_type = 1, $cursor = 0, $count = 20, string $contentType = self::contentTypes['tiktokTiktokShopThemeRanking'][0])
+    {
+        return $this->tiktokTiktokShopThemeRankingAsyncWithHttpInfo($rank_id, $region, $rank_type, $cursor, $count, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation tiktokTiktokShopThemeRankingAsyncWithHttpInfo
+     *
+     * TikTok Shop theme ranking
+     *
+     * @param  string $rank_id (required)
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
+     * @param  int $rank_type (optional, default to 1)
+     * @param  int $cursor (optional, default to 0)
+     * @param  int $count (optional, default to 20)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopThemeRanking'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function tiktokTiktokShopThemeRankingAsyncWithHttpInfo($rank_id, $region = 'US', $rank_type = 1, $cursor = 0, $count = 20, string $contentType = self::contentTypes['tiktokTiktokShopThemeRanking'][0])
+    {
+        $returnType = 'mixed';
+        $request = $this->tiktokTiktokShopThemeRankingRequest($rank_id, $region, $rank_type, $cursor, $count, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'tiktokTiktokShopThemeRanking'
+     *
+     * @param  string $rank_id (required)
+     * @param  string $region Market: US, GB, ID, JP, MX, SG, MY, PH, TH, VN; coverage varies by endpoint (optional, default to 'US')
+     * @param  int $rank_type (optional, default to 1)
+     * @param  int $cursor (optional, default to 0)
+     * @param  int $count (optional, default to 20)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTiktokShopThemeRanking'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function tiktokTiktokShopThemeRankingRequest($rank_id, $region = 'US', $rank_type = 1, $cursor = 0, $count = 20, string $contentType = self::contentTypes['tiktokTiktokShopThemeRanking'][0])
+    {
+
+        // verify the required parameter 'rank_id' is set
+        if ($rank_id === null || (is_array($rank_id) && count($rank_id) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $rank_id when calling tiktokTiktokShopThemeRanking'
+            );
+        }
+
+
+        if ($rank_type !== null && $rank_type > 3) {
+            throw new \InvalidArgumentException('invalid value for "$rank_type" when calling TikTokApi.tiktokTiktokShopThemeRanking, must be smaller than or equal to 3.');
+        }
+        if ($rank_type !== null && $rank_type < 1) {
+            throw new \InvalidArgumentException('invalid value for "$rank_type" when calling TikTokApi.tiktokTiktokShopThemeRanking, must be bigger than or equal to 1.');
+        }
+        
+        if ($cursor !== null && $cursor < 0) {
+            throw new \InvalidArgumentException('invalid value for "$cursor" when calling TikTokApi.tiktokTiktokShopThemeRanking, must be bigger than or equal to 0.');
+        }
+        
+        if ($count !== null && $count > 20) {
+            throw new \InvalidArgumentException('invalid value for "$count" when calling TikTokApi.tiktokTiktokShopThemeRanking, must be smaller than or equal to 20.');
+        }
+        if ($count !== null && $count < 1) {
+            throw new \InvalidArgumentException('invalid value for "$count" when calling TikTokApi.tiktokTiktokShopThemeRanking, must be bigger than or equal to 1.');
+        }
+        
+
+        $resourcePath = '/v1/tiktok/shop/rankings/{rank_id}';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $region,
+            'region', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $rank_type,
+            'rank_type', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $cursor,
+            'cursor', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $count,
+            'count', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+
+
+        // path params
+        if ($rank_id !== null) {
+            $resourcePath = str_replace(
+                '{' . 'rank_id' . '}',
+                ObjectSerializer::toPathValue($rank_id),
                 $resourcePath
             );
         }

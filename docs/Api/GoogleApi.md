@@ -891,7 +891,7 @@ googleGoogleLensVisualSearch($url, $query, $country, $language, $gl, $hl, $produ
 
 Google Lens visual search
 
-Google Lens visual search.  Response carries ``lens_results`` (Scrapingdog parity alias) with ``title`` / ``source`` / ``source_favicon`` / ``thumbnail`` / ``original_thumbnail`` / ``rating`` / ``reviews`` / ``in_stock``, plus ``price`` (``{value, currency, extracted}``) and the raw ``tag`` chip it is parsed from, on shoppable matches. ``related_searches`` chips come alongside. Legacy ``results`` alias kept for backwards compat.
+Google Lens visual search.  Response carries ``lens_results`` (Scrapingdog parity alias) with ``title`` / ``source`` / ``source_favicon`` / ``thumbnail`` / ``original_thumbnail`` / ``rating`` / ``reviews`` / ``in_stock``, plus ``price`` (``{value, currency, extracted}``) and the raw ``tag`` chip it is parsed from, on shoppable matches. ``related_searches`` chips come alongside. Legacy ``results`` alias kept for backwards compat.  ``query`` refines the grid with text and is honoured. ``product`` and ``exact_matches`` are not yet supported, and ``visual_matches=false`` cannot be: visual matches are the only surface served. Setting any of the three adds a line to the ``warnings`` array on the response rather than changing the result — see SCR-177. The match grid still CONTAINS an image's exact matches; Google just does not label which they are.
 
 ### Example
 
@@ -918,9 +918,9 @@ $country = 'country_example'; // string | ISO country code (alias for gl)
 $language = 'language_example'; // string | Language code (alias for hl)
 $gl = 'us'; // string | Country code
 $hl = 'en'; // string | Language code
-$product = false; // bool | Bias towards shoppable product matches
-$visual_matches = true; // bool | Include the visual-matches carousel
-$exact_matches = false; // bool | Restrict to exact-match results
+$product = false; // bool | NOT YET SUPPORTED — accepted, and reported back in `warnings`
+$visual_matches = true; // bool | Always true in practice — `false` is reported back in `warnings`
+$exact_matches = false; // bool | NOT YET SUPPORTED — accepted, and reported back in `warnings`
 
 try {
     $result = $apiInstance->googleGoogleLensVisualSearch($url, $query, $country, $language, $gl, $hl, $product, $visual_matches, $exact_matches);
@@ -940,9 +940,9 @@ try {
 | **language** | **string**| Language code (alias for hl) | [optional] |
 | **gl** | **string**| Country code | [optional] [default to &#39;us&#39;] |
 | **hl** | **string**| Language code | [optional] [default to &#39;en&#39;] |
-| **product** | **bool**| Bias towards shoppable product matches | [optional] [default to false] |
-| **visual_matches** | **bool**| Include the visual-matches carousel | [optional] [default to true] |
-| **exact_matches** | **bool**| Restrict to exact-match results | [optional] [default to false] |
+| **product** | **bool**| NOT YET SUPPORTED — accepted, and reported back in &#x60;warnings&#x60; | [optional] [default to false] |
+| **visual_matches** | **bool**| Always true in practice — &#x60;false&#x60; is reported back in &#x60;warnings&#x60; | [optional] [default to true] |
+| **exact_matches** | **bool**| NOT YET SUPPORTED — accepted, and reported back in &#x60;warnings&#x60; | [optional] [default to false] |
 
 ### Return type
 

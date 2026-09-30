@@ -120,24 +120,24 @@ class TikTokApiTest extends TestCase
     }
 
     /**
-     * Test case for tiktokGetFollowersDeprecated
+     * Test case for tiktokGetFollowers
      *
-     * Get followers (deprecated).
+     * Get followers.
      *
      */
-    public function testTiktokGetFollowersDeprecated()
+    public function testTiktokGetFollowers()
     {
         // TODO: implement
         self::markTestIncomplete('Not implemented');
     }
 
     /**
-     * Test case for tiktokGetFollowingDeprecated
+     * Test case for tiktokGetFollowing
      *
-     * Get following (deprecated).
+     * Get following.
      *
      */
-    public function testTiktokGetFollowingDeprecated()
+    public function testTiktokGetFollowing()
     {
         // TODO: implement
         self::markTestIncomplete('Not implemented');
@@ -168,12 +168,12 @@ class TikTokApiTest extends TestCase
     }
 
     /**
-     * Test case for tiktokGetLikedVideosDeprecated
+     * Test case for tiktokGetLikedVideos
      *
-     * Get liked videos (deprecated).
+     * Get liked videos.
      *
      */
-    public function testTiktokGetLikedVideosDeprecated()
+    public function testTiktokGetLikedVideos()
     {
         // TODO: implement
         self::markTestIncomplete('Not implemented');

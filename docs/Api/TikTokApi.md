@@ -8,11 +8,11 @@ All URIs are relative to https://scrapebadger.com, except if the operation defin
 | [**tiktokGeneralSearch()**](TikTokApi.md#tiktokGeneralSearch) | **GET** /v1/tiktok/search | General search |
 | [**tiktokGetCommentReplies()**](TikTokApi.md#tiktokGetCommentReplies) | **GET** /v1/tiktok/comments/{comment_id}/replies | Get comment replies |
 | [**tiktokGetComments()**](TikTokApi.md#tiktokGetComments) | **GET** /v1/tiktok/videos/{video_id}/comments | Get comments |
-| [**tiktokGetFollowersDeprecated()**](TikTokApi.md#tiktokGetFollowersDeprecated) | **GET** /v1/tiktok/users/{username}/followers | Get followers (deprecated) |
-| [**tiktokGetFollowingDeprecated()**](TikTokApi.md#tiktokGetFollowingDeprecated) | **GET** /v1/tiktok/users/{username}/following | Get following (deprecated) |
+| [**tiktokGetFollowers()**](TikTokApi.md#tiktokGetFollowers) | **GET** /v1/tiktok/users/{username}/followers | Get followers |
+| [**tiktokGetFollowing()**](TikTokApi.md#tiktokGetFollowing) | **GET** /v1/tiktok/users/{username}/following | Get following |
 | [**tiktokGetHashtagDetail()**](TikTokApi.md#tiktokGetHashtagDetail) | **GET** /v1/tiktok/hashtags/{name} | Get hashtag detail |
 | [**tiktokGetHashtagVideos()**](TikTokApi.md#tiktokGetHashtagVideos) | **GET** /v1/tiktok/hashtags/{name}/videos | Get hashtag videos |
-| [**tiktokGetLikedVideosDeprecated()**](TikTokApi.md#tiktokGetLikedVideosDeprecated) | **GET** /v1/tiktok/users/{username}/liked | Get liked videos (deprecated) |
+| [**tiktokGetLikedVideos()**](TikTokApi.md#tiktokGetLikedVideos) | **GET** /v1/tiktok/users/{username}/liked | Get liked videos |
 | [**tiktokGetMusicSoundDetail()**](TikTokApi.md#tiktokGetMusicSoundDetail) | **GET** /v1/tiktok/music/{music_id} | Get music/sound detail |
 | [**tiktokGetMusicVideos()**](TikTokApi.md#tiktokGetMusicVideos) | **GET** /v1/tiktok/music/{music_id}/videos | Get music videos |
 | [**tiktokGetOembedMetadata()**](TikTokApi.md#tiktokGetOembedMetadata) | **GET** /v1/tiktok/oembed | Get oEmbed metadata |
@@ -145,7 +145,7 @@ $apiInstance = new ScrapeBadger\Api\TikTokApi(
 $query = 'query_example'; // string | Search keyword
 $region = 'US'; // string
 $count = 20; // int
-$cursor = 'cursor_example'; // string | Composite pagination cursor (offset.search_id) from a prior page's pagination.cursor
+$cursor = 'cursor_example'; // string | Opaque continuation cursor from a prior page's pagination.cursor
 
 try {
     $result = $apiInstance->tiktokGeneralSearch($query, $region, $count, $cursor);
@@ -162,7 +162,7 @@ try {
 | **query** | **string**| Search keyword | |
 | **region** | **string**|  | [optional] [default to &#39;US&#39;] |
 | **count** | **int**|  | [optional] [default to 20] |
-| **cursor** | **string**| Composite pagination cursor (offset.search_id) from a prior page&#39;s pagination.cursor | [optional] |
+| **cursor** | **string**| Opaque continuation cursor from a prior page&#39;s pagination.cursor | [optional] |
 
 ### Return type
 
@@ -319,15 +319,15 @@ try {
 [[Back to Model list]](../../README.md#models)
 [[Back to README]](../../README.md)
 
-## `tiktokGetFollowersDeprecated()`
+## `tiktokGetFollowers()`
 
 ```php
-tiktokGetFollowersDeprecated($username, $region, $count): mixed
+tiktokGetFollowers($username, $region, $count, $cursor): mixed
 ```
 
-Get followers (deprecated)
+Get followers
 
-DEPRECATED — TikTok followers require an authenticated account session. Returns HTTP 410.
+Get publicly visible followers without an account.
 
 ### Example
 
@@ -351,12 +351,13 @@ $apiInstance = new ScrapeBadger\Api\TikTokApi(
 $username = 'username_example'; // string
 $region = 'US'; // string
 $count = 30; // int
+$cursor = 'cursor_example'; // string | Continuation cursor from the previous page
 
 try {
-    $result = $apiInstance->tiktokGetFollowersDeprecated($username, $region, $count);
+    $result = $apiInstance->tiktokGetFollowers($username, $region, $count, $cursor);
     print_r($result);
 } catch (Exception $e) {
-    echo 'Exception when calling TikTokApi->tiktokGetFollowersDeprecated: ', $e->getMessage(), PHP_EOL;
+    echo 'Exception when calling TikTokApi->tiktokGetFollowers: ', $e->getMessage(), PHP_EOL;
 }
 ```
 
@@ -367,6 +368,7 @@ try {
 | **username** | **string**|  | |
 | **region** | **string**|  | [optional] [default to &#39;US&#39;] |
 | **count** | **int**|  | [optional] [default to 30] |
+| **cursor** | **string**| Continuation cursor from the previous page | [optional] |
 
 ### Return type
 
@@ -385,15 +387,15 @@ try {
 [[Back to Model list]](../../README.md#models)
 [[Back to README]](../../README.md)
 
-## `tiktokGetFollowingDeprecated()`
+## `tiktokGetFollowing()`
 
 ```php
-tiktokGetFollowingDeprecated($username, $region, $count): mixed
+tiktokGetFollowing($username, $region, $count, $cursor): mixed
 ```
 
-Get following (deprecated)
+Get following
 
-DEPRECATED — TikTok following requires an authenticated account session. Returns HTTP 410.
+Get publicly visible followed accounts. Hidden lists return HTTP 403.
 
 ### Example
 
@@ -417,12 +419,13 @@ $apiInstance = new ScrapeBadger\Api\TikTokApi(
 $username = 'username_example'; // string
 $region = 'US'; // string
 $count = 30; // int
+$cursor = 'cursor_example'; // string | Continuation cursor from the previous page
 
 try {
-    $result = $apiInstance->tiktokGetFollowingDeprecated($username, $region, $count);
+    $result = $apiInstance->tiktokGetFollowing($username, $region, $count, $cursor);
     print_r($result);
 } catch (Exception $e) {
-    echo 'Exception when calling TikTokApi->tiktokGetFollowingDeprecated: ', $e->getMessage(), PHP_EOL;
+    echo 'Exception when calling TikTokApi->tiktokGetFollowing: ', $e->getMessage(), PHP_EOL;
 }
 ```
 
@@ -433,6 +436,7 @@ try {
 | **username** | **string**|  | |
 | **region** | **string**|  | [optional] [default to &#39;US&#39;] |
 | **count** | **int**|  | [optional] [default to 30] |
+| **cursor** | **string**| Continuation cursor from the previous page | [optional] |
 
 ### Return type
 
@@ -583,15 +587,15 @@ try {
 [[Back to Model list]](../../README.md#models)
 [[Back to README]](../../README.md)
 
-## `tiktokGetLikedVideosDeprecated()`
+## `tiktokGetLikedVideos()`
 
 ```php
-tiktokGetLikedVideosDeprecated($username, $region, $count): mixed
+tiktokGetLikedVideos($username, $region, $count, $cursor): mixed
 ```
 
-Get liked videos (deprecated)
+Get liked videos
 
-DEPRECATED — TikTok liked videos require an authenticated account session. Returns HTTP 410.
+Get public liked videos. Hidden liked lists return HTTP 403.
 
 ### Example
 
@@ -615,12 +619,13 @@ $apiInstance = new ScrapeBadger\Api\TikTokApi(
 $username = 'username_example'; // string
 $region = 'US'; // string
 $count = 30; // int
+$cursor = 'cursor_example'; // string | Continuation cursor from the previous page
 
 try {
-    $result = $apiInstance->tiktokGetLikedVideosDeprecated($username, $region, $count);
+    $result = $apiInstance->tiktokGetLikedVideos($username, $region, $count, $cursor);
     print_r($result);
 } catch (Exception $e) {
-    echo 'Exception when calling TikTokApi->tiktokGetLikedVideosDeprecated: ', $e->getMessage(), PHP_EOL;
+    echo 'Exception when calling TikTokApi->tiktokGetLikedVideos: ', $e->getMessage(), PHP_EOL;
 }
 ```
 
@@ -631,6 +636,7 @@ try {
 | **username** | **string**|  | |
 | **region** | **string**|  | [optional] [default to &#39;US&#39;] |
 | **count** | **int**|  | [optional] [default to 30] |
+| **cursor** | **string**| Continuation cursor from the previous page | [optional] |
 
 ### Return type
 
@@ -848,7 +854,7 @@ try {
 ## `tiktokGetRelatedVideos()`
 
 ```php
-tiktokGetRelatedVideos($video_id, $region, $count): mixed
+tiktokGetRelatedVideos($video_id, $region, $count, $cursor): mixed
 ```
 
 Get related videos
@@ -877,9 +883,10 @@ $apiInstance = new ScrapeBadger\Api\TikTokApi(
 $video_id = 'video_id_example'; // string
 $region = 'US'; // string
 $count = 16; // int
+$cursor = 'cursor_example'; // string | Continuation cursor from the previous page
 
 try {
-    $result = $apiInstance->tiktokGetRelatedVideos($video_id, $region, $count);
+    $result = $apiInstance->tiktokGetRelatedVideos($video_id, $region, $count, $cursor);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling TikTokApi->tiktokGetRelatedVideos: ', $e->getMessage(), PHP_EOL;
@@ -893,6 +900,7 @@ try {
 | **video_id** | **string**|  | |
 | **region** | **string**|  | [optional] [default to &#39;US&#39;] |
 | **count** | **int**|  | [optional] [default to 16] |
+| **cursor** | **string**| Continuation cursor from the previous page | [optional] |
 
 ### Return type
 
@@ -914,7 +922,7 @@ try {
 ## `tiktokGetReposts()`
 
 ```php
-tiktokGetReposts($username, $region, $count): mixed
+tiktokGetReposts($username, $region, $count, $cursor): mixed
 ```
 
 Get reposts
@@ -943,9 +951,10 @@ $apiInstance = new ScrapeBadger\Api\TikTokApi(
 $username = 'username_example'; // string
 $region = 'US'; // string
 $count = 30; // int
+$cursor = 'cursor_example'; // string | Continuation cursor from the previous page
 
 try {
-    $result = $apiInstance->tiktokGetReposts($username, $region, $count);
+    $result = $apiInstance->tiktokGetReposts($username, $region, $count, $cursor);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling TikTokApi->tiktokGetReposts: ', $e->getMessage(), PHP_EOL;
@@ -959,6 +968,7 @@ try {
 | **username** | **string**|  | |
 | **region** | **string**|  | [optional] [default to &#39;US&#39;] |
 | **count** | **int**|  | [optional] [default to 30] |
+| **cursor** | **string**| Continuation cursor from the previous page | [optional] |
 
 ### Return type
 
@@ -1201,7 +1211,7 @@ $apiInstance = new ScrapeBadger\Api\TikTokApi(
 $username = 'username_example'; // string
 $region = 'US'; // string
 $count = 30; // int
-$cursor = 'cursor_example'; // string | Pagination cursor from a prior page's `pagination.cursor` (signer path only).
+$cursor = 'cursor_example'; // string | Pagination cursor from a prior page's `pagination.cursor` (opaque; expires after 15 minutes).
 
 try {
     $result = $apiInstance->tiktokGetUserVideos($username, $region, $count, $cursor);
@@ -1218,7 +1228,7 @@ try {
 | **username** | **string**|  | |
 | **region** | **string**|  | [optional] [default to &#39;US&#39;] |
 | **count** | **int**|  | [optional] [default to 30] |
-| **cursor** | **string**| Pagination cursor from a prior page&#39;s &#x60;pagination.cursor&#x60; (signer path only). | [optional] |
+| **cursor** | **string**| Pagination cursor from a prior page&#39;s &#x60;pagination.cursor&#x60; (opaque; expires after 15 minutes). | [optional] |
 
 ### Return type
 
@@ -1512,7 +1522,7 @@ $apiInstance = new ScrapeBadger\Api\TikTokApi(
 $query = 'query_example'; // string | Search keyword
 $region = 'US'; // string
 $count = 20; // int
-$cursor = 'cursor_example'; // string | Composite pagination cursor (offset.search_id) from a prior page's pagination.cursor
+$cursor = 'cursor_example'; // string | Opaque continuation cursor from a prior page's pagination.cursor
 
 try {
     $result = $apiInstance->tiktokSearchHashtags($query, $region, $count, $cursor);
@@ -1529,7 +1539,7 @@ try {
 | **query** | **string**| Search keyword | |
 | **region** | **string**|  | [optional] [default to &#39;US&#39;] |
 | **count** | **int**|  | [optional] [default to 20] |
-| **cursor** | **string**| Composite pagination cursor (offset.search_id) from a prior page&#39;s pagination.cursor | [optional] |
+| **cursor** | **string**| Opaque continuation cursor from a prior page&#39;s pagination.cursor | [optional] |
 
 ### Return type
 
@@ -1790,7 +1800,7 @@ $apiInstance = new ScrapeBadger\Api\TikTokApi(
 $query = 'query_example'; // string | Search keyword
 $region = 'US'; // string
 $count = 20; // int
-$cursor = 'cursor_example'; // string | Composite pagination cursor (offset.search_id) from a prior page's pagination.cursor
+$cursor = 'cursor_example'; // string | Opaque continuation cursor from a prior page's pagination.cursor
 
 try {
     $result = $apiInstance->tiktokSearchUsers($query, $region, $count, $cursor);
@@ -1807,7 +1817,7 @@ try {
 | **query** | **string**| Search keyword | |
 | **region** | **string**|  | [optional] [default to &#39;US&#39;] |
 | **count** | **int**|  | [optional] [default to 20] |
-| **cursor** | **string**| Composite pagination cursor (offset.search_id) from a prior page&#39;s pagination.cursor | [optional] |
+| **cursor** | **string**| Opaque continuation cursor from a prior page&#39;s pagination.cursor | [optional] |
 
 ### Return type
 
@@ -1858,7 +1868,7 @@ $apiInstance = new ScrapeBadger\Api\TikTokApi(
 $query = 'query_example'; // string | Search keyword
 $region = 'US'; // string
 $count = 20; // int
-$cursor = 'cursor_example'; // string | Composite pagination cursor (offset.search_id) from a prior page's pagination.cursor
+$cursor = 'cursor_example'; // string | Opaque continuation cursor from a prior page's pagination.cursor
 
 try {
     $result = $apiInstance->tiktokSearchVideos($query, $region, $count, $cursor);
@@ -1875,7 +1885,7 @@ try {
 | **query** | **string**| Search keyword | |
 | **region** | **string**|  | [optional] [default to &#39;US&#39;] |
 | **count** | **int**|  | [optional] [default to 20] |
-| **cursor** | **string**| Composite pagination cursor (offset.search_id) from a prior page&#39;s pagination.cursor | [optional] |
+| **cursor** | **string**| Opaque continuation cursor from a prior page&#39;s pagination.cursor | [optional] |
 
 ### Return type
 
@@ -2462,7 +2472,7 @@ $apiInstance = new ScrapeBadger\Api\TikTokApi(
     $config
 );
 $region = 'US'; // string
-$period = 7; // int
+$period = 56; // int | Historical windows are unavailable; omit period
 $count = 20; // int
 
 try {
@@ -2478,7 +2488,7 @@ try {
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
 | **region** | **string**|  | [optional] [default to &#39;US&#39;] |
-| **period** | **int**|  | [optional] [default to 7] |
+| **period** | **int**| Historical windows are unavailable; omit period | [optional] |
 | **count** | **int**|  | [optional] [default to 20] |
 
 ### Return type
@@ -2528,7 +2538,7 @@ $apiInstance = new ScrapeBadger\Api\TikTokApi(
     $config
 );
 $region = 'US'; // string
-$period = 7; // int
+$period = 56; // int | Historical windows are unavailable; omit period
 $count = 20; // int
 
 try {
@@ -2544,7 +2554,7 @@ try {
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
 | **region** | **string**|  | [optional] [default to &#39;US&#39;] |
-| **period** | **int**|  | [optional] [default to 7] |
+| **period** | **int**| Historical windows are unavailable; omit period | [optional] |
 | **count** | **int**|  | [optional] [default to 20] |
 
 ### Return type

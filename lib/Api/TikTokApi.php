@@ -83,10 +83,10 @@ class TikTokApi
         'tiktokGetComments' => [
             'application/json',
         ],
-        'tiktokGetFollowersDeprecated' => [
+        'tiktokGetFollowers' => [
             'application/json',
         ],
-        'tiktokGetFollowingDeprecated' => [
+        'tiktokGetFollowing' => [
             'application/json',
         ],
         'tiktokGetHashtagDetail' => [
@@ -95,7 +95,7 @@ class TikTokApi
         'tiktokGetHashtagVideos' => [
             'application/json',
         ],
-        'tiktokGetLikedVideosDeprecated' => [
+        'tiktokGetLikedVideos' => [
             'application/json',
         ],
         'tiktokGetMusicSoundDetail' => [
@@ -647,7 +647,7 @@ class TikTokApi
      * @param  string $query Search keyword (required)
      * @param  string $region region (optional, default to 'US')
      * @param  int $count count (optional, default to 20)
-     * @param  string $cursor Composite pagination cursor (offset.search_id) from a prior page&#39;s pagination.cursor (optional)
+     * @param  string $cursor Opaque continuation cursor from a prior page&#39;s pagination.cursor (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGeneralSearch'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
@@ -668,7 +668,7 @@ class TikTokApi
      * @param  string $query Search keyword (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 20)
-     * @param  string $cursor Composite pagination cursor (offset.search_id) from a prior page&#39;s pagination.cursor (optional)
+     * @param  string $cursor Opaque continuation cursor from a prior page&#39;s pagination.cursor (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGeneralSearch'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
@@ -831,7 +831,7 @@ class TikTokApi
      * @param  string $query Search keyword (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 20)
-     * @param  string $cursor Composite pagination cursor (offset.search_id) from a prior page&#39;s pagination.cursor (optional)
+     * @param  string $cursor Opaque continuation cursor from a prior page&#39;s pagination.cursor (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGeneralSearch'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -855,7 +855,7 @@ class TikTokApi
      * @param  string $query Search keyword (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 20)
-     * @param  string $cursor Composite pagination cursor (offset.search_id) from a prior page&#39;s pagination.cursor (optional)
+     * @param  string $cursor Opaque continuation cursor from a prior page&#39;s pagination.cursor (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGeneralSearch'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -908,7 +908,7 @@ class TikTokApi
      * @param  string $query Search keyword (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 20)
-     * @param  string $cursor Composite pagination cursor (offset.search_id) from a prior page&#39;s pagination.cursor (optional)
+     * @param  string $cursor Opaque continuation cursor from a prior page&#39;s pagination.cursor (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGeneralSearch'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -1859,44 +1859,44 @@ class TikTokApi
     }
 
     /**
-     * Operation tiktokGetFollowersDeprecated
+     * Operation tiktokGetFollowers
      *
-     * Get followers (deprecated)
+     * Get followers
      *
      * @param  string $username username (required)
      * @param  string $region region (optional, default to 'US')
      * @param  int $count count (optional, default to 30)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetFollowersDeprecated'] to see the possible values for this operation
+     * @param  string $cursor Continuation cursor from the previous page (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetFollowers'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return mixed|\ScrapeBadger\Model\HTTPValidationError
-     * @deprecated
      */
-    public function tiktokGetFollowersDeprecated($username, $region = 'US', $count = 30, string $contentType = self::contentTypes['tiktokGetFollowersDeprecated'][0])
+    public function tiktokGetFollowers($username, $region = 'US', $count = 30, $cursor = null, string $contentType = self::contentTypes['tiktokGetFollowers'][0])
     {
-        list($response) = $this->tiktokGetFollowersDeprecatedWithHttpInfo($username, $region, $count, $contentType);
+        list($response) = $this->tiktokGetFollowersWithHttpInfo($username, $region, $count, $cursor, $contentType);
         return $response;
     }
 
     /**
-     * Operation tiktokGetFollowersDeprecatedWithHttpInfo
+     * Operation tiktokGetFollowersWithHttpInfo
      *
-     * Get followers (deprecated)
+     * Get followers
      *
      * @param  string $username (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 30)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetFollowersDeprecated'] to see the possible values for this operation
+     * @param  string $cursor Continuation cursor from the previous page (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetFollowers'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
-     * @deprecated
      */
-    public function tiktokGetFollowersDeprecatedWithHttpInfo($username, $region = 'US', $count = 30, string $contentType = self::contentTypes['tiktokGetFollowersDeprecated'][0])
+    public function tiktokGetFollowersWithHttpInfo($username, $region = 'US', $count = 30, $cursor = null, string $contentType = self::contentTypes['tiktokGetFollowers'][0])
     {
-        $request = $this->tiktokGetFollowersDeprecatedRequest($username, $region, $count, $contentType);
+        $request = $this->tiktokGetFollowersRequest($username, $region, $count, $cursor, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -2043,22 +2043,22 @@ class TikTokApi
     }
 
     /**
-     * Operation tiktokGetFollowersDeprecatedAsync
+     * Operation tiktokGetFollowersAsync
      *
-     * Get followers (deprecated)
+     * Get followers
      *
      * @param  string $username (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 30)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetFollowersDeprecated'] to see the possible values for this operation
+     * @param  string $cursor Continuation cursor from the previous page (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetFollowers'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
-     * @deprecated
      */
-    public function tiktokGetFollowersDeprecatedAsync($username, $region = 'US', $count = 30, string $contentType = self::contentTypes['tiktokGetFollowersDeprecated'][0])
+    public function tiktokGetFollowersAsync($username, $region = 'US', $count = 30, $cursor = null, string $contentType = self::contentTypes['tiktokGetFollowers'][0])
     {
-        return $this->tiktokGetFollowersDeprecatedAsyncWithHttpInfo($username, $region, $count, $contentType)
+        return $this->tiktokGetFollowersAsyncWithHttpInfo($username, $region, $count, $cursor, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -2067,23 +2067,23 @@ class TikTokApi
     }
 
     /**
-     * Operation tiktokGetFollowersDeprecatedAsyncWithHttpInfo
+     * Operation tiktokGetFollowersAsyncWithHttpInfo
      *
-     * Get followers (deprecated)
+     * Get followers
      *
      * @param  string $username (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 30)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetFollowersDeprecated'] to see the possible values for this operation
+     * @param  string $cursor Continuation cursor from the previous page (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetFollowers'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
-     * @deprecated
      */
-    public function tiktokGetFollowersDeprecatedAsyncWithHttpInfo($username, $region = 'US', $count = 30, string $contentType = self::contentTypes['tiktokGetFollowersDeprecated'][0])
+    public function tiktokGetFollowersAsyncWithHttpInfo($username, $region = 'US', $count = 30, $cursor = null, string $contentType = self::contentTypes['tiktokGetFollowers'][0])
     {
         $returnType = 'mixed';
-        $request = $this->tiktokGetFollowersDeprecatedRequest($username, $region, $count, $contentType);
+        $request = $this->tiktokGetFollowersRequest($username, $region, $count, $cursor, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -2122,35 +2122,36 @@ class TikTokApi
     }
 
     /**
-     * Create request for operation 'tiktokGetFollowersDeprecated'
+     * Create request for operation 'tiktokGetFollowers'
      *
      * @param  string $username (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 30)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetFollowersDeprecated'] to see the possible values for this operation
+     * @param  string $cursor Continuation cursor from the previous page (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetFollowers'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
-     * @deprecated
      */
-    public function tiktokGetFollowersDeprecatedRequest($username, $region = 'US', $count = 30, string $contentType = self::contentTypes['tiktokGetFollowersDeprecated'][0])
+    public function tiktokGetFollowersRequest($username, $region = 'US', $count = 30, $cursor = null, string $contentType = self::contentTypes['tiktokGetFollowers'][0])
     {
 
         // verify the required parameter 'username' is set
         if ($username === null || (is_array($username) && count($username) === 0)) {
             throw new \InvalidArgumentException(
-                'Missing the required parameter $username when calling tiktokGetFollowersDeprecated'
+                'Missing the required parameter $username when calling tiktokGetFollowers'
             );
         }
 
 
         if ($count !== null && $count > 50) {
-            throw new \InvalidArgumentException('invalid value for "$count" when calling TikTokApi.tiktokGetFollowersDeprecated, must be smaller than or equal to 50.');
+            throw new \InvalidArgumentException('invalid value for "$count" when calling TikTokApi.tiktokGetFollowers, must be smaller than or equal to 50.');
         }
         if ($count !== null && $count < 1) {
-            throw new \InvalidArgumentException('invalid value for "$count" when calling TikTokApi.tiktokGetFollowersDeprecated, must be bigger than or equal to 1.');
+            throw new \InvalidArgumentException('invalid value for "$count" when calling TikTokApi.tiktokGetFollowers, must be bigger than or equal to 1.');
         }
         
+
 
         $resourcePath = '/v1/tiktok/users/{username}/followers';
         $formParams = [];
@@ -2173,6 +2174,15 @@ class TikTokApi
             $count,
             'count', // param base name
             'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $cursor,
+            'cursor', // param base name
+            'string', // openApiType
             'form', // style
             true, // explode
             false // required
@@ -2248,44 +2258,44 @@ class TikTokApi
     }
 
     /**
-     * Operation tiktokGetFollowingDeprecated
+     * Operation tiktokGetFollowing
      *
-     * Get following (deprecated)
+     * Get following
      *
      * @param  string $username username (required)
      * @param  string $region region (optional, default to 'US')
      * @param  int $count count (optional, default to 30)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetFollowingDeprecated'] to see the possible values for this operation
+     * @param  string $cursor Continuation cursor from the previous page (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetFollowing'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return mixed|\ScrapeBadger\Model\HTTPValidationError
-     * @deprecated
      */
-    public function tiktokGetFollowingDeprecated($username, $region = 'US', $count = 30, string $contentType = self::contentTypes['tiktokGetFollowingDeprecated'][0])
+    public function tiktokGetFollowing($username, $region = 'US', $count = 30, $cursor = null, string $contentType = self::contentTypes['tiktokGetFollowing'][0])
     {
-        list($response) = $this->tiktokGetFollowingDeprecatedWithHttpInfo($username, $region, $count, $contentType);
+        list($response) = $this->tiktokGetFollowingWithHttpInfo($username, $region, $count, $cursor, $contentType);
         return $response;
     }
 
     /**
-     * Operation tiktokGetFollowingDeprecatedWithHttpInfo
+     * Operation tiktokGetFollowingWithHttpInfo
      *
-     * Get following (deprecated)
+     * Get following
      *
      * @param  string $username (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 30)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetFollowingDeprecated'] to see the possible values for this operation
+     * @param  string $cursor Continuation cursor from the previous page (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetFollowing'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
-     * @deprecated
      */
-    public function tiktokGetFollowingDeprecatedWithHttpInfo($username, $region = 'US', $count = 30, string $contentType = self::contentTypes['tiktokGetFollowingDeprecated'][0])
+    public function tiktokGetFollowingWithHttpInfo($username, $region = 'US', $count = 30, $cursor = null, string $contentType = self::contentTypes['tiktokGetFollowing'][0])
     {
-        $request = $this->tiktokGetFollowingDeprecatedRequest($username, $region, $count, $contentType);
+        $request = $this->tiktokGetFollowingRequest($username, $region, $count, $cursor, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -2432,22 +2442,22 @@ class TikTokApi
     }
 
     /**
-     * Operation tiktokGetFollowingDeprecatedAsync
+     * Operation tiktokGetFollowingAsync
      *
-     * Get following (deprecated)
+     * Get following
      *
      * @param  string $username (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 30)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetFollowingDeprecated'] to see the possible values for this operation
+     * @param  string $cursor Continuation cursor from the previous page (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetFollowing'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
-     * @deprecated
      */
-    public function tiktokGetFollowingDeprecatedAsync($username, $region = 'US', $count = 30, string $contentType = self::contentTypes['tiktokGetFollowingDeprecated'][0])
+    public function tiktokGetFollowingAsync($username, $region = 'US', $count = 30, $cursor = null, string $contentType = self::contentTypes['tiktokGetFollowing'][0])
     {
-        return $this->tiktokGetFollowingDeprecatedAsyncWithHttpInfo($username, $region, $count, $contentType)
+        return $this->tiktokGetFollowingAsyncWithHttpInfo($username, $region, $count, $cursor, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -2456,23 +2466,23 @@ class TikTokApi
     }
 
     /**
-     * Operation tiktokGetFollowingDeprecatedAsyncWithHttpInfo
+     * Operation tiktokGetFollowingAsyncWithHttpInfo
      *
-     * Get following (deprecated)
+     * Get following
      *
      * @param  string $username (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 30)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetFollowingDeprecated'] to see the possible values for this operation
+     * @param  string $cursor Continuation cursor from the previous page (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetFollowing'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
-     * @deprecated
      */
-    public function tiktokGetFollowingDeprecatedAsyncWithHttpInfo($username, $region = 'US', $count = 30, string $contentType = self::contentTypes['tiktokGetFollowingDeprecated'][0])
+    public function tiktokGetFollowingAsyncWithHttpInfo($username, $region = 'US', $count = 30, $cursor = null, string $contentType = self::contentTypes['tiktokGetFollowing'][0])
     {
         $returnType = 'mixed';
-        $request = $this->tiktokGetFollowingDeprecatedRequest($username, $region, $count, $contentType);
+        $request = $this->tiktokGetFollowingRequest($username, $region, $count, $cursor, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -2511,35 +2521,36 @@ class TikTokApi
     }
 
     /**
-     * Create request for operation 'tiktokGetFollowingDeprecated'
+     * Create request for operation 'tiktokGetFollowing'
      *
      * @param  string $username (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 30)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetFollowingDeprecated'] to see the possible values for this operation
+     * @param  string $cursor Continuation cursor from the previous page (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetFollowing'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
-     * @deprecated
      */
-    public function tiktokGetFollowingDeprecatedRequest($username, $region = 'US', $count = 30, string $contentType = self::contentTypes['tiktokGetFollowingDeprecated'][0])
+    public function tiktokGetFollowingRequest($username, $region = 'US', $count = 30, $cursor = null, string $contentType = self::contentTypes['tiktokGetFollowing'][0])
     {
 
         // verify the required parameter 'username' is set
         if ($username === null || (is_array($username) && count($username) === 0)) {
             throw new \InvalidArgumentException(
-                'Missing the required parameter $username when calling tiktokGetFollowingDeprecated'
+                'Missing the required parameter $username when calling tiktokGetFollowing'
             );
         }
 
 
         if ($count !== null && $count > 50) {
-            throw new \InvalidArgumentException('invalid value for "$count" when calling TikTokApi.tiktokGetFollowingDeprecated, must be smaller than or equal to 50.');
+            throw new \InvalidArgumentException('invalid value for "$count" when calling TikTokApi.tiktokGetFollowing, must be smaller than or equal to 50.');
         }
         if ($count !== null && $count < 1) {
-            throw new \InvalidArgumentException('invalid value for "$count" when calling TikTokApi.tiktokGetFollowingDeprecated, must be bigger than or equal to 1.');
+            throw new \InvalidArgumentException('invalid value for "$count" when calling TikTokApi.tiktokGetFollowing, must be bigger than or equal to 1.');
         }
         
+
 
         $resourcePath = '/v1/tiktok/users/{username}/following';
         $formParams = [];
@@ -2562,6 +2573,15 @@ class TikTokApi
             $count,
             'count', // param base name
             'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $cursor,
+            'cursor', // param base name
+            'string', // openApiType
             'form', // style
             true, // explode
             false // required
@@ -3399,44 +3419,44 @@ class TikTokApi
     }
 
     /**
-     * Operation tiktokGetLikedVideosDeprecated
+     * Operation tiktokGetLikedVideos
      *
-     * Get liked videos (deprecated)
+     * Get liked videos
      *
      * @param  string $username username (required)
      * @param  string $region region (optional, default to 'US')
      * @param  int $count count (optional, default to 30)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetLikedVideosDeprecated'] to see the possible values for this operation
+     * @param  string $cursor Continuation cursor from the previous page (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetLikedVideos'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return mixed|\ScrapeBadger\Model\HTTPValidationError
-     * @deprecated
      */
-    public function tiktokGetLikedVideosDeprecated($username, $region = 'US', $count = 30, string $contentType = self::contentTypes['tiktokGetLikedVideosDeprecated'][0])
+    public function tiktokGetLikedVideos($username, $region = 'US', $count = 30, $cursor = null, string $contentType = self::contentTypes['tiktokGetLikedVideos'][0])
     {
-        list($response) = $this->tiktokGetLikedVideosDeprecatedWithHttpInfo($username, $region, $count, $contentType);
+        list($response) = $this->tiktokGetLikedVideosWithHttpInfo($username, $region, $count, $cursor, $contentType);
         return $response;
     }
 
     /**
-     * Operation tiktokGetLikedVideosDeprecatedWithHttpInfo
+     * Operation tiktokGetLikedVideosWithHttpInfo
      *
-     * Get liked videos (deprecated)
+     * Get liked videos
      *
      * @param  string $username (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 30)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetLikedVideosDeprecated'] to see the possible values for this operation
+     * @param  string $cursor Continuation cursor from the previous page (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetLikedVideos'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
-     * @deprecated
      */
-    public function tiktokGetLikedVideosDeprecatedWithHttpInfo($username, $region = 'US', $count = 30, string $contentType = self::contentTypes['tiktokGetLikedVideosDeprecated'][0])
+    public function tiktokGetLikedVideosWithHttpInfo($username, $region = 'US', $count = 30, $cursor = null, string $contentType = self::contentTypes['tiktokGetLikedVideos'][0])
     {
-        $request = $this->tiktokGetLikedVideosDeprecatedRequest($username, $region, $count, $contentType);
+        $request = $this->tiktokGetLikedVideosRequest($username, $region, $count, $cursor, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -3583,22 +3603,22 @@ class TikTokApi
     }
 
     /**
-     * Operation tiktokGetLikedVideosDeprecatedAsync
+     * Operation tiktokGetLikedVideosAsync
      *
-     * Get liked videos (deprecated)
+     * Get liked videos
      *
      * @param  string $username (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 30)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetLikedVideosDeprecated'] to see the possible values for this operation
+     * @param  string $cursor Continuation cursor from the previous page (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetLikedVideos'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
-     * @deprecated
      */
-    public function tiktokGetLikedVideosDeprecatedAsync($username, $region = 'US', $count = 30, string $contentType = self::contentTypes['tiktokGetLikedVideosDeprecated'][0])
+    public function tiktokGetLikedVideosAsync($username, $region = 'US', $count = 30, $cursor = null, string $contentType = self::contentTypes['tiktokGetLikedVideos'][0])
     {
-        return $this->tiktokGetLikedVideosDeprecatedAsyncWithHttpInfo($username, $region, $count, $contentType)
+        return $this->tiktokGetLikedVideosAsyncWithHttpInfo($username, $region, $count, $cursor, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -3607,23 +3627,23 @@ class TikTokApi
     }
 
     /**
-     * Operation tiktokGetLikedVideosDeprecatedAsyncWithHttpInfo
+     * Operation tiktokGetLikedVideosAsyncWithHttpInfo
      *
-     * Get liked videos (deprecated)
+     * Get liked videos
      *
      * @param  string $username (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 30)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetLikedVideosDeprecated'] to see the possible values for this operation
+     * @param  string $cursor Continuation cursor from the previous page (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetLikedVideos'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
-     * @deprecated
      */
-    public function tiktokGetLikedVideosDeprecatedAsyncWithHttpInfo($username, $region = 'US', $count = 30, string $contentType = self::contentTypes['tiktokGetLikedVideosDeprecated'][0])
+    public function tiktokGetLikedVideosAsyncWithHttpInfo($username, $region = 'US', $count = 30, $cursor = null, string $contentType = self::contentTypes['tiktokGetLikedVideos'][0])
     {
         $returnType = 'mixed';
-        $request = $this->tiktokGetLikedVideosDeprecatedRequest($username, $region, $count, $contentType);
+        $request = $this->tiktokGetLikedVideosRequest($username, $region, $count, $cursor, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -3662,35 +3682,36 @@ class TikTokApi
     }
 
     /**
-     * Create request for operation 'tiktokGetLikedVideosDeprecated'
+     * Create request for operation 'tiktokGetLikedVideos'
      *
      * @param  string $username (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 30)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetLikedVideosDeprecated'] to see the possible values for this operation
+     * @param  string $cursor Continuation cursor from the previous page (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetLikedVideos'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
-     * @deprecated
      */
-    public function tiktokGetLikedVideosDeprecatedRequest($username, $region = 'US', $count = 30, string $contentType = self::contentTypes['tiktokGetLikedVideosDeprecated'][0])
+    public function tiktokGetLikedVideosRequest($username, $region = 'US', $count = 30, $cursor = null, string $contentType = self::contentTypes['tiktokGetLikedVideos'][0])
     {
 
         // verify the required parameter 'username' is set
         if ($username === null || (is_array($username) && count($username) === 0)) {
             throw new \InvalidArgumentException(
-                'Missing the required parameter $username when calling tiktokGetLikedVideosDeprecated'
+                'Missing the required parameter $username when calling tiktokGetLikedVideos'
             );
         }
 
 
         if ($count !== null && $count > 50) {
-            throw new \InvalidArgumentException('invalid value for "$count" when calling TikTokApi.tiktokGetLikedVideosDeprecated, must be smaller than or equal to 50.');
+            throw new \InvalidArgumentException('invalid value for "$count" when calling TikTokApi.tiktokGetLikedVideos, must be smaller than or equal to 50.');
         }
         if ($count !== null && $count < 1) {
-            throw new \InvalidArgumentException('invalid value for "$count" when calling TikTokApi.tiktokGetLikedVideosDeprecated, must be bigger than or equal to 1.');
+            throw new \InvalidArgumentException('invalid value for "$count" when calling TikTokApi.tiktokGetLikedVideos, must be bigger than or equal to 1.');
         }
         
+
 
         $resourcePath = '/v1/tiktok/users/{username}/liked';
         $formParams = [];
@@ -3713,6 +3734,15 @@ class TikTokApi
             $count,
             'count', // param base name
             'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $cursor,
+            'cursor', // param base name
+            'string', // openApiType
             'form', // style
             true, // explode
             false // required
@@ -4921,15 +4951,16 @@ class TikTokApi
      * @param  string $video_id video_id (required)
      * @param  string $region region (optional, default to 'US')
      * @param  int $count count (optional, default to 16)
+     * @param  string $cursor Continuation cursor from the previous page (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetRelatedVideos'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return mixed|\ScrapeBadger\Model\HTTPValidationError
      */
-    public function tiktokGetRelatedVideos($video_id, $region = 'US', $count = 16, string $contentType = self::contentTypes['tiktokGetRelatedVideos'][0])
+    public function tiktokGetRelatedVideos($video_id, $region = 'US', $count = 16, $cursor = null, string $contentType = self::contentTypes['tiktokGetRelatedVideos'][0])
     {
-        list($response) = $this->tiktokGetRelatedVideosWithHttpInfo($video_id, $region, $count, $contentType);
+        list($response) = $this->tiktokGetRelatedVideosWithHttpInfo($video_id, $region, $count, $cursor, $contentType);
         return $response;
     }
 
@@ -4941,15 +4972,16 @@ class TikTokApi
      * @param  string $video_id (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 16)
+     * @param  string $cursor Continuation cursor from the previous page (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetRelatedVideos'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
-    public function tiktokGetRelatedVideosWithHttpInfo($video_id, $region = 'US', $count = 16, string $contentType = self::contentTypes['tiktokGetRelatedVideos'][0])
+    public function tiktokGetRelatedVideosWithHttpInfo($video_id, $region = 'US', $count = 16, $cursor = null, string $contentType = self::contentTypes['tiktokGetRelatedVideos'][0])
     {
-        $request = $this->tiktokGetRelatedVideosRequest($video_id, $region, $count, $contentType);
+        $request = $this->tiktokGetRelatedVideosRequest($video_id, $region, $count, $cursor, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -5103,14 +5135,15 @@ class TikTokApi
      * @param  string $video_id (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 16)
+     * @param  string $cursor Continuation cursor from the previous page (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetRelatedVideos'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function tiktokGetRelatedVideosAsync($video_id, $region = 'US', $count = 16, string $contentType = self::contentTypes['tiktokGetRelatedVideos'][0])
+    public function tiktokGetRelatedVideosAsync($video_id, $region = 'US', $count = 16, $cursor = null, string $contentType = self::contentTypes['tiktokGetRelatedVideos'][0])
     {
-        return $this->tiktokGetRelatedVideosAsyncWithHttpInfo($video_id, $region, $count, $contentType)
+        return $this->tiktokGetRelatedVideosAsyncWithHttpInfo($video_id, $region, $count, $cursor, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -5126,15 +5159,16 @@ class TikTokApi
      * @param  string $video_id (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 16)
+     * @param  string $cursor Continuation cursor from the previous page (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetRelatedVideos'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function tiktokGetRelatedVideosAsyncWithHttpInfo($video_id, $region = 'US', $count = 16, string $contentType = self::contentTypes['tiktokGetRelatedVideos'][0])
+    public function tiktokGetRelatedVideosAsyncWithHttpInfo($video_id, $region = 'US', $count = 16, $cursor = null, string $contentType = self::contentTypes['tiktokGetRelatedVideos'][0])
     {
         $returnType = 'mixed';
-        $request = $this->tiktokGetRelatedVideosRequest($video_id, $region, $count, $contentType);
+        $request = $this->tiktokGetRelatedVideosRequest($video_id, $region, $count, $cursor, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -5178,12 +5212,13 @@ class TikTokApi
      * @param  string $video_id (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 16)
+     * @param  string $cursor Continuation cursor from the previous page (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetRelatedVideos'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function tiktokGetRelatedVideosRequest($video_id, $region = 'US', $count = 16, string $contentType = self::contentTypes['tiktokGetRelatedVideos'][0])
+    public function tiktokGetRelatedVideosRequest($video_id, $region = 'US', $count = 16, $cursor = null, string $contentType = self::contentTypes['tiktokGetRelatedVideos'][0])
     {
 
         // verify the required parameter 'video_id' is set
@@ -5201,6 +5236,7 @@ class TikTokApi
             throw new \InvalidArgumentException('invalid value for "$count" when calling TikTokApi.tiktokGetRelatedVideos, must be bigger than or equal to 1.');
         }
         
+
 
         $resourcePath = '/v1/tiktok/videos/{video_id}/related';
         $formParams = [];
@@ -5223,6 +5259,15 @@ class TikTokApi
             $count,
             'count', // param base name
             'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $cursor,
+            'cursor', // param base name
+            'string', // openApiType
             'form', // style
             true, // explode
             false // required
@@ -5305,15 +5350,16 @@ class TikTokApi
      * @param  string $username username (required)
      * @param  string $region region (optional, default to 'US')
      * @param  int $count count (optional, default to 30)
+     * @param  string $cursor Continuation cursor from the previous page (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetReposts'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return mixed|\ScrapeBadger\Model\HTTPValidationError
      */
-    public function tiktokGetReposts($username, $region = 'US', $count = 30, string $contentType = self::contentTypes['tiktokGetReposts'][0])
+    public function tiktokGetReposts($username, $region = 'US', $count = 30, $cursor = null, string $contentType = self::contentTypes['tiktokGetReposts'][0])
     {
-        list($response) = $this->tiktokGetRepostsWithHttpInfo($username, $region, $count, $contentType);
+        list($response) = $this->tiktokGetRepostsWithHttpInfo($username, $region, $count, $cursor, $contentType);
         return $response;
     }
 
@@ -5325,15 +5371,16 @@ class TikTokApi
      * @param  string $username (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 30)
+     * @param  string $cursor Continuation cursor from the previous page (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetReposts'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
-    public function tiktokGetRepostsWithHttpInfo($username, $region = 'US', $count = 30, string $contentType = self::contentTypes['tiktokGetReposts'][0])
+    public function tiktokGetRepostsWithHttpInfo($username, $region = 'US', $count = 30, $cursor = null, string $contentType = self::contentTypes['tiktokGetReposts'][0])
     {
-        $request = $this->tiktokGetRepostsRequest($username, $region, $count, $contentType);
+        $request = $this->tiktokGetRepostsRequest($username, $region, $count, $cursor, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -5487,14 +5534,15 @@ class TikTokApi
      * @param  string $username (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 30)
+     * @param  string $cursor Continuation cursor from the previous page (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetReposts'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function tiktokGetRepostsAsync($username, $region = 'US', $count = 30, string $contentType = self::contentTypes['tiktokGetReposts'][0])
+    public function tiktokGetRepostsAsync($username, $region = 'US', $count = 30, $cursor = null, string $contentType = self::contentTypes['tiktokGetReposts'][0])
     {
-        return $this->tiktokGetRepostsAsyncWithHttpInfo($username, $region, $count, $contentType)
+        return $this->tiktokGetRepostsAsyncWithHttpInfo($username, $region, $count, $cursor, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -5510,15 +5558,16 @@ class TikTokApi
      * @param  string $username (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 30)
+     * @param  string $cursor Continuation cursor from the previous page (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetReposts'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function tiktokGetRepostsAsyncWithHttpInfo($username, $region = 'US', $count = 30, string $contentType = self::contentTypes['tiktokGetReposts'][0])
+    public function tiktokGetRepostsAsyncWithHttpInfo($username, $region = 'US', $count = 30, $cursor = null, string $contentType = self::contentTypes['tiktokGetReposts'][0])
     {
         $returnType = 'mixed';
-        $request = $this->tiktokGetRepostsRequest($username, $region, $count, $contentType);
+        $request = $this->tiktokGetRepostsRequest($username, $region, $count, $cursor, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -5562,12 +5611,13 @@ class TikTokApi
      * @param  string $username (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 30)
+     * @param  string $cursor Continuation cursor from the previous page (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetReposts'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function tiktokGetRepostsRequest($username, $region = 'US', $count = 30, string $contentType = self::contentTypes['tiktokGetReposts'][0])
+    public function tiktokGetRepostsRequest($username, $region = 'US', $count = 30, $cursor = null, string $contentType = self::contentTypes['tiktokGetReposts'][0])
     {
 
         // verify the required parameter 'username' is set
@@ -5585,6 +5635,7 @@ class TikTokApi
             throw new \InvalidArgumentException('invalid value for "$count" when calling TikTokApi.tiktokGetReposts, must be bigger than or equal to 1.');
         }
         
+
 
         $resourcePath = '/v1/tiktok/users/{username}/reposts';
         $formParams = [];
@@ -5607,6 +5658,15 @@ class TikTokApi
             $count,
             'count', // param base name
             'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $cursor,
+            'cursor', // param base name
+            'string', // openApiType
             'form', // style
             true, // explode
             false // required
@@ -6778,7 +6838,7 @@ class TikTokApi
      * @param  string $username username (required)
      * @param  string $region region (optional, default to 'US')
      * @param  int $count count (optional, default to 30)
-     * @param  string $cursor Pagination cursor from a prior page&#39;s &#x60;pagination.cursor&#x60; (signer path only). (optional)
+     * @param  string $cursor Pagination cursor from a prior page&#39;s &#x60;pagination.cursor&#x60; (opaque; expires after 15 minutes). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetUserVideos'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
@@ -6799,7 +6859,7 @@ class TikTokApi
      * @param  string $username (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 30)
-     * @param  string $cursor Pagination cursor from a prior page&#39;s &#x60;pagination.cursor&#x60; (signer path only). (optional)
+     * @param  string $cursor Pagination cursor from a prior page&#39;s &#x60;pagination.cursor&#x60; (opaque; expires after 15 minutes). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetUserVideos'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
@@ -6962,7 +7022,7 @@ class TikTokApi
      * @param  string $username (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 30)
-     * @param  string $cursor Pagination cursor from a prior page&#39;s &#x60;pagination.cursor&#x60; (signer path only). (optional)
+     * @param  string $cursor Pagination cursor from a prior page&#39;s &#x60;pagination.cursor&#x60; (opaque; expires after 15 minutes). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetUserVideos'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -6986,7 +7046,7 @@ class TikTokApi
      * @param  string $username (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 30)
-     * @param  string $cursor Pagination cursor from a prior page&#39;s &#x60;pagination.cursor&#x60; (signer path only). (optional)
+     * @param  string $cursor Pagination cursor from a prior page&#39;s &#x60;pagination.cursor&#x60; (opaque; expires after 15 minutes). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetUserVideos'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -7039,7 +7099,7 @@ class TikTokApi
      * @param  string $username (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 30)
-     * @param  string $cursor Pagination cursor from a prior page&#39;s &#x60;pagination.cursor&#x60; (signer path only). (optional)
+     * @param  string $cursor Pagination cursor from a prior page&#39;s &#x60;pagination.cursor&#x60; (opaque; expires after 15 minutes). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokGetUserVideos'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -8434,7 +8494,7 @@ class TikTokApi
      * @param  string $query Search keyword (required)
      * @param  string $region region (optional, default to 'US')
      * @param  int $count count (optional, default to 20)
-     * @param  string $cursor Composite pagination cursor (offset.search_id) from a prior page&#39;s pagination.cursor (optional)
+     * @param  string $cursor Opaque continuation cursor from a prior page&#39;s pagination.cursor (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokSearchHashtags'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
@@ -8455,7 +8515,7 @@ class TikTokApi
      * @param  string $query Search keyword (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 20)
-     * @param  string $cursor Composite pagination cursor (offset.search_id) from a prior page&#39;s pagination.cursor (optional)
+     * @param  string $cursor Opaque continuation cursor from a prior page&#39;s pagination.cursor (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokSearchHashtags'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
@@ -8618,7 +8678,7 @@ class TikTokApi
      * @param  string $query Search keyword (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 20)
-     * @param  string $cursor Composite pagination cursor (offset.search_id) from a prior page&#39;s pagination.cursor (optional)
+     * @param  string $cursor Opaque continuation cursor from a prior page&#39;s pagination.cursor (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokSearchHashtags'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -8642,7 +8702,7 @@ class TikTokApi
      * @param  string $query Search keyword (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 20)
-     * @param  string $cursor Composite pagination cursor (offset.search_id) from a prior page&#39;s pagination.cursor (optional)
+     * @param  string $cursor Opaque continuation cursor from a prior page&#39;s pagination.cursor (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokSearchHashtags'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -8695,7 +8755,7 @@ class TikTokApi
      * @param  string $query Search keyword (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 20)
-     * @param  string $cursor Composite pagination cursor (offset.search_id) from a prior page&#39;s pagination.cursor (optional)
+     * @param  string $cursor Opaque continuation cursor from a prior page&#39;s pagination.cursor (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokSearchHashtags'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -10088,7 +10148,7 @@ class TikTokApi
      * @param  string $query Search keyword (required)
      * @param  string $region region (optional, default to 'US')
      * @param  int $count count (optional, default to 20)
-     * @param  string $cursor Composite pagination cursor (offset.search_id) from a prior page&#39;s pagination.cursor (optional)
+     * @param  string $cursor Opaque continuation cursor from a prior page&#39;s pagination.cursor (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokSearchUsers'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
@@ -10109,7 +10169,7 @@ class TikTokApi
      * @param  string $query Search keyword (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 20)
-     * @param  string $cursor Composite pagination cursor (offset.search_id) from a prior page&#39;s pagination.cursor (optional)
+     * @param  string $cursor Opaque continuation cursor from a prior page&#39;s pagination.cursor (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokSearchUsers'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
@@ -10272,7 +10332,7 @@ class TikTokApi
      * @param  string $query Search keyword (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 20)
-     * @param  string $cursor Composite pagination cursor (offset.search_id) from a prior page&#39;s pagination.cursor (optional)
+     * @param  string $cursor Opaque continuation cursor from a prior page&#39;s pagination.cursor (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokSearchUsers'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -10296,7 +10356,7 @@ class TikTokApi
      * @param  string $query Search keyword (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 20)
-     * @param  string $cursor Composite pagination cursor (offset.search_id) from a prior page&#39;s pagination.cursor (optional)
+     * @param  string $cursor Opaque continuation cursor from a prior page&#39;s pagination.cursor (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokSearchUsers'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -10349,7 +10409,7 @@ class TikTokApi
      * @param  string $query Search keyword (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 20)
-     * @param  string $cursor Composite pagination cursor (offset.search_id) from a prior page&#39;s pagination.cursor (optional)
+     * @param  string $cursor Opaque continuation cursor from a prior page&#39;s pagination.cursor (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokSearchUsers'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -10488,7 +10548,7 @@ class TikTokApi
      * @param  string $query Search keyword (required)
      * @param  string $region region (optional, default to 'US')
      * @param  int $count count (optional, default to 20)
-     * @param  string $cursor Composite pagination cursor (offset.search_id) from a prior page&#39;s pagination.cursor (optional)
+     * @param  string $cursor Opaque continuation cursor from a prior page&#39;s pagination.cursor (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokSearchVideos'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
@@ -10509,7 +10569,7 @@ class TikTokApi
      * @param  string $query Search keyword (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 20)
-     * @param  string $cursor Composite pagination cursor (offset.search_id) from a prior page&#39;s pagination.cursor (optional)
+     * @param  string $cursor Opaque continuation cursor from a prior page&#39;s pagination.cursor (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokSearchVideos'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
@@ -10672,7 +10732,7 @@ class TikTokApi
      * @param  string $query Search keyword (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 20)
-     * @param  string $cursor Composite pagination cursor (offset.search_id) from a prior page&#39;s pagination.cursor (optional)
+     * @param  string $cursor Opaque continuation cursor from a prior page&#39;s pagination.cursor (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokSearchVideos'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -10696,7 +10756,7 @@ class TikTokApi
      * @param  string $query Search keyword (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 20)
-     * @param  string $cursor Composite pagination cursor (offset.search_id) from a prior page&#39;s pagination.cursor (optional)
+     * @param  string $cursor Opaque continuation cursor from a prior page&#39;s pagination.cursor (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokSearchVideos'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -10749,7 +10809,7 @@ class TikTokApi
      * @param  string $query Search keyword (required)
      * @param  string $region (optional, default to 'US')
      * @param  int $count (optional, default to 20)
-     * @param  string $cursor Composite pagination cursor (offset.search_id) from a prior page&#39;s pagination.cursor (optional)
+     * @param  string $cursor Opaque continuation cursor from a prior page&#39;s pagination.cursor (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokSearchVideos'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -14023,7 +14083,7 @@ class TikTokApi
      * Trending hashtags
      *
      * @param  string $region region (optional, default to 'US')
-     * @param  int $period period (optional, default to 7)
+     * @param  int $period Historical windows are unavailable; omit period (optional)
      * @param  int $count count (optional, default to 20)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTrendingHashtags'] to see the possible values for this operation
      *
@@ -14031,7 +14091,7 @@ class TikTokApi
      * @throws \InvalidArgumentException
      * @return mixed|\ScrapeBadger\Model\HTTPValidationError
      */
-    public function tiktokTrendingHashtags($region = 'US', $period = 7, $count = 20, string $contentType = self::contentTypes['tiktokTrendingHashtags'][0])
+    public function tiktokTrendingHashtags($region = 'US', $period = null, $count = 20, string $contentType = self::contentTypes['tiktokTrendingHashtags'][0])
     {
         list($response) = $this->tiktokTrendingHashtagsWithHttpInfo($region, $period, $count, $contentType);
         return $response;
@@ -14043,7 +14103,7 @@ class TikTokApi
      * Trending hashtags
      *
      * @param  string $region (optional, default to 'US')
-     * @param  int $period (optional, default to 7)
+     * @param  int $period Historical windows are unavailable; omit period (optional)
      * @param  int $count (optional, default to 20)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTrendingHashtags'] to see the possible values for this operation
      *
@@ -14051,7 +14111,7 @@ class TikTokApi
      * @throws \InvalidArgumentException
      * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
-    public function tiktokTrendingHashtagsWithHttpInfo($region = 'US', $period = 7, $count = 20, string $contentType = self::contentTypes['tiktokTrendingHashtags'][0])
+    public function tiktokTrendingHashtagsWithHttpInfo($region = 'US', $period = null, $count = 20, string $contentType = self::contentTypes['tiktokTrendingHashtags'][0])
     {
         $request = $this->tiktokTrendingHashtagsRequest($region, $period, $count, $contentType);
 
@@ -14205,14 +14265,14 @@ class TikTokApi
      * Trending hashtags
      *
      * @param  string $region (optional, default to 'US')
-     * @param  int $period (optional, default to 7)
+     * @param  int $period Historical windows are unavailable; omit period (optional)
      * @param  int $count (optional, default to 20)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTrendingHashtags'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function tiktokTrendingHashtagsAsync($region = 'US', $period = 7, $count = 20, string $contentType = self::contentTypes['tiktokTrendingHashtags'][0])
+    public function tiktokTrendingHashtagsAsync($region = 'US', $period = null, $count = 20, string $contentType = self::contentTypes['tiktokTrendingHashtags'][0])
     {
         return $this->tiktokTrendingHashtagsAsyncWithHttpInfo($region, $period, $count, $contentType)
             ->then(
@@ -14228,14 +14288,14 @@ class TikTokApi
      * Trending hashtags
      *
      * @param  string $region (optional, default to 'US')
-     * @param  int $period (optional, default to 7)
+     * @param  int $period Historical windows are unavailable; omit period (optional)
      * @param  int $count (optional, default to 20)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTrendingHashtags'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function tiktokTrendingHashtagsAsyncWithHttpInfo($region = 'US', $period = 7, $count = 20, string $contentType = self::contentTypes['tiktokTrendingHashtags'][0])
+    public function tiktokTrendingHashtagsAsyncWithHttpInfo($region = 'US', $period = null, $count = 20, string $contentType = self::contentTypes['tiktokTrendingHashtags'][0])
     {
         $returnType = 'mixed';
         $request = $this->tiktokTrendingHashtagsRequest($region, $period, $count, $contentType);
@@ -14280,14 +14340,14 @@ class TikTokApi
      * Create request for operation 'tiktokTrendingHashtags'
      *
      * @param  string $region (optional, default to 'US')
-     * @param  int $period (optional, default to 7)
+     * @param  int $period Historical windows are unavailable; omit period (optional)
      * @param  int $count (optional, default to 20)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTrendingHashtags'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function tiktokTrendingHashtagsRequest($region = 'US', $period = 7, $count = 20, string $contentType = self::contentTypes['tiktokTrendingHashtags'][0])
+    public function tiktokTrendingHashtagsRequest($region = 'US', $period = null, $count = 20, string $contentType = self::contentTypes['tiktokTrendingHashtags'][0])
     {
 
 
@@ -14402,7 +14462,7 @@ class TikTokApi
      * Trending songs
      *
      * @param  string $region region (optional, default to 'US')
-     * @param  int $period period (optional, default to 7)
+     * @param  int $period Historical windows are unavailable; omit period (optional)
      * @param  int $count count (optional, default to 20)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTrendingSongs'] to see the possible values for this operation
      *
@@ -14410,7 +14470,7 @@ class TikTokApi
      * @throws \InvalidArgumentException
      * @return mixed|\ScrapeBadger\Model\HTTPValidationError
      */
-    public function tiktokTrendingSongs($region = 'US', $period = 7, $count = 20, string $contentType = self::contentTypes['tiktokTrendingSongs'][0])
+    public function tiktokTrendingSongs($region = 'US', $period = null, $count = 20, string $contentType = self::contentTypes['tiktokTrendingSongs'][0])
     {
         list($response) = $this->tiktokTrendingSongsWithHttpInfo($region, $period, $count, $contentType);
         return $response;
@@ -14422,7 +14482,7 @@ class TikTokApi
      * Trending songs
      *
      * @param  string $region (optional, default to 'US')
-     * @param  int $period (optional, default to 7)
+     * @param  int $period Historical windows are unavailable; omit period (optional)
      * @param  int $count (optional, default to 20)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTrendingSongs'] to see the possible values for this operation
      *
@@ -14430,7 +14490,7 @@ class TikTokApi
      * @throws \InvalidArgumentException
      * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
-    public function tiktokTrendingSongsWithHttpInfo($region = 'US', $period = 7, $count = 20, string $contentType = self::contentTypes['tiktokTrendingSongs'][0])
+    public function tiktokTrendingSongsWithHttpInfo($region = 'US', $period = null, $count = 20, string $contentType = self::contentTypes['tiktokTrendingSongs'][0])
     {
         $request = $this->tiktokTrendingSongsRequest($region, $period, $count, $contentType);
 
@@ -14584,14 +14644,14 @@ class TikTokApi
      * Trending songs
      *
      * @param  string $region (optional, default to 'US')
-     * @param  int $period (optional, default to 7)
+     * @param  int $period Historical windows are unavailable; omit period (optional)
      * @param  int $count (optional, default to 20)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTrendingSongs'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function tiktokTrendingSongsAsync($region = 'US', $period = 7, $count = 20, string $contentType = self::contentTypes['tiktokTrendingSongs'][0])
+    public function tiktokTrendingSongsAsync($region = 'US', $period = null, $count = 20, string $contentType = self::contentTypes['tiktokTrendingSongs'][0])
     {
         return $this->tiktokTrendingSongsAsyncWithHttpInfo($region, $period, $count, $contentType)
             ->then(
@@ -14607,14 +14667,14 @@ class TikTokApi
      * Trending songs
      *
      * @param  string $region (optional, default to 'US')
-     * @param  int $period (optional, default to 7)
+     * @param  int $period Historical windows are unavailable; omit period (optional)
      * @param  int $count (optional, default to 20)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTrendingSongs'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function tiktokTrendingSongsAsyncWithHttpInfo($region = 'US', $period = 7, $count = 20, string $contentType = self::contentTypes['tiktokTrendingSongs'][0])
+    public function tiktokTrendingSongsAsyncWithHttpInfo($region = 'US', $period = null, $count = 20, string $contentType = self::contentTypes['tiktokTrendingSongs'][0])
     {
         $returnType = 'mixed';
         $request = $this->tiktokTrendingSongsRequest($region, $period, $count, $contentType);
@@ -14659,14 +14719,14 @@ class TikTokApi
      * Create request for operation 'tiktokTrendingSongs'
      *
      * @param  string $region (optional, default to 'US')
-     * @param  int $period (optional, default to 7)
+     * @param  int $period Historical windows are unavailable; omit period (optional)
      * @param  int $count (optional, default to 20)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tiktokTrendingSongs'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function tiktokTrendingSongsRequest($region = 'US', $period = 7, $count = 20, string $contentType = self::contentTypes['tiktokTrendingSongs'][0])
+    public function tiktokTrendingSongsRequest($region = 'US', $period = null, $count = 20, string $contentType = self::contentTypes['tiktokTrendingSongs'][0])
     {
 
 

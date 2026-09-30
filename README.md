@@ -10,14 +10,14 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="license"></a>
 </p>
 
-Official **PHP** SDK for [ScrapeBadger](https://scrapebadger.com) — one API key for
+Official **PHP** SDK for [ScrapeBadger](https://scrapebadger.com/?utm_source=sdk-readme&utm_medium=referral&utm_campaign=scrapebadger-php) — one API key for
 30+ scraping APIs: Twitter/X, Reddit, Facebook, Instagram, TikTok, YouTube, Amazon, eBay,
 Walmart, Vinted, Google (18 products), Bing, Yahoo, ChatGPT, Perplexity, real estate, and
 any URL via the general Web Scraping API. Generated from the ScrapeBadger OpenAPI spec —
 always in sync with the API. ⚠️ This repository is regenerated automatically; don't send
 PRs here, request changes via the [roadmap](https://github.com/scrape-badger/roadmap).
 
-📚 [API docs](https://docs.scrapebadger.com) · 🧰 [All SDKs](https://scrapebadger.com/sdks) · 🔑 [Get an API key](https://scrapebadger.com/auth/signup) — 1,000 free credits
+📚 [API docs](https://docs.scrapebadger.com) · 🧰 [All SDKs](https://scrapebadger.com/sdks?utm_source=sdk-readme&utm_medium=referral&utm_campaign=scrapebadger-php) · 🔑 [Get an API key](https://scrapebadger.com/auth/signup?utm_source=sdk-readme&utm_medium=referral&utm_campaign=scrapebadger-php) — 1,000 free credits
 
 ## 🚀 Install
 

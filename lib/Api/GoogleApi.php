@@ -5298,7 +5298,7 @@ class GoogleApi
      * @param  string $hl Language code (optional, default to 'en')
      * @param  bool $product NOT YET SUPPORTED — accepted, and reported back in &#x60;warnings&#x60; (optional, default to false)
      * @param  bool $visual_matches Always true in practice — &#x60;false&#x60; is reported back in &#x60;warnings&#x60; (optional, default to true)
-     * @param  bool $exact_matches NOT YET SUPPORTED — accepted, and reported back in &#x60;warnings&#x60; (optional, default to false)
+     * @param  bool $exact_matches Return the pages hosting this image, flagged &#x60;exact_match&#x60; (optional, default to false)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googleGoogleLensVisualSearch'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
@@ -5324,7 +5324,7 @@ class GoogleApi
      * @param  string $hl Language code (optional, default to 'en')
      * @param  bool $product NOT YET SUPPORTED — accepted, and reported back in &#x60;warnings&#x60; (optional, default to false)
      * @param  bool $visual_matches Always true in practice — &#x60;false&#x60; is reported back in &#x60;warnings&#x60; (optional, default to true)
-     * @param  bool $exact_matches NOT YET SUPPORTED — accepted, and reported back in &#x60;warnings&#x60; (optional, default to false)
+     * @param  bool $exact_matches Return the pages hosting this image, flagged &#x60;exact_match&#x60; (optional, default to false)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googleGoogleLensVisualSearch'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
@@ -5492,7 +5492,7 @@ class GoogleApi
      * @param  string $hl Language code (optional, default to 'en')
      * @param  bool $product NOT YET SUPPORTED — accepted, and reported back in &#x60;warnings&#x60; (optional, default to false)
      * @param  bool $visual_matches Always true in practice — &#x60;false&#x60; is reported back in &#x60;warnings&#x60; (optional, default to true)
-     * @param  bool $exact_matches NOT YET SUPPORTED — accepted, and reported back in &#x60;warnings&#x60; (optional, default to false)
+     * @param  bool $exact_matches Return the pages hosting this image, flagged &#x60;exact_match&#x60; (optional, default to false)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googleGoogleLensVisualSearch'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -5521,7 +5521,7 @@ class GoogleApi
      * @param  string $hl Language code (optional, default to 'en')
      * @param  bool $product NOT YET SUPPORTED — accepted, and reported back in &#x60;warnings&#x60; (optional, default to false)
      * @param  bool $visual_matches Always true in practice — &#x60;false&#x60; is reported back in &#x60;warnings&#x60; (optional, default to true)
-     * @param  bool $exact_matches NOT YET SUPPORTED — accepted, and reported back in &#x60;warnings&#x60; (optional, default to false)
+     * @param  bool $exact_matches Return the pages hosting this image, flagged &#x60;exact_match&#x60; (optional, default to false)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googleGoogleLensVisualSearch'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -5579,7 +5579,7 @@ class GoogleApi
      * @param  string $hl Language code (optional, default to 'en')
      * @param  bool $product NOT YET SUPPORTED — accepted, and reported back in &#x60;warnings&#x60; (optional, default to false)
      * @param  bool $visual_matches Always true in practice — &#x60;false&#x60; is reported back in &#x60;warnings&#x60; (optional, default to true)
-     * @param  bool $exact_matches NOT YET SUPPORTED — accepted, and reported back in &#x60;warnings&#x60; (optional, default to false)
+     * @param  bool $exact_matches Return the pages hosting this image, flagged &#x60;exact_match&#x60; (optional, default to false)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googleGoogleLensVisualSearch'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException

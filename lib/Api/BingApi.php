@@ -2572,8 +2572,8 @@ class BingApi
      *
      * @param  string $query Search keywords, e.g. &#39;coffee machine&#39; (required)
      * @param  string $market Bing market code, e.g. &#39;en-US&#39;, &#39;en-GB&#39;, &#39;de-DE&#39;. See /markets. (optional, default to 'en-US')
-     * @param  int $count Results per page (1-50) (optional, default to 10)
-     * @param  int $offset Zero-based result offset for pagination (optional, default to 0)
+     * @param  int $count Organic results to return (1-50), merged from Bing&#39;s following pages when one page is short. May return fewer. (optional, default to 10)
+     * @param  int $offset Organic results to skip in Bing&#39;s ranking. Paginate with offset +&#x3D; count. (optional, default to 0)
      * @param  string $safe_search off | moderate | strict (default moderate) (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bingWebSearch'] to see the possible values for this operation
      *
@@ -2594,8 +2594,8 @@ class BingApi
      *
      * @param  string $query Search keywords, e.g. &#39;coffee machine&#39; (required)
      * @param  string $market Bing market code, e.g. &#39;en-US&#39;, &#39;en-GB&#39;, &#39;de-DE&#39;. See /markets. (optional, default to 'en-US')
-     * @param  int $count Results per page (1-50) (optional, default to 10)
-     * @param  int $offset Zero-based result offset for pagination (optional, default to 0)
+     * @param  int $count Organic results to return (1-50), merged from Bing&#39;s following pages when one page is short. May return fewer. (optional, default to 10)
+     * @param  int $offset Organic results to skip in Bing&#39;s ranking. Paginate with offset +&#x3D; count. (optional, default to 0)
      * @param  string $safe_search off | moderate | strict (default moderate) (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bingWebSearch'] to see the possible values for this operation
      *
@@ -2758,8 +2758,8 @@ class BingApi
      *
      * @param  string $query Search keywords, e.g. &#39;coffee machine&#39; (required)
      * @param  string $market Bing market code, e.g. &#39;en-US&#39;, &#39;en-GB&#39;, &#39;de-DE&#39;. See /markets. (optional, default to 'en-US')
-     * @param  int $count Results per page (1-50) (optional, default to 10)
-     * @param  int $offset Zero-based result offset for pagination (optional, default to 0)
+     * @param  int $count Organic results to return (1-50), merged from Bing&#39;s following pages when one page is short. May return fewer. (optional, default to 10)
+     * @param  int $offset Organic results to skip in Bing&#39;s ranking. Paginate with offset +&#x3D; count. (optional, default to 0)
      * @param  string $safe_search off | moderate | strict (default moderate) (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bingWebSearch'] to see the possible values for this operation
      *
@@ -2783,8 +2783,8 @@ class BingApi
      *
      * @param  string $query Search keywords, e.g. &#39;coffee machine&#39; (required)
      * @param  string $market Bing market code, e.g. &#39;en-US&#39;, &#39;en-GB&#39;, &#39;de-DE&#39;. See /markets. (optional, default to 'en-US')
-     * @param  int $count Results per page (1-50) (optional, default to 10)
-     * @param  int $offset Zero-based result offset for pagination (optional, default to 0)
+     * @param  int $count Organic results to return (1-50), merged from Bing&#39;s following pages when one page is short. May return fewer. (optional, default to 10)
+     * @param  int $offset Organic results to skip in Bing&#39;s ranking. Paginate with offset +&#x3D; count. (optional, default to 0)
      * @param  string $safe_search off | moderate | strict (default moderate) (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bingWebSearch'] to see the possible values for this operation
      *
@@ -2837,8 +2837,8 @@ class BingApi
      *
      * @param  string $query Search keywords, e.g. &#39;coffee machine&#39; (required)
      * @param  string $market Bing market code, e.g. &#39;en-US&#39;, &#39;en-GB&#39;, &#39;de-DE&#39;. See /markets. (optional, default to 'en-US')
-     * @param  int $count Results per page (1-50) (optional, default to 10)
-     * @param  int $offset Zero-based result offset for pagination (optional, default to 0)
+     * @param  int $count Organic results to return (1-50), merged from Bing&#39;s following pages when one page is short. May return fewer. (optional, default to 10)
+     * @param  int $offset Organic results to skip in Bing&#39;s ranking. Paginate with offset +&#x3D; count. (optional, default to 0)
      * @param  string $safe_search off | moderate | strict (default moderate) (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bingWebSearch'] to see the possible values for this operation
      *

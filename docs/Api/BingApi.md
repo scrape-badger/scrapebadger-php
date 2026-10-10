@@ -488,8 +488,8 @@ $apiInstance = new ScrapeBadger\Api\BingApi(
 );
 $query = 'query_example'; // string | Search keywords, e.g. 'coffee machine'
 $market = 'en-US'; // string | Bing market code, e.g. 'en-US', 'en-GB', 'de-DE'. See /markets.
-$count = 10; // int | Results per page (1-50)
-$offset = 0; // int | Zero-based result offset for pagination
+$count = 10; // int | Organic results to return (1-50), merged from Bing's following pages when one page is short. May return fewer.
+$offset = 0; // int | Organic results to skip in Bing's ranking. Paginate with offset += count.
 $safe_search = 'safe_search_example'; // string | off | moderate | strict (default moderate)
 
 try {
@@ -506,8 +506,8 @@ try {
 | ------------- | ------------- | ------------- | ------------- |
 | **query** | **string**| Search keywords, e.g. &#39;coffee machine&#39; | |
 | **market** | **string**| Bing market code, e.g. &#39;en-US&#39;, &#39;en-GB&#39;, &#39;de-DE&#39;. See /markets. | [optional] [default to &#39;en-US&#39;] |
-| **count** | **int**| Results per page (1-50) | [optional] [default to 10] |
-| **offset** | **int**| Zero-based result offset for pagination | [optional] [default to 0] |
+| **count** | **int**| Organic results to return (1-50), merged from Bing&#39;s following pages when one page is short. May return fewer. | [optional] [default to 10] |
+| **offset** | **int**| Organic results to skip in Bing&#39;s ranking. Paginate with offset +&#x3D; count. | [optional] [default to 0] |
 | **safe_search** | **string**| off | moderate | strict (default moderate) | [optional] |
 
 ### Return type

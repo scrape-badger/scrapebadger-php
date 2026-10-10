@@ -77,16 +77,10 @@ class WebApi
         'webExtractStructuredData' => [
             'application/json',
         ],
-        'webGetBatchJobStatus' => [
-            'application/json',
-        ],
         'webPollAnAutoUnblockDiscoveryJob' => [
             'application/json',
         ],
         'webScrapeAUrl' => [
-            'application/json',
-        ],
-        'webSubmitBatchScrapingJob' => [
             'application/json',
         ],
         'webTakeAScreenshot' => [
@@ -444,15 +438,16 @@ class WebApi
      *
      * Extract structured data
      *
+     * @param  \ScrapeBadger\Model\ExtractRequest $extract_request extract_request (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['webExtractStructuredData'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
      */
-    public function webExtractStructuredData(string $contentType = self::contentTypes['webExtractStructuredData'][0])
+    public function webExtractStructuredData($extract_request, string $contentType = self::contentTypes['webExtractStructuredData'][0])
     {
-        list($response) = $this->webExtractStructuredDataWithHttpInfo($contentType);
+        list($response) = $this->webExtractStructuredDataWithHttpInfo($extract_request, $contentType);
         return $response;
     }
 
@@ -461,310 +456,16 @@ class WebApi
      *
      * Extract structured data
      *
+     * @param  \ScrapeBadger\Model\ExtractRequest $extract_request (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['webExtractStructuredData'] to see the possible values for this operation
-     *
-     * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
-     * @throws \InvalidArgumentException
-     * @return array of mixed, HTTP status code, HTTP response headers (array of strings)
-     */
-    public function webExtractStructuredDataWithHttpInfo(string $contentType = self::contentTypes['webExtractStructuredData'][0])
-    {
-        $request = $this->webExtractStructuredDataRequest($contentType);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    (int) $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
-                );
-            } catch (ConnectException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    (int) $e->getCode(),
-                    null,
-                    null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-
-            switch($statusCode) {
-                case 200:
-                    if ('mixed' === '\SplFileObject') {
-                        $content = $response->getBody(); //stream goes to serializer
-                    } else {
-                        $content = (string) $response->getBody();
-                        if ('mixed' !== 'string') {
-                            try {
-                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
-                            } catch (\JsonException $exception) {
-                                throw new ApiException(
-                                    sprintf(
-                                        'Error JSON decoding server response (%s)',
-                                        $request->getUri()
-                                    ),
-                                    $statusCode,
-                                    $response->getHeaders(),
-                                    $content
-                                );
-                            }
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, 'mixed', []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-            }
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        (string) $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    (string) $response->getBody()
-                );
-            }
-
-            $returnType = 'mixed';
-            if ($returnType === '\SplFileObject') {
-                $content = $response->getBody(); //stream goes to serializer
-            } else {
-                $content = (string) $response->getBody();
-                if ($returnType !== 'string') {
-                    try {
-                        $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
-                    } catch (\JsonException $exception) {
-                        throw new ApiException(
-                            sprintf(
-                                'Error JSON decoding server response (%s)',
-                                $request->getUri()
-                            ),
-                            $statusCode,
-                            $response->getHeaders(),
-                            $content
-                        );
-                    }
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        'mixed',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
-        }
-    }
-
-    /**
-     * Operation webExtractStructuredDataAsync
-     *
-     * Extract structured data
-     *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['webExtractStructuredData'] to see the possible values for this operation
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function webExtractStructuredDataAsync(string $contentType = self::contentTypes['webExtractStructuredData'][0])
-    {
-        return $this->webExtractStructuredDataAsyncWithHttpInfo($contentType)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation webExtractStructuredDataAsyncWithHttpInfo
-     *
-     * Extract structured data
-     *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['webExtractStructuredData'] to see the possible values for this operation
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function webExtractStructuredDataAsyncWithHttpInfo(string $contentType = self::contentTypes['webExtractStructuredData'][0])
-    {
-        $returnType = 'mixed';
-        $request = $this->webExtractStructuredDataRequest($contentType);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    if ($returnType === '\SplFileObject') {
-                        $content = $response->getBody(); //stream goes to serializer
-                    } else {
-                        $content = (string) $response->getBody();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        (string) $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
-     * Create request for operation 'webExtractStructuredData'
-     *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['webExtractStructuredData'] to see the possible values for this operation
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Psr7\Request
-     */
-    public function webExtractStructuredDataRequest(string $contentType = self::contentTypes['webExtractStructuredData'][0])
-    {
-
-
-        $resourcePath = '/v1/web/extract';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-
-
-
-
-        $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
-            $contentType,
-            $multipart
-        );
-
-        // for model (json/xml)
-        if (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
-                    foreach ($formParamValueItems as $formParamValueItem) {
-                        $multipartContents[] = [
-                            'name' => $formParamName,
-                            'contents' => $formParamValueItem
-                        ];
-                    }
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
-                # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
-            } else {
-                // for HTTP post (form)
-                $httpBody = ObjectSerializer::buildQuery($formParams);
-            }
-        }
-
-        // this endpoint requires API key authentication
-        $apiKey = $this->config->getApiKeyWithPrefix('X-API-Key');
-        if ($apiKey !== null) {
-            $headers['X-API-Key'] = $apiKey;
-        }
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
-        );
-
-        $operationHost = $this->config->getHost();
-        $query = ObjectSerializer::buildQuery($queryParams);
-        return new Request(
-            'POST',
-            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
-        );
-    }
-
-    /**
-     * Operation webGetBatchJobStatus
-     *
-     * Get batch job status
-     *
-     * @param  string $job_id job_id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['webGetBatchJobStatus'] to see the possible values for this operation
-     *
-     * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
-     * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
-     */
-    public function webGetBatchJobStatus($job_id, string $contentType = self::contentTypes['webGetBatchJobStatus'][0])
-    {
-        list($response) = $this->webGetBatchJobStatusWithHttpInfo($job_id, $contentType);
-        return $response;
-    }
-
-    /**
-     * Operation webGetBatchJobStatusWithHttpInfo
-     *
-     * Get batch job status
-     *
-     * @param  string $job_id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['webGetBatchJobStatus'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
-    public function webGetBatchJobStatusWithHttpInfo($job_id, string $contentType = self::contentTypes['webGetBatchJobStatus'][0])
+    public function webExtractStructuredDataWithHttpInfo($extract_request, string $contentType = self::contentTypes['webExtractStructuredData'][0])
     {
-        $request = $this->webGetBatchJobStatusRequest($job_id, $contentType);
+        $request = $this->webExtractStructuredDataRequest($extract_request, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -911,19 +612,19 @@ class WebApi
     }
 
     /**
-     * Operation webGetBatchJobStatusAsync
+     * Operation webExtractStructuredDataAsync
      *
-     * Get batch job status
+     * Extract structured data
      *
-     * @param  string $job_id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['webGetBatchJobStatus'] to see the possible values for this operation
+     * @param  \ScrapeBadger\Model\ExtractRequest $extract_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['webExtractStructuredData'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function webGetBatchJobStatusAsync($job_id, string $contentType = self::contentTypes['webGetBatchJobStatus'][0])
+    public function webExtractStructuredDataAsync($extract_request, string $contentType = self::contentTypes['webExtractStructuredData'][0])
     {
-        return $this->webGetBatchJobStatusAsyncWithHttpInfo($job_id, $contentType)
+        return $this->webExtractStructuredDataAsyncWithHttpInfo($extract_request, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -932,20 +633,20 @@ class WebApi
     }
 
     /**
-     * Operation webGetBatchJobStatusAsyncWithHttpInfo
+     * Operation webExtractStructuredDataAsyncWithHttpInfo
      *
-     * Get batch job status
+     * Extract structured data
      *
-     * @param  string $job_id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['webGetBatchJobStatus'] to see the possible values for this operation
+     * @param  \ScrapeBadger\Model\ExtractRequest $extract_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['webExtractStructuredData'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function webGetBatchJobStatusAsyncWithHttpInfo($job_id, string $contentType = self::contentTypes['webGetBatchJobStatus'][0])
+    public function webExtractStructuredDataAsyncWithHttpInfo($extract_request, string $contentType = self::contentTypes['webExtractStructuredData'][0])
     {
         $returnType = 'mixed';
-        $request = $this->webGetBatchJobStatusRequest($job_id, $contentType);
+        $request = $this->webExtractStructuredDataRequest($extract_request, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -984,26 +685,26 @@ class WebApi
     }
 
     /**
-     * Create request for operation 'webGetBatchJobStatus'
+     * Create request for operation 'webExtractStructuredData'
      *
-     * @param  string $job_id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['webGetBatchJobStatus'] to see the possible values for this operation
+     * @param  \ScrapeBadger\Model\ExtractRequest $extract_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['webExtractStructuredData'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function webGetBatchJobStatusRequest($job_id, string $contentType = self::contentTypes['webGetBatchJobStatus'][0])
+    public function webExtractStructuredDataRequest($extract_request, string $contentType = self::contentTypes['webExtractStructuredData'][0])
     {
 
-        // verify the required parameter 'job_id' is set
-        if ($job_id === null || (is_array($job_id) && count($job_id) === 0)) {
+        // verify the required parameter 'extract_request' is set
+        if ($extract_request === null || (is_array($extract_request) && count($extract_request) === 0)) {
             throw new \InvalidArgumentException(
-                'Missing the required parameter $job_id when calling webGetBatchJobStatus'
+                'Missing the required parameter $extract_request when calling webExtractStructuredData'
             );
         }
 
 
-        $resourcePath = '/v1/web/batch/{job_id}';
+        $resourcePath = '/v1/web/extract';
         $formParams = [];
         $queryParams = [];
         $headerParams = [];
@@ -1012,14 +713,6 @@ class WebApi
 
 
 
-        // path params
-        if ($job_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'job_id' . '}',
-                ObjectSerializer::toPathValue($job_id),
-                $resourcePath
-            );
-        }
 
 
         $headers = $this->headerSelector->selectHeaders(
@@ -1029,7 +722,14 @@ class WebApi
         );
 
         // for model (json/xml)
-        if (count($formParams) > 0) {
+        if (isset($extract_request)) {
+            if (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the body
+                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($extract_request));
+            } else {
+                $httpBody = $extract_request;
+            }
+        } elseif (count($formParams) > 0) {
             if ($multipart) {
                 $multipartContents = [];
                 foreach ($formParams as $formParamName => $formParamValue) {
@@ -1073,7 +773,7 @@ class WebApi
         $operationHost = $this->config->getHost();
         $query = ObjectSerializer::buildQuery($queryParams);
         return new Request(
-            'GET',
+            'POST',
             $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
             $headers,
             $httpBody
@@ -1722,36 +1422,38 @@ class WebApi
     }
 
     /**
-     * Operation webSubmitBatchScrapingJob
+     * Operation webTakeAScreenshot
      *
-     * Submit batch scraping job
+     * Take a screenshot
      *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['webSubmitBatchScrapingJob'] to see the possible values for this operation
+     * @param  \ScrapeBadger\Model\ScreenshotRequest $screenshot_request screenshot_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['webTakeAScreenshot'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
      */
-    public function webSubmitBatchScrapingJob(string $contentType = self::contentTypes['webSubmitBatchScrapingJob'][0])
+    public function webTakeAScreenshot($screenshot_request, string $contentType = self::contentTypes['webTakeAScreenshot'][0])
     {
-        list($response) = $this->webSubmitBatchScrapingJobWithHttpInfo($contentType);
+        list($response) = $this->webTakeAScreenshotWithHttpInfo($screenshot_request, $contentType);
         return $response;
     }
 
     /**
-     * Operation webSubmitBatchScrapingJobWithHttpInfo
+     * Operation webTakeAScreenshotWithHttpInfo
      *
-     * Submit batch scraping job
+     * Take a screenshot
      *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['webSubmitBatchScrapingJob'] to see the possible values for this operation
+     * @param  \ScrapeBadger\Model\ScreenshotRequest $screenshot_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['webTakeAScreenshot'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
-    public function webSubmitBatchScrapingJobWithHttpInfo(string $contentType = self::contentTypes['webSubmitBatchScrapingJob'][0])
+    public function webTakeAScreenshotWithHttpInfo($screenshot_request, string $contentType = self::contentTypes['webTakeAScreenshot'][0])
     {
-        $request = $this->webSubmitBatchScrapingJobRequest($contentType);
+        $request = $this->webTakeAScreenshotRequest($screenshot_request, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -1801,6 +1503,33 @@ class WebApi
 
                     return [
                         ObjectSerializer::deserialize($content, 'mixed', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                case 422:
+                    if ('\ScrapeBadger\Model\HTTPValidationError' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\HTTPValidationError' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\HTTPValidationError', []),
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
@@ -1857,295 +1586,10 @@ class WebApi
                     );
                     $e->setResponseObject($data);
                     break;
-            }
-            throw $e;
-        }
-    }
-
-    /**
-     * Operation webSubmitBatchScrapingJobAsync
-     *
-     * Submit batch scraping job
-     *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['webSubmitBatchScrapingJob'] to see the possible values for this operation
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function webSubmitBatchScrapingJobAsync(string $contentType = self::contentTypes['webSubmitBatchScrapingJob'][0])
-    {
-        return $this->webSubmitBatchScrapingJobAsyncWithHttpInfo($contentType)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation webSubmitBatchScrapingJobAsyncWithHttpInfo
-     *
-     * Submit batch scraping job
-     *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['webSubmitBatchScrapingJob'] to see the possible values for this operation
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function webSubmitBatchScrapingJobAsyncWithHttpInfo(string $contentType = self::contentTypes['webSubmitBatchScrapingJob'][0])
-    {
-        $returnType = 'mixed';
-        $request = $this->webSubmitBatchScrapingJobRequest($contentType);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    if ($returnType === '\SplFileObject') {
-                        $content = $response->getBody(); //stream goes to serializer
-                    } else {
-                        $content = (string) $response->getBody();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        (string) $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
-     * Create request for operation 'webSubmitBatchScrapingJob'
-     *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['webSubmitBatchScrapingJob'] to see the possible values for this operation
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Psr7\Request
-     */
-    public function webSubmitBatchScrapingJobRequest(string $contentType = self::contentTypes['webSubmitBatchScrapingJob'][0])
-    {
-
-
-        $resourcePath = '/v1/web/batch';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-
-
-
-
-        $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
-            $contentType,
-            $multipart
-        );
-
-        // for model (json/xml)
-        if (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
-                    foreach ($formParamValueItems as $formParamValueItem) {
-                        $multipartContents[] = [
-                            'name' => $formParamName,
-                            'contents' => $formParamValueItem
-                        ];
-                    }
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
-                # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
-            } else {
-                // for HTTP post (form)
-                $httpBody = ObjectSerializer::buildQuery($formParams);
-            }
-        }
-
-        // this endpoint requires API key authentication
-        $apiKey = $this->config->getApiKeyWithPrefix('X-API-Key');
-        if ($apiKey !== null) {
-            $headers['X-API-Key'] = $apiKey;
-        }
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
-        );
-
-        $operationHost = $this->config->getHost();
-        $query = ObjectSerializer::buildQuery($queryParams);
-        return new Request(
-            'POST',
-            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
-        );
-    }
-
-    /**
-     * Operation webTakeAScreenshot
-     *
-     * Take a screenshot
-     *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['webTakeAScreenshot'] to see the possible values for this operation
-     *
-     * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
-     * @throws \InvalidArgumentException
-     * @return mixed
-     */
-    public function webTakeAScreenshot(string $contentType = self::contentTypes['webTakeAScreenshot'][0])
-    {
-        list($response) = $this->webTakeAScreenshotWithHttpInfo($contentType);
-        return $response;
-    }
-
-    /**
-     * Operation webTakeAScreenshotWithHttpInfo
-     *
-     * Take a screenshot
-     *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['webTakeAScreenshot'] to see the possible values for this operation
-     *
-     * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
-     * @throws \InvalidArgumentException
-     * @return array of mixed, HTTP status code, HTTP response headers (array of strings)
-     */
-    public function webTakeAScreenshotWithHttpInfo(string $contentType = self::contentTypes['webTakeAScreenshot'][0])
-    {
-        $request = $this->webTakeAScreenshotRequest($contentType);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    (int) $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
-                );
-            } catch (ConnectException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    (int) $e->getCode(),
-                    null,
-                    null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-
-            switch($statusCode) {
-                case 200:
-                    if ('mixed' === '\SplFileObject') {
-                        $content = $response->getBody(); //stream goes to serializer
-                    } else {
-                        $content = (string) $response->getBody();
-                        if ('mixed' !== 'string') {
-                            try {
-                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
-                            } catch (\JsonException $exception) {
-                                throw new ApiException(
-                                    sprintf(
-                                        'Error JSON decoding server response (%s)',
-                                        $request->getUri()
-                                    ),
-                                    $statusCode,
-                                    $response->getHeaders(),
-                                    $content
-                                );
-                            }
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, 'mixed', []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-            }
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        (string) $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    (string) $response->getBody()
-                );
-            }
-
-            $returnType = 'mixed';
-            if ($returnType === '\SplFileObject') {
-                $content = $response->getBody(); //stream goes to serializer
-            } else {
-                $content = (string) $response->getBody();
-                if ($returnType !== 'string') {
-                    try {
-                        $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
-                    } catch (\JsonException $exception) {
-                        throw new ApiException(
-                            sprintf(
-                                'Error JSON decoding server response (%s)',
-                                $request->getUri()
-                            ),
-                            $statusCode,
-                            $response->getHeaders(),
-                            $content
-                        );
-                    }
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 200:
+                case 422:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        'mixed',
+                        '\ScrapeBadger\Model\HTTPValidationError',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -2160,14 +1604,15 @@ class WebApi
      *
      * Take a screenshot
      *
+     * @param  \ScrapeBadger\Model\ScreenshotRequest $screenshot_request (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['webTakeAScreenshot'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function webTakeAScreenshotAsync(string $contentType = self::contentTypes['webTakeAScreenshot'][0])
+    public function webTakeAScreenshotAsync($screenshot_request, string $contentType = self::contentTypes['webTakeAScreenshot'][0])
     {
-        return $this->webTakeAScreenshotAsyncWithHttpInfo($contentType)
+        return $this->webTakeAScreenshotAsyncWithHttpInfo($screenshot_request, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -2180,15 +1625,16 @@ class WebApi
      *
      * Take a screenshot
      *
+     * @param  \ScrapeBadger\Model\ScreenshotRequest $screenshot_request (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['webTakeAScreenshot'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function webTakeAScreenshotAsyncWithHttpInfo(string $contentType = self::contentTypes['webTakeAScreenshot'][0])
+    public function webTakeAScreenshotAsyncWithHttpInfo($screenshot_request, string $contentType = self::contentTypes['webTakeAScreenshot'][0])
     {
         $returnType = 'mixed';
-        $request = $this->webTakeAScreenshotRequest($contentType);
+        $request = $this->webTakeAScreenshotRequest($screenshot_request, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -2229,13 +1675,21 @@ class WebApi
     /**
      * Create request for operation 'webTakeAScreenshot'
      *
+     * @param  \ScrapeBadger\Model\ScreenshotRequest $screenshot_request (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['webTakeAScreenshot'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function webTakeAScreenshotRequest(string $contentType = self::contentTypes['webTakeAScreenshot'][0])
+    public function webTakeAScreenshotRequest($screenshot_request, string $contentType = self::contentTypes['webTakeAScreenshot'][0])
     {
+
+        // verify the required parameter 'screenshot_request' is set
+        if ($screenshot_request === null || (is_array($screenshot_request) && count($screenshot_request) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $screenshot_request when calling webTakeAScreenshot'
+            );
+        }
 
 
         $resourcePath = '/v1/web/screenshot';
@@ -2256,7 +1710,14 @@ class WebApi
         );
 
         // for model (json/xml)
-        if (count($formParams) > 0) {
+        if (isset($screenshot_request)) {
+            if (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the body
+                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($screenshot_request));
+            } else {
+                $httpBody = $screenshot_request;
+            }
+        } elseif (count($formParams) > 0) {
             if ($multipart) {
                 $multipartContents = [];
                 foreach ($formParams as $formParamName => $formParamValue) {

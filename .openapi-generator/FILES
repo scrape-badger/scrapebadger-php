@@ -45,6 +45,9 @@ docs/Model/BillingLogListResponse.md
 docs/Model/BillingLogResponse.md
 docs/Model/BrandsResponse.md
 docs/Model/ColorsResponse.md
+docs/Model/ExtractRequest.md
+docs/Model/ExtractRequestExtractRulesValue.md
+docs/Model/ExtractRule.md
 docs/Model/FilterRuleCreate.md
 docs/Model/FilterRuleDeliveryLogListResponse.md
 docs/Model/FilterRuleDeliveryLogResponse.md
@@ -57,6 +60,7 @@ docs/Model/HTTPValidationError.md
 docs/Model/ItemDetailResponse.md
 docs/Model/MarketsResponse.md
 docs/Model/PortalApiRoutersV1TwitterFilterRulesFilterRulePricingResponse.md
+docs/Model/ScreenshotRequest.md
 docs/Model/SearchResponse.md
 docs/Model/StatusesResponse.md
 docs/Model/StreamMonitorCreate.md
@@ -134,6 +138,9 @@ lib/Model/BillingLogListResponse.php
 lib/Model/BillingLogResponse.php
 lib/Model/BrandsResponse.php
 lib/Model/ColorsResponse.php
+lib/Model/ExtractRequest.php
+lib/Model/ExtractRequestExtractRulesValue.php
+lib/Model/ExtractRule.php
 lib/Model/FilterRuleCreate.php
 lib/Model/FilterRuleDeliveryLogListResponse.php
 lib/Model/FilterRuleDeliveryLogResponse.php
@@ -147,6 +154,7 @@ lib/Model/ItemDetailResponse.php
 lib/Model/MarketsResponse.php
 lib/Model/ModelInterface.php
 lib/Model/PortalApiRoutersV1TwitterFilterRulesFilterRulePricingResponse.php
+lib/Model/ScreenshotRequest.php
 lib/Model/SearchResponse.php
 lib/Model/StatusesResponse.php
 lib/Model/StreamMonitorCreate.php
@@ -222,6 +230,9 @@ test/Model/BillingLogListResponseTest.php
 test/Model/BillingLogResponseTest.php
 test/Model/BrandsResponseTest.php
 test/Model/ColorsResponseTest.php
+test/Model/ExtractRequestExtractRulesValueTest.php
+test/Model/ExtractRequestTest.php
+test/Model/ExtractRuleTest.php
 test/Model/FilterRuleCreateTest.php
 test/Model/FilterRuleDeliveryLogListResponseTest.php
 test/Model/FilterRuleDeliveryLogResponseTest.php
@@ -234,6 +245,7 @@ test/Model/HTTPValidationErrorTest.php
 test/Model/ItemDetailResponseTest.php
 test/Model/MarketsResponseTest.php
 test/Model/PortalApiRoutersV1TwitterFilterRulesFilterRulePricingResponseTest.php
+test/Model/ScreenshotRequestTest.php
 test/Model/SearchResponseTest.php
 test/Model/StatusesResponseTest.php
 test/Model/StreamMonitorCreateTest.php

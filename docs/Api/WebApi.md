@@ -6,10 +6,8 @@ All URIs are relative to https://scrapebadger.com, except if the operation defin
 | ------------- | ------------- | ------------- |
 | [**webDetectAntiBotAndCaptchaSystems()**](WebApi.md#webDetectAntiBotAndCaptchaSystems) | **POST** /v1/web/detect | Detect anti-bot and CAPTCHA systems |
 | [**webExtractStructuredData()**](WebApi.md#webExtractStructuredData) | **POST** /v1/web/extract | Extract structured data |
-| [**webGetBatchJobStatus()**](WebApi.md#webGetBatchJobStatus) | **GET** /v1/web/batch/{job_id} | Get batch job status |
 | [**webPollAnAutoUnblockDiscoveryJob()**](WebApi.md#webPollAnAutoUnblockDiscoveryJob) | **GET** /v1/web/unblock/{job_id} | Poll an auto-unblock discovery job |
 | [**webScrapeAUrl()**](WebApi.md#webScrapeAUrl) | **POST** /v1/web/scrape | Scrape a URL |
-| [**webSubmitBatchScrapingJob()**](WebApi.md#webSubmitBatchScrapingJob) | **POST** /v1/web/batch | Submit batch scraping job |
 | [**webTakeAScreenshot()**](WebApi.md#webTakeAScreenshot) | **POST** /v1/web/screenshot | Take a screenshot |
 | [**webWebScraperHealthCheck()**](WebApi.md#webWebScraperHealthCheck) | **GET** /v1/web/health | Web scraper health check |
 | [**webWebScraperHealthCheckHead()**](WebApi.md#webWebScraperHealthCheckHead) | **HEAD** /v1/web/health | Web scraper health check |
@@ -77,12 +75,12 @@ This endpoint does not need any parameter.
 ## `webExtractStructuredData()`
 
 ```php
-webExtractStructuredData(): mixed
+webExtractStructuredData($extract_request): mixed
 ```
 
 Extract structured data
 
-Extract structured data from a URL using CSS or XPath selectors. (Phase 6)
+Scrape a URL and extract fields with CSS/XPath selectors and/or AI.  ``extract_rules`` maps a field to a selector and returns ``data``; ``ai_extract_rules`` (field -> description) and ``ai_query`` return ``ai_extraction``. Billed as a scrape, plus the AI extraction credits when AI is asked for and succeeds.
 
 ### Example
 
@@ -103,9 +101,10 @@ $apiInstance = new ScrapeBadger\Api\WebApi(
     new GuzzleHttp\Client(),
     $config
 );
+$extract_request = new \ScrapeBadger\Model\ExtractRequest(); // \ScrapeBadger\Model\ExtractRequest
 
 try {
-    $result = $apiInstance->webExtractStructuredData();
+    $result = $apiInstance->webExtractStructuredData($extract_request);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling WebApi->webExtractStructuredData: ', $e->getMessage(), PHP_EOL;
@@ -114,69 +113,9 @@ try {
 
 ### Parameters
 
-This endpoint does not need any parameter.
-
-### Return type
-
-**mixed**
-
-### Authorization
-
-[ApiKeyAuth](../../README.md#ApiKeyAuth)
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: `application/json`
-
-[[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
-[[Back to Model list]](../../README.md#models)
-[[Back to README]](../../README.md)
-
-## `webGetBatchJobStatus()`
-
-```php
-webGetBatchJobStatus($job_id): mixed
-```
-
-Get batch job status
-
-Get the status of a batch scraping job. (Phase 6)
-
-### Example
-
-```php
-<?php
-require_once(__DIR__ . '/vendor/autoload.php');
-
-
-// Configure API key authorization: ApiKeyAuth
-$config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKey('X-API-Key', 'YOUR_API_KEY');
-// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-// $config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKeyPrefix('X-API-Key', 'Bearer');
-
-
-$apiInstance = new ScrapeBadger\Api\WebApi(
-    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
-    // This is optional, `GuzzleHttp\Client` will be used as default.
-    new GuzzleHttp\Client(),
-    $config
-);
-$job_id = 'job_id_example'; // string
-
-try {
-    $result = $apiInstance->webGetBatchJobStatus($job_id);
-    print_r($result);
-} catch (Exception $e) {
-    echo 'Exception when calling WebApi->webGetBatchJobStatus: ', $e->getMessage(), PHP_EOL;
-}
-```
-
-### Parameters
-
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
-| **job_id** | **string**|  | |
+| **extract_request** | [**\ScrapeBadger\Model\ExtractRequest**](../Model/ExtractRequest.md)|  | |
 
 ### Return type
 
@@ -188,7 +127,7 @@ try {
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
+- **Content-Type**: `application/json`
 - **Accept**: `application/json`
 
 [[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
@@ -316,74 +255,15 @@ This endpoint does not need any parameter.
 [[Back to Model list]](../../README.md#models)
 [[Back to README]](../../README.md)
 
-## `webSubmitBatchScrapingJob()`
-
-```php
-webSubmitBatchScrapingJob(): mixed
-```
-
-Submit batch scraping job
-
-Submit a batch of URLs for scraping. (Phase 6)
-
-### Example
-
-```php
-<?php
-require_once(__DIR__ . '/vendor/autoload.php');
-
-
-// Configure API key authorization: ApiKeyAuth
-$config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKey('X-API-Key', 'YOUR_API_KEY');
-// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-// $config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKeyPrefix('X-API-Key', 'Bearer');
-
-
-$apiInstance = new ScrapeBadger\Api\WebApi(
-    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
-    // This is optional, `GuzzleHttp\Client` will be used as default.
-    new GuzzleHttp\Client(),
-    $config
-);
-
-try {
-    $result = $apiInstance->webSubmitBatchScrapingJob();
-    print_r($result);
-} catch (Exception $e) {
-    echo 'Exception when calling WebApi->webSubmitBatchScrapingJob: ', $e->getMessage(), PHP_EOL;
-}
-```
-
-### Parameters
-
-This endpoint does not need any parameter.
-
-### Return type
-
-**mixed**
-
-### Authorization
-
-[ApiKeyAuth](../../README.md#ApiKeyAuth)
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: `application/json`
-
-[[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
-[[Back to Model list]](../../README.md#models)
-[[Back to README]](../../README.md)
-
 ## `webTakeAScreenshot()`
 
 ```php
-webTakeAScreenshot(): mixed
+webTakeAScreenshot($screenshot_request): mixed
 ```
 
 Take a screenshot
 
-Take a screenshot of a URL. (browser engine)
+Render a URL in the browser engine and return a PNG screenshot.  ``screenshot`` is the PNG, base64-encoded. ``width``/``height`` set the viewport; ``full_page`` captures the whole scrollable page. Billed as a browser scrape (plus the proxy tier); a page that loads without a screenshot is a 502 and costs nothing.
 
 ### Example
 
@@ -404,9 +284,10 @@ $apiInstance = new ScrapeBadger\Api\WebApi(
     new GuzzleHttp\Client(),
     $config
 );
+$screenshot_request = new \ScrapeBadger\Model\ScreenshotRequest(); // \ScrapeBadger\Model\ScreenshotRequest
 
 try {
-    $result = $apiInstance->webTakeAScreenshot();
+    $result = $apiInstance->webTakeAScreenshot($screenshot_request);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling WebApi->webTakeAScreenshot: ', $e->getMessage(), PHP_EOL;
@@ -415,7 +296,9 @@ try {
 
 ### Parameters
 
-This endpoint does not need any parameter.
+| Name | Type | Description  | Notes |
+| ------------- | ------------- | ------------- | ------------- |
+| **screenshot_request** | [**\ScrapeBadger\Model\ScreenshotRequest**](../Model/ScreenshotRequest.md)|  | |
 
 ### Return type
 
@@ -427,7 +310,7 @@ This endpoint does not need any parameter.
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
+- **Content-Type**: `application/json`
 - **Accept**: `application/json`
 
 [[Back to top]](#) [[Back to API list]](../../README.md#endpoints)

@@ -20,6 +20,7 @@ docs/Api/FacebookApi.md
 docs/Api/GeminiApi.md
 docs/Api/GoogleApi.md
 docs/Api/GooglePlayApi.md
+docs/Api/GumtreeApi.md
 docs/Api/IdealistaApi.md
 docs/Api/ImmobiliareApi.md
 docs/Api/InstagramApi.md
@@ -111,6 +112,7 @@ lib/Api/FacebookApi.php
 lib/Api/GeminiApi.php
 lib/Api/GoogleApi.php
 lib/Api/GooglePlayApi.php
+lib/Api/GumtreeApi.php
 lib/Api/IdealistaApi.php
 lib/Api/ImmobiliareApi.php
 lib/Api/InstagramApi.php
@@ -207,6 +209,7 @@ test/Api/FacebookApiTest.php
 test/Api/GeminiApiTest.php
 test/Api/GoogleApiTest.php
 test/Api/GooglePlayApiTest.php
+test/Api/GumtreeApiTest.php
 test/Api/IdealistaApiTest.php
 test/Api/ImmobiliareApiTest.php
 test/Api/InstagramApiTest.php

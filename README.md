@@ -306,6 +306,16 @@ Class | Method | HTTP request | Description
 *GooglePlayApi* | [**googlePlayListMarkets**](docs/Api/GooglePlayApi.md#googleplaylistmarkets) | **GET** /v1/google-play/markets | List markets
 *GooglePlayApi* | [**googlePlaySearchApps**](docs/Api/GooglePlayApi.md#googleplaysearchapps) | **GET** /v1/google-play/search | Search apps
 *GooglePlayApi* | [**googlePlayTopCharts**](docs/Api/GooglePlayApi.md#googleplaytopcharts) | **GET** /v1/google-play/collections/{collection} | Top charts
+*GumtreeApi* | [**gumtreeGetListing**](docs/Api/GumtreeApi.md#gumtreegetlisting) | **GET** /v1/gumtree/listings/{listing_id} | Get listing
+*GumtreeApi* | [**gumtreeGetSearchFilters**](docs/Api/GumtreeApi.md#gumtreegetsearchfilters) | **GET** /v1/gumtree/search/filters | Get search filters
+*GumtreeApi* | [**gumtreeGetSellerListings**](docs/Api/GumtreeApi.md#gumtreegetsellerlistings) | **GET** /v1/gumtree/listings/{listing_id}/seller-listings | Get seller listings
+*GumtreeApi* | [**gumtreeGumtreeScraperHealthCheck**](docs/Api/GumtreeApi.md#gumtreegumtreescraperhealthcheck) | **GET** /v1/gumtree/health | Gumtree scraper health check
+*GumtreeApi* | [**gumtreeGumtreeScraperHealthCheckHead**](docs/Api/GumtreeApi.md#gumtreegumtreescraperhealthcheckhead) | **HEAD** /v1/gumtree/health | Gumtree scraper health check
+*GumtreeApi* | [**gumtreeListCategories**](docs/Api/GumtreeApi.md#gumtreelistcategories) | **GET** /v1/gumtree/categories | List categories
+*GumtreeApi* | [**gumtreeListLocations**](docs/Api/GumtreeApi.md#gumtreelistlocations) | **GET** /v1/gumtree/locations | List locations
+*GumtreeApi* | [**gumtreeLocationSuggestions**](docs/Api/GumtreeApi.md#gumtreelocationsuggestions) | **GET** /v1/gumtree/locations/autocomplete | Location suggestions
+*GumtreeApi* | [**gumtreeSearchListings**](docs/Api/GumtreeApi.md#gumtreesearchlistings) | **GET** /v1/gumtree/search | Search listings
+*GumtreeApi* | [**gumtreeSearchSuggestions**](docs/Api/GumtreeApi.md#gumtreesearchsuggestions) | **GET** /v1/gumtree/autocomplete | Search suggestions
 *IdealistaApi* | [**idealistaAgencyByPhone**](docs/Api/IdealistaApi.md#idealistaagencybyphone) | **GET** /v1/idealista/agency/by-phone/{phone} | Agency by phone
 *IdealistaApi* | [**idealistaAgencyProfileListings**](docs/Api/IdealistaApi.md#idealistaagencyprofilelistings) | **GET** /v1/idealista/agency/{short_name} | Agency profile + listings
 *IdealistaApi* | [**idealistaGetListingEngagementStats**](docs/Api/IdealistaApi.md#idealistagetlistingengagementstats) | **GET** /v1/idealista/properties/{property_code}/stats | Get listing engagement stats

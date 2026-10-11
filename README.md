@@ -542,6 +542,18 @@ Class | Method | HTTP request | Description
 *VintedApi* | [**vintedSearchVintedItems**](docs/Api/VintedApi.md#vintedsearchvinteditems) | **GET** /v1/vinted/search | Search Vinted items
 *VintedApi* | [**vintedVintedScraperHealthCheck**](docs/Api/VintedApi.md#vintedvintedscraperhealthcheck) | **GET** /v1/vinted/health | Vinted scraper health check
 *VintedApi* | [**vintedVintedScraperHealthCheckHead**](docs/Api/VintedApi.md#vintedvintedscraperhealthcheckhead) | **HEAD** /v1/vinted/health | Vinted scraper health check
+*WallapopApi* | [**wallapopAutocomplete**](docs/Api/WallapopApi.md#wallapopautocomplete) | **GET** /v1/wallapop/autocomplete | Autocomplete
+*WallapopApi* | [**wallapopGetListingDetail**](docs/Api/WallapopApi.md#wallapopgetlistingdetail) | **GET** /v1/wallapop/items/{item_id} | Get listing detail
+*WallapopApi* | [**wallapopGetUserListings**](docs/Api/WallapopApi.md#wallapopgetuserlistings) | **GET** /v1/wallapop/users/{user_id}/items | Get user listings
+*WallapopApi* | [**wallapopGetUserProfile**](docs/Api/WallapopApi.md#wallapopgetuserprofile) | **GET** /v1/wallapop/users/{user_id} | Get user profile
+*WallapopApi* | [**wallapopGetUserReviews**](docs/Api/WallapopApi.md#wallapopgetuserreviews) | **GET** /v1/wallapop/users/{user_id}/reviews | Get user reviews
+*WallapopApi* | [**wallapopListCategories**](docs/Api/WallapopApi.md#wallapoplistcategories) | **GET** /v1/wallapop/categories | List categories
+*WallapopApi* | [**wallapopListFilterOptions**](docs/Api/WallapopApi.md#wallapoplistfilteroptions) | **GET** /v1/wallapop/filters/{filter_id}/options | List filter options
+*WallapopApi* | [**wallapopListMarkets**](docs/Api/WallapopApi.md#wallapoplistmarkets) | **GET** /v1/wallapop/markets | List markets
+*WallapopApi* | [**wallapopListSearchFilters**](docs/Api/WallapopApi.md#wallapoplistsearchfilters) | **GET** /v1/wallapop/filters | List search filters
+*WallapopApi* | [**wallapopSearchListings**](docs/Api/WallapopApi.md#wallapopsearchlistings) | **GET** /v1/wallapop/search | Search listings
+*WallapopApi* | [**wallapopWallapopScraperHealthCheck**](docs/Api/WallapopApi.md#wallapopwallapopscraperhealthcheck) | **GET** /v1/wallapop/health | Wallapop scraper health check
+*WallapopApi* | [**wallapopWallapopScraperHealthCheckHead**](docs/Api/WallapopApi.md#wallapopwallapopscraperhealthcheckhead) | **HEAD** /v1/wallapop/health | Wallapop scraper health check
 *WalmartApi* | [**walmartBrowseACategory**](docs/Api/WalmartApi.md#walmartbrowseacategory) | **GET** /v1/walmart/category | Browse a category
 *WalmartApi* | [**walmartDealsRollbacksAndClearance**](docs/Api/WalmartApi.md#walmartdealsrollbacksandclearance) | **GET** /v1/walmart/deals | Deals, rollbacks and clearance
 *WalmartApi* | [**walmartGetASellerSCatalogue**](docs/Api/WalmartApi.md#walmartgetasellerscatalogue) | **GET** /v1/walmart/sellers/{seller_id}/products | Get a seller&#39;s catalogue

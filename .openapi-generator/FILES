@@ -34,6 +34,7 @@ docs/Api/RedfinApi.md
 docs/Api/TikTokApi.md
 docs/Api/TwitterApi.md
 docs/Api/VintedApi.md
+docs/Api/WallapopApi.md
 docs/Api/WalmartApi.md
 docs/Api/WebApi.md
 docs/Api/YahooApi.md
@@ -124,6 +125,7 @@ lib/Api/RedfinApi.php
 lib/Api/TikTokApi.php
 lib/Api/TwitterApi.php
 lib/Api/VintedApi.php
+lib/Api/WallapopApi.php
 lib/Api/WalmartApi.php
 lib/Api/WebApi.php
 lib/Api/YahooApi.php
@@ -219,6 +221,7 @@ test/Api/RedfinApiTest.php
 test/Api/TikTokApiTest.php
 test/Api/TwitterApiTest.php
 test/Api/VintedApiTest.php
+test/Api/WallapopApiTest.php
 test/Api/WalmartApiTest.php
 test/Api/WebApiTest.php
 test/Api/YahooApiTest.php

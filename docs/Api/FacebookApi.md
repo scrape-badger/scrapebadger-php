@@ -357,12 +357,12 @@ try {
 ## `facebookGetGroupPosts()`
 
 ```php
-facebookGetGroupPosts($group_id, $after): mixed
+facebookGetGroupPosts($group_id, $after, $sort): mixed
 ```
 
 Get group posts
 
-Get a Facebook group's post feed.
+Get a public Facebook group's post feed.  ``sort`` is ``newest`` (newest first by post time, the default) or ``relevance`` (Facebook's \"top posts\" ranking, which moves posts with fresh comments up). Facebook serves 3 posts per page to logged-out visitors; follow ``end_cursor`` while ``has_next_page`` for older posts.
 
 ### Example
 
@@ -385,9 +385,10 @@ $apiInstance = new ScrapeBadger\Api\FacebookApi(
 );
 $group_id = 'group_id_example'; // string
 $after = 'after_example'; // string
+$sort = 'newest'; // string | newest | relevance
 
 try {
-    $result = $apiInstance->facebookGetGroupPosts($group_id, $after);
+    $result = $apiInstance->facebookGetGroupPosts($group_id, $after, $sort);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling FacebookApi->facebookGetGroupPosts: ', $e->getMessage(), PHP_EOL;
@@ -400,6 +401,7 @@ try {
 | ------------- | ------------- | ------------- | ------------- |
 | **group_id** | **string**|  | |
 | **after** | **string**|  | [optional] |
+| **sort** | **string**| newest | relevance | [optional] [default to &#39;newest&#39;] |
 
 ### Return type
 

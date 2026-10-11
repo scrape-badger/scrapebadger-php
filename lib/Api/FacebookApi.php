@@ -2043,15 +2043,16 @@ class FacebookApi
      *
      * @param  string $group_id group_id (required)
      * @param  string $after after (optional)
+     * @param  string $sort newest | relevance (optional, default to 'newest')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookGetGroupPosts'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return mixed|\ScrapeBadger\Model\HTTPValidationError
      */
-    public function facebookGetGroupPosts($group_id, $after = null, string $contentType = self::contentTypes['facebookGetGroupPosts'][0])
+    public function facebookGetGroupPosts($group_id, $after = null, $sort = 'newest', string $contentType = self::contentTypes['facebookGetGroupPosts'][0])
     {
-        list($response) = $this->facebookGetGroupPostsWithHttpInfo($group_id, $after, $contentType);
+        list($response) = $this->facebookGetGroupPostsWithHttpInfo($group_id, $after, $sort, $contentType);
         return $response;
     }
 
@@ -2062,15 +2063,16 @@ class FacebookApi
      *
      * @param  string $group_id (required)
      * @param  string $after (optional)
+     * @param  string $sort newest | relevance (optional, default to 'newest')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookGetGroupPosts'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
-    public function facebookGetGroupPostsWithHttpInfo($group_id, $after = null, string $contentType = self::contentTypes['facebookGetGroupPosts'][0])
+    public function facebookGetGroupPostsWithHttpInfo($group_id, $after = null, $sort = 'newest', string $contentType = self::contentTypes['facebookGetGroupPosts'][0])
     {
-        $request = $this->facebookGetGroupPostsRequest($group_id, $after, $contentType);
+        $request = $this->facebookGetGroupPostsRequest($group_id, $after, $sort, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -2223,14 +2225,15 @@ class FacebookApi
      *
      * @param  string $group_id (required)
      * @param  string $after (optional)
+     * @param  string $sort newest | relevance (optional, default to 'newest')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookGetGroupPosts'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function facebookGetGroupPostsAsync($group_id, $after = null, string $contentType = self::contentTypes['facebookGetGroupPosts'][0])
+    public function facebookGetGroupPostsAsync($group_id, $after = null, $sort = 'newest', string $contentType = self::contentTypes['facebookGetGroupPosts'][0])
     {
-        return $this->facebookGetGroupPostsAsyncWithHttpInfo($group_id, $after, $contentType)
+        return $this->facebookGetGroupPostsAsyncWithHttpInfo($group_id, $after, $sort, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -2245,15 +2248,16 @@ class FacebookApi
      *
      * @param  string $group_id (required)
      * @param  string $after (optional)
+     * @param  string $sort newest | relevance (optional, default to 'newest')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookGetGroupPosts'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function facebookGetGroupPostsAsyncWithHttpInfo($group_id, $after = null, string $contentType = self::contentTypes['facebookGetGroupPosts'][0])
+    public function facebookGetGroupPostsAsyncWithHttpInfo($group_id, $after = null, $sort = 'newest', string $contentType = self::contentTypes['facebookGetGroupPosts'][0])
     {
         $returnType = 'mixed';
-        $request = $this->facebookGetGroupPostsRequest($group_id, $after, $contentType);
+        $request = $this->facebookGetGroupPostsRequest($group_id, $after, $sort, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -2296,12 +2300,13 @@ class FacebookApi
      *
      * @param  string $group_id (required)
      * @param  string $after (optional)
+     * @param  string $sort newest | relevance (optional, default to 'newest')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookGetGroupPosts'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function facebookGetGroupPostsRequest($group_id, $after = null, string $contentType = self::contentTypes['facebookGetGroupPosts'][0])
+    public function facebookGetGroupPostsRequest($group_id, $after = null, $sort = 'newest', string $contentType = self::contentTypes['facebookGetGroupPosts'][0])
     {
 
         // verify the required parameter 'group_id' is set
@@ -2310,6 +2315,7 @@ class FacebookApi
                 'Missing the required parameter $group_id when calling facebookGetGroupPosts'
             );
         }
+
 
 
 
@@ -2324,6 +2330,15 @@ class FacebookApi
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
             $after,
             'after', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $sort,
+            'sort', // param base name
             'string', // openApiType
             'form', // style
             true, // explode

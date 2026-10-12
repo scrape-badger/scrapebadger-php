@@ -156,6 +156,18 @@ class GumtreeApiTest extends TestCase
     }
 
     /**
+     * Test case for gumtreeListMarkets
+     *
+     * List markets.
+     *
+     */
+    public function testGumtreeListMarkets()
+    {
+        // TODO: implement
+        self::markTestIncomplete('Not implemented');
+    }
+
+    /**
      * Test case for gumtreeLocationSuggestions
      *
      * Location suggestions.

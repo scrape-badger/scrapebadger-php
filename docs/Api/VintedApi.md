@@ -588,7 +588,7 @@ try {
 ## `vintedSearchByImage()`
 
 ```php
-vintedSearchByImage($vinted_image_search_request): \ScrapeBadger\Model\SearchResponse
+vintedSearchByImage($vinted_image_search_request): \ScrapeBadger\Model\PortalApiRoutersVintedSchemasSearchResponse
 ```
 
 Search by image
@@ -632,7 +632,7 @@ try {
 
 ### Return type
 
-[**\ScrapeBadger\Model\SearchResponse**](../Model/SearchResponse.md)
+[**\ScrapeBadger\Model\PortalApiRoutersVintedSchemasSearchResponse**](../Model/PortalApiRoutersVintedSchemasSearchResponse.md)
 
 ### Authorization
 
@@ -650,7 +650,7 @@ try {
 ## `vintedSearchVintedItems()`
 
 ```php
-vintedSearchVintedItems($query, $market, $seller_country, $page, $per_page, $price_from, $price_to, $brand_ids, $catalog_ids, $color_ids, $size_ids, $material_ids, $time, $search_session_id, $status_ids, $order): \ScrapeBadger\Model\SearchResponse
+vintedSearchVintedItems($query, $market, $seller_country, $page, $per_page, $price_from, $price_to, $brand_ids, $catalog_ids, $color_ids, $size_ids, $material_ids, $time, $search_session_id, $status_ids, $order): \ScrapeBadger\Model\PortalApiRoutersVintedSchemasSearchResponse
 ```
 
 Search Vinted items
@@ -724,7 +724,7 @@ try {
 
 ### Return type
 
-[**\ScrapeBadger\Model\SearchResponse**](../Model/SearchResponse.md)
+[**\ScrapeBadger\Model\PortalApiRoutersVintedSchemasSearchResponse**](../Model/PortalApiRoutersVintedSchemasSearchResponse.md)
 
 ### Authorization
 

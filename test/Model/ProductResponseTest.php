@@ -1,6 +1,6 @@
 <?php
 /**
- * SearchResponseTest
+ * ProductResponseTest
  *
  * PHP version 7.4
  *
@@ -31,15 +31,15 @@ namespace ScrapeBadger\Test\Model;
 use PHPUnit\Framework\TestCase;
 
 /**
- * SearchResponseTest Class Doc Comment
+ * ProductResponseTest Class Doc Comment
  *
  * @category    Class
- * @description Envelope returned by search and search_by_image.
+ * @description ProductResponse
  * @package     ScrapeBadger
  * @author      OpenAPI Generator team
  * @link        https://openapi-generator.tech
  */
-class SearchResponseTest extends TestCase
+class ProductResponseTest extends TestCase
 {
 
     /**
@@ -71,27 +71,9 @@ class SearchResponseTest extends TestCase
     }
 
     /**
-     * Test "SearchResponse"
+     * Test "ProductResponse"
      */
-    public function testSearchResponse()
-    {
-        // TODO: implement
-        self::markTestIncomplete('Not implemented');
-    }
-
-    /**
-     * Test attribute "items"
-     */
-    public function testPropertyItems()
-    {
-        // TODO: implement
-        self::markTestIncomplete('Not implemented');
-    }
-
-    /**
-     * Test attribute "pagination"
-     */
-    public function testPropertyPagination()
+    public function testProductResponse()
     {
         // TODO: implement
         self::markTestIncomplete('Not implemented');
@@ -107,9 +89,9 @@ class SearchResponseTest extends TestCase
     }
 
     /**
-     * Test attribute "seller_country"
+     * Test attribute "product"
      */
-    public function testPropertySellerCountry()
+    public function testPropertyProduct()
     {
         // TODO: implement
         self::markTestIncomplete('Not implemented');

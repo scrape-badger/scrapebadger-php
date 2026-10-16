@@ -1,6 +1,6 @@
 <?php
 /**
- * SearchResponse
+ * PortalApiRoutersVintedSchemasSearchResponse
  *
  * PHP version 7.4
  *
@@ -32,7 +32,7 @@ use \ArrayAccess;
 use \ScrapeBadger\ObjectSerializer;
 
 /**
- * SearchResponse Class Doc Comment
+ * PortalApiRoutersVintedSchemasSearchResponse Class Doc Comment
  *
  * @category Class
  * @description Envelope returned by search and search_by_image.
@@ -41,7 +41,7 @@ use \ScrapeBadger\ObjectSerializer;
  * @link     https://openapi-generator.tech
  * @implements \ArrayAccess<string, mixed>
  */
-class SearchResponse implements ModelInterface, ArrayAccess, \JsonSerializable
+class PortalApiRoutersVintedSchemasSearchResponse implements ModelInterface, ArrayAccess, \JsonSerializable
 {
     public const DISCRIMINATOR = null;
 
@@ -50,7 +50,7 @@ class SearchResponse implements ModelInterface, ArrayAccess, \JsonSerializable
       *
       * @var string
       */
-    protected static $openAPIModelName = 'SearchResponse';
+    protected static $openAPIModelName = 'portal_api__routers___vinted_schemas__SearchResponse';
 
     /**
       * Array of property to type mappings. Used for (de)serialization

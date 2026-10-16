@@ -1,4 +1,4 @@
-# # SearchResponse
+# # PortalApiRoutersVintedSchemasSearchResponse
 
 ## Properties
 

@@ -3299,7 +3299,7 @@ class VintedApi
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \ScrapeBadger\Model\SearchResponse|\ScrapeBadger\Model\HTTPValidationError
+     * @return \ScrapeBadger\Model\PortalApiRoutersVintedSchemasSearchResponse|\ScrapeBadger\Model\HTTPValidationError
      */
     public function vintedSearchByImage($vinted_image_search_request, string $contentType = self::contentTypes['vintedSearchByImage'][0])
     {
@@ -3317,7 +3317,7 @@ class VintedApi
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \ScrapeBadger\Model\SearchResponse|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \ScrapeBadger\Model\PortalApiRoutersVintedSchemasSearchResponse|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
     public function vintedSearchByImageWithHttpInfo($vinted_image_search_request, string $contentType = self::contentTypes['vintedSearchByImage'][0])
     {
@@ -3348,11 +3348,11 @@ class VintedApi
 
             switch($statusCode) {
                 case 200:
-                    if ('\ScrapeBadger\Model\SearchResponse' === '\SplFileObject') {
+                    if ('\ScrapeBadger\Model\PortalApiRoutersVintedSchemasSearchResponse' === '\SplFileObject') {
                         $content = $response->getBody(); //stream goes to serializer
                     } else {
                         $content = (string) $response->getBody();
-                        if ('\ScrapeBadger\Model\SearchResponse' !== 'string') {
+                        if ('\ScrapeBadger\Model\PortalApiRoutersVintedSchemasSearchResponse' !== 'string') {
                             try {
                                 $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
                             } catch (\JsonException $exception) {
@@ -3370,7 +3370,7 @@ class VintedApi
                     }
 
                     return [
-                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\SearchResponse', []),
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\PortalApiRoutersVintedSchemasSearchResponse', []),
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
@@ -3416,7 +3416,7 @@ class VintedApi
                 );
             }
 
-            $returnType = '\ScrapeBadger\Model\SearchResponse';
+            $returnType = '\ScrapeBadger\Model\PortalApiRoutersVintedSchemasSearchResponse';
             if ($returnType === '\SplFileObject') {
                 $content = $response->getBody(); //stream goes to serializer
             } else {
@@ -3449,7 +3449,7 @@ class VintedApi
                 case 200:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        '\ScrapeBadger\Model\SearchResponse',
+                        '\ScrapeBadger\Model\PortalApiRoutersVintedSchemasSearchResponse',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -3501,7 +3501,7 @@ class VintedApi
      */
     public function vintedSearchByImageAsyncWithHttpInfo($vinted_image_search_request, string $contentType = self::contentTypes['vintedSearchByImage'][0])
     {
-        $returnType = '\ScrapeBadger\Model\SearchResponse';
+        $returnType = '\ScrapeBadger\Model\PortalApiRoutersVintedSchemasSearchResponse';
         $request = $this->vintedSearchByImageRequest($vinted_image_search_request, $contentType);
 
         return $this->client
@@ -3661,7 +3661,7 @@ class VintedApi
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \ScrapeBadger\Model\SearchResponse|\ScrapeBadger\Model\HTTPValidationError
+     * @return \ScrapeBadger\Model\PortalApiRoutersVintedSchemasSearchResponse|\ScrapeBadger\Model\HTTPValidationError
      */
     public function vintedSearchVintedItems($query, $market = 'fr', $seller_country = null, $page = 1, $per_page = 20, $price_from = null, $price_to = null, $brand_ids = null, $catalog_ids = null, $color_ids = null, $size_ids = null, $material_ids = null, $time = null, $search_session_id = null, $status_ids = null, $order = null, string $contentType = self::contentTypes['vintedSearchVintedItems'][0])
     {
@@ -3694,7 +3694,7 @@ class VintedApi
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \ScrapeBadger\Model\SearchResponse|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \ScrapeBadger\Model\PortalApiRoutersVintedSchemasSearchResponse|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
     public function vintedSearchVintedItemsWithHttpInfo($query, $market = 'fr', $seller_country = null, $page = 1, $per_page = 20, $price_from = null, $price_to = null, $brand_ids = null, $catalog_ids = null, $color_ids = null, $size_ids = null, $material_ids = null, $time = null, $search_session_id = null, $status_ids = null, $order = null, string $contentType = self::contentTypes['vintedSearchVintedItems'][0])
     {
@@ -3725,11 +3725,11 @@ class VintedApi
 
             switch($statusCode) {
                 case 200:
-                    if ('\ScrapeBadger\Model\SearchResponse' === '\SplFileObject') {
+                    if ('\ScrapeBadger\Model\PortalApiRoutersVintedSchemasSearchResponse' === '\SplFileObject') {
                         $content = $response->getBody(); //stream goes to serializer
                     } else {
                         $content = (string) $response->getBody();
-                        if ('\ScrapeBadger\Model\SearchResponse' !== 'string') {
+                        if ('\ScrapeBadger\Model\PortalApiRoutersVintedSchemasSearchResponse' !== 'string') {
                             try {
                                 $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
                             } catch (\JsonException $exception) {
@@ -3747,7 +3747,7 @@ class VintedApi
                     }
 
                     return [
-                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\SearchResponse', []),
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\PortalApiRoutersVintedSchemasSearchResponse', []),
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
@@ -3793,7 +3793,7 @@ class VintedApi
                 );
             }
 
-            $returnType = '\ScrapeBadger\Model\SearchResponse';
+            $returnType = '\ScrapeBadger\Model\PortalApiRoutersVintedSchemasSearchResponse';
             if ($returnType === '\SplFileObject') {
                 $content = $response->getBody(); //stream goes to serializer
             } else {
@@ -3826,7 +3826,7 @@ class VintedApi
                 case 200:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        '\ScrapeBadger\Model\SearchResponse',
+                        '\ScrapeBadger\Model\PortalApiRoutersVintedSchemasSearchResponse',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -3908,7 +3908,7 @@ class VintedApi
      */
     public function vintedSearchVintedItemsAsyncWithHttpInfo($query, $market = 'fr', $seller_country = null, $page = 1, $per_page = 20, $price_from = null, $price_to = null, $brand_ids = null, $catalog_ids = null, $color_ids = null, $size_ids = null, $material_ids = null, $time = null, $search_session_id = null, $status_ids = null, $order = null, string $contentType = self::contentTypes['vintedSearchVintedItems'][0])
     {
-        $returnType = '\ScrapeBadger\Model\SearchResponse';
+        $returnType = '\ScrapeBadger\Model\PortalApiRoutersVintedSchemasSearchResponse';
         $request = $this->vintedSearchVintedItemsRequest($query, $market, $seller_country, $page, $per_page, $price_from, $price_to, $brand_ids, $catalog_ids, $color_ids, $size_ids, $material_ids, $time, $search_session_id, $status_ids, $order, $contentType);
 
         return $this->client

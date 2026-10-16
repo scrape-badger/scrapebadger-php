@@ -7180,7 +7180,7 @@ class GoogleApi
      * @param  string $si Cached search params (optional)
      * @param  string $ibp Layout control (optional)
      * @param  string $uds Google filter string (optional)
-     * @param  bool $ai_overview Chase deferred AI Overview page_token with a follow-up fetch and merge the result. Adds ~1s and 1 credit when the SERP defers the overview. (optional, default to false)
+     * @param  bool $ai_overview Chase deferred AI Overview page_token with a follow-up fetch and merge the result. Adds ~1s when the SERP defers the overview; the request price is unchanged. (optional, default to false)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googleGoogleWebSearch'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
@@ -7221,7 +7221,7 @@ class GoogleApi
      * @param  string $si Cached search params (optional)
      * @param  string $ibp Layout control (optional)
      * @param  string $uds Google filter string (optional)
-     * @param  bool $ai_overview Chase deferred AI Overview page_token with a follow-up fetch and merge the result. Adds ~1s and 1 credit when the SERP defers the overview. (optional, default to false)
+     * @param  bool $ai_overview Chase deferred AI Overview page_token with a follow-up fetch and merge the result. Adds ~1s when the SERP defers the overview; the request price is unchanged. (optional, default to false)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googleGoogleWebSearch'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
@@ -7404,7 +7404,7 @@ class GoogleApi
      * @param  string $si Cached search params (optional)
      * @param  string $ibp Layout control (optional)
      * @param  string $uds Google filter string (optional)
-     * @param  bool $ai_overview Chase deferred AI Overview page_token with a follow-up fetch and merge the result. Adds ~1s and 1 credit when the SERP defers the overview. (optional, default to false)
+     * @param  bool $ai_overview Chase deferred AI Overview page_token with a follow-up fetch and merge the result. Adds ~1s when the SERP defers the overview; the request price is unchanged. (optional, default to false)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googleGoogleWebSearch'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -7448,7 +7448,7 @@ class GoogleApi
      * @param  string $si Cached search params (optional)
      * @param  string $ibp Layout control (optional)
      * @param  string $uds Google filter string (optional)
-     * @param  bool $ai_overview Chase deferred AI Overview page_token with a follow-up fetch and merge the result. Adds ~1s and 1 credit when the SERP defers the overview. (optional, default to false)
+     * @param  bool $ai_overview Chase deferred AI Overview page_token with a follow-up fetch and merge the result. Adds ~1s when the SERP defers the overview; the request price is unchanged. (optional, default to false)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googleGoogleWebSearch'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -7521,7 +7521,7 @@ class GoogleApi
      * @param  string $si Cached search params (optional)
      * @param  string $ibp Layout control (optional)
      * @param  string $uds Google filter string (optional)
-     * @param  bool $ai_overview Chase deferred AI Overview page_token with a follow-up fetch and merge the result. Adds ~1s and 1 credit when the SERP defers the overview. (optional, default to false)
+     * @param  bool $ai_overview Chase deferred AI Overview page_token with a follow-up fetch and merge the result. Adds ~1s when the SERP defers the overview; the request price is unchanged. (optional, default to false)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googleGoogleWebSearch'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException

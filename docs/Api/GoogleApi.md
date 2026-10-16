@@ -1269,7 +1269,7 @@ $kgmid = 'kgmid_example'; // string | Knowledge Graph entity ID
 $si = 'si_example'; // string | Cached search params
 $ibp = 'ibp_example'; // string | Layout control
 $uds = 'uds_example'; // string | Google filter string
-$ai_overview = false; // bool | Chase deferred AI Overview page_token with a follow-up fetch and merge the result. Adds ~1s and 1 credit when the SERP defers the overview.
+$ai_overview = false; // bool | Chase deferred AI Overview page_token with a follow-up fetch and merge the result. Adds ~1s when the SERP defers the overview; the request price is unchanged.
 
 try {
     $result = $apiInstance->googleGoogleWebSearch($q, $gl, $hl, $num, $start, $domain, $device, $user_agent, $output, $location, $lr, $tbs, $safe, $uule, $filter, $nfpr, $cr, $ludocid, $lsig, $kgmid, $si, $ibp, $uds, $ai_overview);
@@ -1306,7 +1306,7 @@ try {
 | **si** | **string**| Cached search params | [optional] |
 | **ibp** | **string**| Layout control | [optional] |
 | **uds** | **string**| Google filter string | [optional] |
-| **ai_overview** | **bool**| Chase deferred AI Overview page_token with a follow-up fetch and merge the result. Adds ~1s and 1 credit when the SERP defers the overview. | [optional] [default to false] |
+| **ai_overview** | **bool**| Chase deferred AI Overview page_token with a follow-up fetch and merge the result. Adds ~1s when the SERP defers the overview; the request price is unchanged. | [optional] [default to false] |
 
 ### Return type
 

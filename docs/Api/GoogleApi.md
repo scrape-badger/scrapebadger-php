@@ -17,6 +17,7 @@ All URIs are relative to https://scrapebadger.com, except if the operation defin
 | [**googleGoogleFlightsCalendarCheapestFarePerDate()**](GoogleApi.md#googleGoogleFlightsCalendarCheapestFarePerDate) | **GET** /v1/google/flights/calendar | Google Flights calendar — cheapest fare per date |
 | [**googleGoogleFlightsSearch()**](GoogleApi.md#googleGoogleFlightsSearch) | **GET** /v1/google/flights/search | Google Flights search |
 | [**googleGoogleLensVisualSearch()**](GoogleApi.md#googleGoogleLensVisualSearch) | **GET** /v1/google/lens/search | Google Lens visual search |
+| [**googleGoogleLightWebSearch()**](GoogleApi.md#googleGoogleLightWebSearch) | **GET** /v1/google/light/search | Google Light web search |
 | [**googleGoogleScraperHealthCheck()**](GoogleApi.md#googleGoogleScraperHealthCheck) | **GET** /v1/google/health | Google scraper health check |
 | [**googleGoogleScraperHealthCheckHead()**](GoogleApi.md#googleGoogleScraperHealthCheckHead) | **HEAD** /v1/google/health | Google scraper health check |
 | [**googleGoogleSearchSuggestions()**](GoogleApi.md#googleGoogleSearchSuggestions) | **GET** /v1/google/autocomplete | Google search suggestions |
@@ -943,6 +944,94 @@ try {
 | **product** | **bool**| Only the tiles Google marked buyable (price + stock), drawn from the same grid | [optional] [default to false] |
 | **visual_matches** | **bool**| Always true in practice — &#x60;false&#x60; is reported back in &#x60;warnings&#x60; | [optional] [default to true] |
 | **exact_matches** | **bool**| Return only the pages hosting this image, flagged exact_match. Available for most images (8/10 in sampling); falls back to the full grid otherwise, saying so in warnings | [optional] [default to false] |
+
+### Return type
+
+**mixed**
+
+### Authorization
+
+[ApiKeyAuth](../../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `application/json`
+
+[[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
+[[Back to Model list]](../../README.md#models)
+[[Back to README]](../../README.md)
+
+## `googleGoogleLightWebSearch()`
+
+```php
+googleGoogleLightWebSearch($q, $gl, $hl, $num, $start, $domain, $location, $uule, $lr, $tbs, $safe, $filter, $nfpr, $output): mixed
+```
+
+Google Light web search
+
+Organic results and related searches only. Costs 10 credits per successful uncached request, compared with 20 credits for regular Google Search. Light always skips rich SERP blocks; mode and ai_overview cannot enable them.
+
+### Example
+
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+// Configure API key authorization: ApiKeyAuth
+$config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKey('X-API-Key', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// $config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKeyPrefix('X-API-Key', 'Bearer');
+
+
+$apiInstance = new ScrapeBadger\Api\GoogleApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client(),
+    $config
+);
+$q = 'q_example'; // string | Search query (supports Google operators)
+$gl = 'us'; // string | Country code
+$hl = 'en'; // string | Language code
+$num = 10; // int
+$start = 0; // int | Page offset (0, 10, 20...)
+$domain = 'google.com'; // string | Google domain
+$location = 'location_example'; // string | City-level geo-targeting
+$uule = 'uule_example'; // string | Encoded location
+$lr = 'lr_example'; // string | Language restrict (e.g. lang_en)
+$tbs = 'tbs_example'; // string | Time filter (e.g. qdr:d)
+$safe = 'off'; // string | Safe search: off or active
+$filter = 56; // int
+$nfpr = 0; // int | Disable auto-correction
+$output = 'json'; // string
+
+try {
+    $result = $apiInstance->googleGoogleLightWebSearch($q, $gl, $hl, $num, $start, $domain, $location, $uule, $lr, $tbs, $safe, $filter, $nfpr, $output);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling GoogleApi->googleGoogleLightWebSearch: ', $e->getMessage(), PHP_EOL;
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+| ------------- | ------------- | ------------- | ------------- |
+| **q** | **string**| Search query (supports Google operators) | |
+| **gl** | **string**| Country code | [optional] [default to &#39;us&#39;] |
+| **hl** | **string**| Language code | [optional] [default to &#39;en&#39;] |
+| **num** | **int**|  | [optional] [default to 10] |
+| **start** | **int**| Page offset (0, 10, 20...) | [optional] [default to 0] |
+| **domain** | **string**| Google domain | [optional] [default to &#39;google.com&#39;] |
+| **location** | **string**| City-level geo-targeting | [optional] |
+| **uule** | **string**| Encoded location | [optional] |
+| **lr** | **string**| Language restrict (e.g. lang_en) | [optional] |
+| **tbs** | **string**| Time filter (e.g. qdr:d) | [optional] |
+| **safe** | **string**| Safe search: off or active | [optional] [default to &#39;off&#39;] |
+| **filter** | **int**|  | [optional] |
+| **nfpr** | **int**| Disable auto-correction | [optional] [default to 0] |
+| **output** | **string**|  | [optional] [default to &#39;json&#39;] |
 
 ### Return type
 

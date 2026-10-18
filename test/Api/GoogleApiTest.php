@@ -228,6 +228,18 @@ class GoogleApiTest extends TestCase
     }
 
     /**
+     * Test case for googleGoogleLightWebSearch
+     *
+     * Google Light web search.
+     *
+     */
+    public function testGoogleGoogleLightWebSearch()
+    {
+        // TODO: implement
+        self::markTestIncomplete('Not implemented');
+    }
+
+    /**
      * Test case for googleGoogleScraperHealthCheck
      *
      * Google scraper health check.

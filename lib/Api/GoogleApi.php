@@ -110,6 +110,9 @@ class GoogleApi
         'googleGoogleLensVisualSearch' => [
             'application/json',
         ],
+        'googleGoogleLightWebSearch' => [
+            'application/json',
+        ],
         'googleGoogleScraperHealthCheck' => [
             'application/json',
         ],
@@ -5688,6 +5691,565 @@ class GoogleApi
             $exact_matches,
             'exact_matches', // param base name
             'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+
+
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+        // this endpoint requires API key authentication
+        $apiKey = $this->config->getApiKeyWithPrefix('X-API-Key');
+        if ($apiKey !== null) {
+            $headers['X-API-Key'] = $apiKey;
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'GET',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation googleGoogleLightWebSearch
+     *
+     * Google Light web search
+     *
+     * @param  string $q Search query (supports Google operators) (required)
+     * @param  string $gl Country code (optional, default to 'us')
+     * @param  string $hl Language code (optional, default to 'en')
+     * @param  int $num num (optional, default to 10)
+     * @param  int $start Page offset (0, 10, 20...) (optional, default to 0)
+     * @param  string $domain Google domain (optional, default to 'google.com')
+     * @param  string $location City-level geo-targeting (optional)
+     * @param  string $uule Encoded location (optional)
+     * @param  string $lr Language restrict (e.g. lang_en) (optional)
+     * @param  string $tbs Time filter (e.g. qdr:d) (optional)
+     * @param  string $safe Safe search: off or active (optional, default to 'off')
+     * @param  int $filter filter (optional)
+     * @param  int $nfpr Disable auto-correction (optional, default to 0)
+     * @param  string $output output (optional, default to 'json')
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googleGoogleLightWebSearch'] to see the possible values for this operation
+     *
+     * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     */
+    public function googleGoogleLightWebSearch($q, $gl = 'us', $hl = 'en', $num = 10, $start = 0, $domain = 'google.com', $location = null, $uule = null, $lr = null, $tbs = null, $safe = 'off', $filter = null, $nfpr = 0, $output = 'json', string $contentType = self::contentTypes['googleGoogleLightWebSearch'][0])
+    {
+        list($response) = $this->googleGoogleLightWebSearchWithHttpInfo($q, $gl, $hl, $num, $start, $domain, $location, $uule, $lr, $tbs, $safe, $filter, $nfpr, $output, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation googleGoogleLightWebSearchWithHttpInfo
+     *
+     * Google Light web search
+     *
+     * @param  string $q Search query (supports Google operators) (required)
+     * @param  string $gl Country code (optional, default to 'us')
+     * @param  string $hl Language code (optional, default to 'en')
+     * @param  int $num (optional, default to 10)
+     * @param  int $start Page offset (0, 10, 20...) (optional, default to 0)
+     * @param  string $domain Google domain (optional, default to 'google.com')
+     * @param  string $location City-level geo-targeting (optional)
+     * @param  string $uule Encoded location (optional)
+     * @param  string $lr Language restrict (e.g. lang_en) (optional)
+     * @param  string $tbs Time filter (e.g. qdr:d) (optional)
+     * @param  string $safe Safe search: off or active (optional, default to 'off')
+     * @param  int $filter (optional)
+     * @param  int $nfpr Disable auto-correction (optional, default to 0)
+     * @param  string $output (optional, default to 'json')
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googleGoogleLightWebSearch'] to see the possible values for this operation
+     *
+     * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function googleGoogleLightWebSearchWithHttpInfo($q, $gl = 'us', $hl = 'en', $num = 10, $start = 0, $domain = 'google.com', $location = null, $uule = null, $lr = null, $tbs = null, $safe = 'off', $filter = null, $nfpr = 0, $output = 'json', string $contentType = self::contentTypes['googleGoogleLightWebSearch'][0])
+    {
+        $request = $this->googleGoogleLightWebSearchRequest($q, $gl, $hl, $num, $start, $domain, $location, $uule, $lr, $tbs, $safe, $filter, $nfpr, $output, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    if ('mixed' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('mixed' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, 'mixed', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                case 422:
+                    if ('\ScrapeBadger\Model\HTTPValidationError' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\HTTPValidationError' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\HTTPValidationError', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+            }
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            $returnType = 'mixed';
+            if ($returnType === '\SplFileObject') {
+                $content = $response->getBody(); //stream goes to serializer
+            } else {
+                $content = (string) $response->getBody();
+                if ($returnType !== 'string') {
+                    try {
+                        $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                    } catch (\JsonException $exception) {
+                        throw new ApiException(
+                            sprintf(
+                                'Error JSON decoding server response (%s)',
+                                $request->getUri()
+                            ),
+                            $statusCode,
+                            $response->getHeaders(),
+                            $content
+                        );
+                    }
+                }
+            }
+
+            return [
+                ObjectSerializer::deserialize($content, $returnType, []),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            ];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        'mixed',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\HTTPValidationError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation googleGoogleLightWebSearchAsync
+     *
+     * Google Light web search
+     *
+     * @param  string $q Search query (supports Google operators) (required)
+     * @param  string $gl Country code (optional, default to 'us')
+     * @param  string $hl Language code (optional, default to 'en')
+     * @param  int $num (optional, default to 10)
+     * @param  int $start Page offset (0, 10, 20...) (optional, default to 0)
+     * @param  string $domain Google domain (optional, default to 'google.com')
+     * @param  string $location City-level geo-targeting (optional)
+     * @param  string $uule Encoded location (optional)
+     * @param  string $lr Language restrict (e.g. lang_en) (optional)
+     * @param  string $tbs Time filter (e.g. qdr:d) (optional)
+     * @param  string $safe Safe search: off or active (optional, default to 'off')
+     * @param  int $filter (optional)
+     * @param  int $nfpr Disable auto-correction (optional, default to 0)
+     * @param  string $output (optional, default to 'json')
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googleGoogleLightWebSearch'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function googleGoogleLightWebSearchAsync($q, $gl = 'us', $hl = 'en', $num = 10, $start = 0, $domain = 'google.com', $location = null, $uule = null, $lr = null, $tbs = null, $safe = 'off', $filter = null, $nfpr = 0, $output = 'json', string $contentType = self::contentTypes['googleGoogleLightWebSearch'][0])
+    {
+        return $this->googleGoogleLightWebSearchAsyncWithHttpInfo($q, $gl, $hl, $num, $start, $domain, $location, $uule, $lr, $tbs, $safe, $filter, $nfpr, $output, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation googleGoogleLightWebSearchAsyncWithHttpInfo
+     *
+     * Google Light web search
+     *
+     * @param  string $q Search query (supports Google operators) (required)
+     * @param  string $gl Country code (optional, default to 'us')
+     * @param  string $hl Language code (optional, default to 'en')
+     * @param  int $num (optional, default to 10)
+     * @param  int $start Page offset (0, 10, 20...) (optional, default to 0)
+     * @param  string $domain Google domain (optional, default to 'google.com')
+     * @param  string $location City-level geo-targeting (optional)
+     * @param  string $uule Encoded location (optional)
+     * @param  string $lr Language restrict (e.g. lang_en) (optional)
+     * @param  string $tbs Time filter (e.g. qdr:d) (optional)
+     * @param  string $safe Safe search: off or active (optional, default to 'off')
+     * @param  int $filter (optional)
+     * @param  int $nfpr Disable auto-correction (optional, default to 0)
+     * @param  string $output (optional, default to 'json')
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googleGoogleLightWebSearch'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function googleGoogleLightWebSearchAsyncWithHttpInfo($q, $gl = 'us', $hl = 'en', $num = 10, $start = 0, $domain = 'google.com', $location = null, $uule = null, $lr = null, $tbs = null, $safe = 'off', $filter = null, $nfpr = 0, $output = 'json', string $contentType = self::contentTypes['googleGoogleLightWebSearch'][0])
+    {
+        $returnType = 'mixed';
+        $request = $this->googleGoogleLightWebSearchRequest($q, $gl, $hl, $num, $start, $domain, $location, $uule, $lr, $tbs, $safe, $filter, $nfpr, $output, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'googleGoogleLightWebSearch'
+     *
+     * @param  string $q Search query (supports Google operators) (required)
+     * @param  string $gl Country code (optional, default to 'us')
+     * @param  string $hl Language code (optional, default to 'en')
+     * @param  int $num (optional, default to 10)
+     * @param  int $start Page offset (0, 10, 20...) (optional, default to 0)
+     * @param  string $domain Google domain (optional, default to 'google.com')
+     * @param  string $location City-level geo-targeting (optional)
+     * @param  string $uule Encoded location (optional)
+     * @param  string $lr Language restrict (e.g. lang_en) (optional)
+     * @param  string $tbs Time filter (e.g. qdr:d) (optional)
+     * @param  string $safe Safe search: off or active (optional, default to 'off')
+     * @param  int $filter (optional)
+     * @param  int $nfpr Disable auto-correction (optional, default to 0)
+     * @param  string $output (optional, default to 'json')
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googleGoogleLightWebSearch'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function googleGoogleLightWebSearchRequest($q, $gl = 'us', $hl = 'en', $num = 10, $start = 0, $domain = 'google.com', $location = null, $uule = null, $lr = null, $tbs = null, $safe = 'off', $filter = null, $nfpr = 0, $output = 'json', string $contentType = self::contentTypes['googleGoogleLightWebSearch'][0])
+    {
+
+        // verify the required parameter 'q' is set
+        if ($q === null || (is_array($q) && count($q) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $q when calling googleGoogleLightWebSearch'
+            );
+        }
+
+
+
+        if ($num !== null && $num > 100) {
+            throw new \InvalidArgumentException('invalid value for "$num" when calling GoogleApi.googleGoogleLightWebSearch, must be smaller than or equal to 100.');
+        }
+        if ($num !== null && $num < 1) {
+            throw new \InvalidArgumentException('invalid value for "$num" when calling GoogleApi.googleGoogleLightWebSearch, must be bigger than or equal to 1.');
+        }
+        
+        if ($start !== null && $start < 0) {
+            throw new \InvalidArgumentException('invalid value for "$start" when calling GoogleApi.googleGoogleLightWebSearch, must be bigger than or equal to 0.');
+        }
+        
+
+
+
+
+
+
+        if ($filter !== null && $filter > 1) {
+            throw new \InvalidArgumentException('invalid value for "$filter" when calling GoogleApi.googleGoogleLightWebSearch, must be smaller than or equal to 1.');
+        }
+        if ($filter !== null && $filter < 0) {
+            throw new \InvalidArgumentException('invalid value for "$filter" when calling GoogleApi.googleGoogleLightWebSearch, must be bigger than or equal to 0.');
+        }
+        
+
+
+
+        $resourcePath = '/v1/google/light/search';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $q,
+            'q', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            true // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $gl,
+            'gl', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $hl,
+            'hl', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $num,
+            'num', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $start,
+            'start', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $domain,
+            'domain', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $location,
+            'location', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $uule,
+            'uule', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $lr,
+            'lr', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $tbs,
+            'tbs', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $safe,
+            'safe', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $filter,
+            'filter', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $nfpr,
+            'nfpr', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $output,
+            'output', // param base name
+            'string', // openApiType
             'form', // style
             true, // explode
             false // required

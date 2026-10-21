@@ -97,12 +97,12 @@ try {
 ## `ebayCompletedSoldListings()`
 
 ```php
-ebayCompletedSoldListings($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $location, $language): mixed
+ebayCompletedSoldListings($query, $seller, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $location, $language): mixed
 ```
 
 Completed / sold listings
 
-Search completed/sold listings — eBay's sold-price history.  eBay pads a short result set with \"results matching fewer words\" and counts only the exact ones in ``pagination.total_results``. Results come back in eBay's own ranking order with the exact matches first, and each one carries ``exact_match`` (true/false) so a price series can be built without parsing titles. An empty ``results`` with ``total_results: 0`` is eBay's own answer and costs 0 credits — a fetch failure is never a 200.  ``price`` is what the listing sold for, including the market's buyer-protection fee, as a local buyer sees it. It is ``null`` on one shape: an auction that also accepted offers (``bids`` set). eBay's sold index answers those with either the listing's start/Buy-It-Now price or the price it sold at, varying between identical requests with nothing to say which, so no number there is trustworthy — ``/v1/ebay/items/{item_id}`` carries the winning bid for them (before the fee). A listing that closed purely on an accepted Best Offer prices normally: eBay never publishes the accepted amount, so ``price`` is the listed one, exactly as its own item page shows.
+Search completed/sold listings — eBay's sold-price history.  Pass ``query``, ``seller`` or both. ``seller`` alone returns everything that seller sold, page by page, with no keyword needed.  eBay pads a short result set with \"results matching fewer words\" and counts only the exact ones in ``pagination.total_results``. Results come back in eBay's own ranking order with the exact matches first, and each one carries ``exact_match`` (true/false) so a price series can be built without parsing titles. An empty ``results`` with ``total_results: 0`` is eBay's own answer and costs 0 credits — a fetch failure is never a 200.  ``price`` is what the listing sold for, including the market's buyer-protection fee, as a local buyer sees it. It is ``null`` on one shape: an auction that also accepted offers (``bids`` set). eBay's sold index answers those with either the listing's start/Buy-It-Now price or the price it sold at, varying between identical requests with nothing to say which, so no number there is trustworthy — ``/v1/ebay/items/{item_id}`` carries the winning bid for them (before the fee). A listing that closed purely on an accepted Best Offer prices normally: eBay never publishes the accepted amount, so ``price`` is the listed one, exactly as its own item page shows.
 
 ### Example
 
@@ -123,7 +123,8 @@ $apiInstance = new ScrapeBadger\Api\EBayApi(
     new GuzzleHttp\Client(),
     $config
 );
-$query = 'query_example'; // string | Search keywords
+$query = 'query_example'; // string | Search keywords. Optional when `seller` is set.
+$seller = 'seller_example'; // string | Only this seller's sold listings (eBay username). Works without `query`.
 $domain = 'com'; // string | Marketplace domain (com, co.uk, de …)
 $category_id = 'category_id_example'; // string | Restrict to a category id
 $page = 1; // int
@@ -136,7 +137,7 @@ $location = 'location_example'; // string | domestic|worldwide
 $language = 'language_example'; // string | english|japanese|chinese|korean
 
 try {
-    $result = $apiInstance->ebayCompletedSoldListings($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $location, $language);
+    $result = $apiInstance->ebayCompletedSoldListings($query, $seller, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $location, $language);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling EBayApi->ebayCompletedSoldListings: ', $e->getMessage(), PHP_EOL;
@@ -147,7 +148,8 @@ try {
 
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
-| **query** | **string**| Search keywords | |
+| **query** | **string**| Search keywords. Optional when &#x60;seller&#x60; is set. | [optional] |
+| **seller** | **string**| Only this seller&#39;s sold listings (eBay username). Works without &#x60;query&#x60;. | [optional] |
 | **domain** | **string**| Marketplace domain (com, co.uk, de …) | [optional] [default to &#39;com&#39;] |
 | **category_id** | **string**| Restrict to a category id | [optional] |
 | **page** | **int**|  | [optional] [default to 1] |

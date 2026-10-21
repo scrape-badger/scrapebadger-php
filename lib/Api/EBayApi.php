@@ -622,7 +622,8 @@ class EBayApi
      *
      * Completed / sold listings
      *
-     * @param  string $query Search keywords (required)
+     * @param  string $query Search keywords. Optional when &#x60;seller&#x60; is set. (optional)
+     * @param  string $seller Only this seller&#39;s sold listings (eBay username). Works without &#x60;query&#x60;. (optional)
      * @param  string $domain Marketplace domain (com, co.uk, de …) (optional, default to 'com')
      * @param  string $category_id Restrict to a category id (optional)
      * @param  int $page page (optional, default to 1)
@@ -639,9 +640,9 @@ class EBayApi
      * @throws \InvalidArgumentException
      * @return mixed|\ScrapeBadger\Model\HTTPValidationError
      */
-    public function ebayCompletedSoldListings($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, $location = null, $language = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
+    public function ebayCompletedSoldListings($query = null, $seller = null, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, $location = null, $language = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
     {
-        list($response) = $this->ebayCompletedSoldListingsWithHttpInfo($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $location, $language, $contentType);
+        list($response) = $this->ebayCompletedSoldListingsWithHttpInfo($query, $seller, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $location, $language, $contentType);
         return $response;
     }
 
@@ -650,7 +651,8 @@ class EBayApi
      *
      * Completed / sold listings
      *
-     * @param  string $query Search keywords (required)
+     * @param  string $query Search keywords. Optional when &#x60;seller&#x60; is set. (optional)
+     * @param  string $seller Only this seller&#39;s sold listings (eBay username). Works without &#x60;query&#x60;. (optional)
      * @param  string $domain Marketplace domain (com, co.uk, de …) (optional, default to 'com')
      * @param  string $category_id Restrict to a category id (optional)
      * @param  int $page (optional, default to 1)
@@ -667,9 +669,9 @@ class EBayApi
      * @throws \InvalidArgumentException
      * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
-    public function ebayCompletedSoldListingsWithHttpInfo($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, $location = null, $language = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
+    public function ebayCompletedSoldListingsWithHttpInfo($query = null, $seller = null, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, $location = null, $language = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
     {
-        $request = $this->ebayCompletedSoldListingsRequest($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $location, $language, $contentType);
+        $request = $this->ebayCompletedSoldListingsRequest($query, $seller, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $location, $language, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -820,7 +822,8 @@ class EBayApi
      *
      * Completed / sold listings
      *
-     * @param  string $query Search keywords (required)
+     * @param  string $query Search keywords. Optional when &#x60;seller&#x60; is set. (optional)
+     * @param  string $seller Only this seller&#39;s sold listings (eBay username). Works without &#x60;query&#x60;. (optional)
      * @param  string $domain Marketplace domain (com, co.uk, de …) (optional, default to 'com')
      * @param  string $category_id Restrict to a category id (optional)
      * @param  int $page (optional, default to 1)
@@ -836,9 +839,9 @@ class EBayApi
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function ebayCompletedSoldListingsAsync($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, $location = null, $language = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
+    public function ebayCompletedSoldListingsAsync($query = null, $seller = null, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, $location = null, $language = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
     {
-        return $this->ebayCompletedSoldListingsAsyncWithHttpInfo($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $location, $language, $contentType)
+        return $this->ebayCompletedSoldListingsAsyncWithHttpInfo($query, $seller, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $location, $language, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -851,7 +854,8 @@ class EBayApi
      *
      * Completed / sold listings
      *
-     * @param  string $query Search keywords (required)
+     * @param  string $query Search keywords. Optional when &#x60;seller&#x60; is set. (optional)
+     * @param  string $seller Only this seller&#39;s sold listings (eBay username). Works without &#x60;query&#x60;. (optional)
      * @param  string $domain Marketplace domain (com, co.uk, de …) (optional, default to 'com')
      * @param  string $category_id Restrict to a category id (optional)
      * @param  int $page (optional, default to 1)
@@ -867,10 +871,10 @@ class EBayApi
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function ebayCompletedSoldListingsAsyncWithHttpInfo($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, $location = null, $language = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
+    public function ebayCompletedSoldListingsAsyncWithHttpInfo($query = null, $seller = null, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, $location = null, $language = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
     {
         $returnType = 'mixed';
-        $request = $this->ebayCompletedSoldListingsRequest($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $location, $language, $contentType);
+        $request = $this->ebayCompletedSoldListingsRequest($query, $seller, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $location, $language, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -911,7 +915,8 @@ class EBayApi
     /**
      * Create request for operation 'ebayCompletedSoldListings'
      *
-     * @param  string $query Search keywords (required)
+     * @param  string $query Search keywords. Optional when &#x60;seller&#x60; is set. (optional)
+     * @param  string $seller Only this seller&#39;s sold listings (eBay username). Works without &#x60;query&#x60;. (optional)
      * @param  string $domain Marketplace domain (com, co.uk, de …) (optional, default to 'com')
      * @param  string $category_id Restrict to a category id (optional)
      * @param  int $page (optional, default to 1)
@@ -927,15 +932,10 @@ class EBayApi
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function ebayCompletedSoldListingsRequest($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, $location = null, $language = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
+    public function ebayCompletedSoldListingsRequest($query = null, $seller = null, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, $location = null, $language = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
     {
 
-        // verify the required parameter 'query' is set
-        if ($query === null || (is_array($query) && count($query) === 0)) {
-            throw new \InvalidArgumentException(
-                'Missing the required parameter $query when calling ebayCompletedSoldListings'
-            );
-        }
+
 
 
 
@@ -980,7 +980,16 @@ class EBayApi
             'string', // openApiType
             'form', // style
             true, // explode
-            true // required
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $seller,
+            'seller', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
         ) ?? []);
         // query params
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(

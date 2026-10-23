@@ -10,5 +10,6 @@ Name | Type | Description | Notes
 **tier** | **string** |  |
 **rate_limit_per_minute** | **int** |  |
 **subscription** | [**\ScrapeBadger\Model\SubscriptionInfo**](SubscriptionInfo.md) |  | [optional]
+**agent_trial** | [**\ScrapeBadger\Model\AgentTrialInfo**](AgentTrialInfo.md) |  | [optional]
 
 [[Back to Model list]](../../README.md#models) [[Back to API list]](../../README.md#endpoints) [[Back to README]](../../README.md)

@@ -21,6 +21,7 @@ docs/Api/DuckDuckGoApi.md
 docs/Api/EBayApi.md
 docs/Api/EtsyApi.md
 docs/Api/FacebookApi.md
+docs/Api/FeedbackApi.md
 docs/Api/GeminiApi.md
 docs/Api/GoogleApi.md
 docs/Api/GooglePlayApi.md
@@ -33,9 +34,12 @@ docs/Api/LinkedInApi.md
 docs/Api/LoopNetApi.md
 docs/Api/NaverApi.md
 docs/Api/PerplexityApi.md
+docs/Api/QuoteApi.md
 docs/Api/RealtorApi.md
 docs/Api/RedditApi.md
 docs/Api/RedfinApi.md
+docs/Api/RequestsApi.md
+docs/Api/ResultsApi.md
 docs/Api/TargetApi.md
 docs/Api/TikTokApi.md
 docs/Api/TwitterApi.md
@@ -48,6 +52,7 @@ docs/Api/YandexApi.md
 docs/Api/YouTubeApi.md
 docs/Api/ZillowApi.md
 docs/Model/AccountInfo.md
+docs/Model/AgentTrialInfo.md
 docs/Model/BillingLogListResponse.md
 docs/Model/BillingLogResponse.md
 docs/Model/Brandid.md
@@ -61,6 +66,7 @@ docs/Model/Description.md
 docs/Model/ExtractRequest.md
 docs/Model/ExtractRequestExtractRulesValue.md
 docs/Model/ExtractRule.md
+docs/Model/FeedbackRequest.md
 docs/Model/FilterRuleCreate.md
 docs/Model/FilterRuleDeliveryLogListResponse.md
 docs/Model/FilterRuleDeliveryLogResponse.md
@@ -87,6 +93,7 @@ docs/Model/Product.md
 docs/Model/ProductPrice.md
 docs/Model/ProductResponse.md
 docs/Model/Productcode.md
+docs/Model/QuoteRequest.md
 docs/Model/Ratings.md
 docs/Model/ScreenshotRequest.md
 docs/Model/Searchterm.md
@@ -143,6 +150,7 @@ lib/Api/DuckDuckGoApi.php
 lib/Api/EBayApi.php
 lib/Api/EtsyApi.php
 lib/Api/FacebookApi.php
+lib/Api/FeedbackApi.php
 lib/Api/GeminiApi.php
 lib/Api/GoogleApi.php
 lib/Api/GooglePlayApi.php
@@ -155,9 +163,12 @@ lib/Api/LinkedInApi.php
 lib/Api/LoopNetApi.php
 lib/Api/NaverApi.php
 lib/Api/PerplexityApi.php
+lib/Api/QuoteApi.php
 lib/Api/RealtorApi.php
 lib/Api/RedditApi.php
 lib/Api/RedfinApi.php
+lib/Api/RequestsApi.php
+lib/Api/ResultsApi.php
 lib/Api/TargetApi.php
 lib/Api/TikTokApi.php
 lib/Api/TwitterApi.php
@@ -173,6 +184,7 @@ lib/ApiException.php
 lib/Configuration.php
 lib/HeaderSelector.php
 lib/Model/AccountInfo.php
+lib/Model/AgentTrialInfo.php
 lib/Model/BillingLogListResponse.php
 lib/Model/BillingLogResponse.php
 lib/Model/Brandid.php
@@ -186,6 +198,7 @@ lib/Model/Description.php
 lib/Model/ExtractRequest.php
 lib/Model/ExtractRequestExtractRulesValue.php
 lib/Model/ExtractRule.php
+lib/Model/FeedbackRequest.php
 lib/Model/FilterRuleCreate.php
 lib/Model/FilterRuleDeliveryLogListResponse.php
 lib/Model/FilterRuleDeliveryLogResponse.php
@@ -213,6 +226,7 @@ lib/Model/Product.php
 lib/Model/ProductPrice.php
 lib/Model/ProductResponse.php
 lib/Model/Productcode.php
+lib/Model/QuoteRequest.php
 lib/Model/Ratings.php
 lib/Model/ScreenshotRequest.php
 lib/Model/Searchterm.php
@@ -270,6 +284,7 @@ test/Api/DuckDuckGoApiTest.php
 test/Api/EBayApiTest.php
 test/Api/EtsyApiTest.php
 test/Api/FacebookApiTest.php
+test/Api/FeedbackApiTest.php
 test/Api/GeminiApiTest.php
 test/Api/GoogleApiTest.php
 test/Api/GooglePlayApiTest.php
@@ -282,9 +297,12 @@ test/Api/LinkedInApiTest.php
 test/Api/LoopNetApiTest.php
 test/Api/NaverApiTest.php
 test/Api/PerplexityApiTest.php
+test/Api/QuoteApiTest.php
 test/Api/RealtorApiTest.php
 test/Api/RedditApiTest.php
 test/Api/RedfinApiTest.php
+test/Api/RequestsApiTest.php
+test/Api/ResultsApiTest.php
 test/Api/TargetApiTest.php
 test/Api/TikTokApiTest.php
 test/Api/TwitterApiTest.php
@@ -297,6 +315,7 @@ test/Api/YandexApiTest.php
 test/Api/YouTubeApiTest.php
 test/Api/ZillowApiTest.php
 test/Model/AccountInfoTest.php
+test/Model/AgentTrialInfoTest.php
 test/Model/BillingLogListResponseTest.php
 test/Model/BillingLogResponseTest.php
 test/Model/BrandidTest.php
@@ -310,6 +329,7 @@ test/Model/DescriptionTest.php
 test/Model/ExtractRequestExtractRulesValueTest.php
 test/Model/ExtractRequestTest.php
 test/Model/ExtractRuleTest.php
+test/Model/FeedbackRequestTest.php
 test/Model/FilterRuleCreateTest.php
 test/Model/FilterRuleDeliveryLogListResponseTest.php
 test/Model/FilterRuleDeliveryLogResponseTest.php
@@ -336,6 +356,7 @@ test/Model/ProductPriceTest.php
 test/Model/ProductResponseTest.php
 test/Model/ProductTest.php
 test/Model/ProductcodeTest.php
+test/Model/QuoteRequestTest.php
 test/Model/RatingsTest.php
 test/Model/ScreenshotRequestTest.php
 test/Model/SearchtermTest.php

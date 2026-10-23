@@ -132,4 +132,13 @@ class AccountInfoTest extends TestCase
         // TODO: implement
         self::markTestIncomplete('Not implemented');
     }
+
+    /**
+     * Test attribute "agent_trial"
+     */
+    public function testPropertyAgentTrial()
+    {
+        // TODO: implement
+        self::markTestIncomplete('Not implemented');
+    }
 }

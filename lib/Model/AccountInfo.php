@@ -63,7 +63,8 @@ class AccountInfo implements ModelInterface, ArrayAccess, \JsonSerializable
         'total_credits_balance' => 'int',
         'tier' => 'string',
         'rate_limit_per_minute' => 'int',
-        'subscription' => '\ScrapeBadger\Model\SubscriptionInfo'
+        'subscription' => '\ScrapeBadger\Model\SubscriptionInfo',
+        'agent_trial' => '\ScrapeBadger\Model\AgentTrialInfo'
     ];
 
     /**
@@ -79,7 +80,8 @@ class AccountInfo implements ModelInterface, ArrayAccess, \JsonSerializable
         'total_credits_balance' => null,
         'tier' => null,
         'rate_limit_per_minute' => null,
-        'subscription' => null
+        'subscription' => null,
+        'agent_trial' => null
     ];
 
     /**
@@ -93,7 +95,8 @@ class AccountInfo implements ModelInterface, ArrayAccess, \JsonSerializable
         'total_credits_balance' => false,
         'tier' => true,
         'rate_limit_per_minute' => true,
-        'subscription' => true
+        'subscription' => true,
+        'agent_trial' => true
     ];
 
     /**
@@ -187,7 +190,8 @@ class AccountInfo implements ModelInterface, ArrayAccess, \JsonSerializable
         'total_credits_balance' => 'total_credits_balance',
         'tier' => 'tier',
         'rate_limit_per_minute' => 'rate_limit_per_minute',
-        'subscription' => 'subscription'
+        'subscription' => 'subscription',
+        'agent_trial' => 'agent_trial'
     ];
 
     /**
@@ -201,7 +205,8 @@ class AccountInfo implements ModelInterface, ArrayAccess, \JsonSerializable
         'total_credits_balance' => 'setTotalCreditsBalance',
         'tier' => 'setTier',
         'rate_limit_per_minute' => 'setRateLimitPerMinute',
-        'subscription' => 'setSubscription'
+        'subscription' => 'setSubscription',
+        'agent_trial' => 'setAgentTrial'
     ];
 
     /**
@@ -215,7 +220,8 @@ class AccountInfo implements ModelInterface, ArrayAccess, \JsonSerializable
         'total_credits_balance' => 'getTotalCreditsBalance',
         'tier' => 'getTier',
         'rate_limit_per_minute' => 'getRateLimitPerMinute',
-        'subscription' => 'getSubscription'
+        'subscription' => 'getSubscription',
+        'agent_trial' => 'getAgentTrial'
     ];
 
     /**
@@ -281,6 +287,7 @@ class AccountInfo implements ModelInterface, ArrayAccess, \JsonSerializable
         $this->setIfExists('tier', $data ?? [], null);
         $this->setIfExists('rate_limit_per_minute', $data ?? [], null);
         $this->setIfExists('subscription', $data ?? [], null);
+        $this->setIfExists('agent_trial', $data ?? [], null);
     }
 
     /**
@@ -519,6 +526,40 @@ class AccountInfo implements ModelInterface, ArrayAccess, \JsonSerializable
             }
         }
         $this->container['subscription'] = $subscription;
+
+        return $this;
+    }
+
+    /**
+     * Gets agent_trial
+     *
+     * @return \ScrapeBadger\Model\AgentTrialInfo|null
+     */
+    public function getAgentTrial()
+    {
+        return $this->container['agent_trial'];
+    }
+
+    /**
+     * Sets agent_trial
+     *
+     * @param \ScrapeBadger\Model\AgentTrialInfo|null $agent_trial agent_trial
+     *
+     * @return self
+     */
+    public function setAgentTrial($agent_trial)
+    {
+        if (is_null($agent_trial)) {
+            array_push($this->openAPINullablesSetToNull, 'agent_trial');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('agent_trial', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        $this->container['agent_trial'] = $agent_trial;
 
         return $this;
     }

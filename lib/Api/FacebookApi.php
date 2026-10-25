@@ -201,6 +201,7 @@ class FacebookApi
      * @param  int $min_price min_price (optional)
      * @param  int $max_price max_price (optional)
      * @param  string $sort_by sort_by (optional)
+     * @param  int $radius Radius around the location (km, or miles in the US) (optional)
      * @param  string $after after (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookBrowseAMarketplaceCategory'] to see the possible values for this operation
      *
@@ -208,9 +209,9 @@ class FacebookApi
      * @throws \InvalidArgumentException
      * @return mixed|\ScrapeBadger\Model\HTTPValidationError
      */
-    public function facebookBrowseAMarketplaceCategory($category, $location = 'nyc', $min_price = null, $max_price = null, $sort_by = null, $after = null, string $contentType = self::contentTypes['facebookBrowseAMarketplaceCategory'][0])
+    public function facebookBrowseAMarketplaceCategory($category, $location = 'nyc', $min_price = null, $max_price = null, $sort_by = null, $radius = null, $after = null, string $contentType = self::contentTypes['facebookBrowseAMarketplaceCategory'][0])
     {
-        list($response) = $this->facebookBrowseAMarketplaceCategoryWithHttpInfo($category, $location, $min_price, $max_price, $sort_by, $after, $contentType);
+        list($response) = $this->facebookBrowseAMarketplaceCategoryWithHttpInfo($category, $location, $min_price, $max_price, $sort_by, $radius, $after, $contentType);
         return $response;
     }
 
@@ -224,6 +225,7 @@ class FacebookApi
      * @param  int $min_price (optional)
      * @param  int $max_price (optional)
      * @param  string $sort_by (optional)
+     * @param  int $radius Radius around the location (km, or miles in the US) (optional)
      * @param  string $after (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookBrowseAMarketplaceCategory'] to see the possible values for this operation
      *
@@ -231,9 +233,9 @@ class FacebookApi
      * @throws \InvalidArgumentException
      * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
-    public function facebookBrowseAMarketplaceCategoryWithHttpInfo($category, $location = 'nyc', $min_price = null, $max_price = null, $sort_by = null, $after = null, string $contentType = self::contentTypes['facebookBrowseAMarketplaceCategory'][0])
+    public function facebookBrowseAMarketplaceCategoryWithHttpInfo($category, $location = 'nyc', $min_price = null, $max_price = null, $sort_by = null, $radius = null, $after = null, string $contentType = self::contentTypes['facebookBrowseAMarketplaceCategory'][0])
     {
-        $request = $this->facebookBrowseAMarketplaceCategoryRequest($category, $location, $min_price, $max_price, $sort_by, $after, $contentType);
+        $request = $this->facebookBrowseAMarketplaceCategoryRequest($category, $location, $min_price, $max_price, $sort_by, $radius, $after, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -389,15 +391,16 @@ class FacebookApi
      * @param  int $min_price (optional)
      * @param  int $max_price (optional)
      * @param  string $sort_by (optional)
+     * @param  int $radius Radius around the location (km, or miles in the US) (optional)
      * @param  string $after (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookBrowseAMarketplaceCategory'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function facebookBrowseAMarketplaceCategoryAsync($category, $location = 'nyc', $min_price = null, $max_price = null, $sort_by = null, $after = null, string $contentType = self::contentTypes['facebookBrowseAMarketplaceCategory'][0])
+    public function facebookBrowseAMarketplaceCategoryAsync($category, $location = 'nyc', $min_price = null, $max_price = null, $sort_by = null, $radius = null, $after = null, string $contentType = self::contentTypes['facebookBrowseAMarketplaceCategory'][0])
     {
-        return $this->facebookBrowseAMarketplaceCategoryAsyncWithHttpInfo($category, $location, $min_price, $max_price, $sort_by, $after, $contentType)
+        return $this->facebookBrowseAMarketplaceCategoryAsyncWithHttpInfo($category, $location, $min_price, $max_price, $sort_by, $radius, $after, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -415,16 +418,17 @@ class FacebookApi
      * @param  int $min_price (optional)
      * @param  int $max_price (optional)
      * @param  string $sort_by (optional)
+     * @param  int $radius Radius around the location (km, or miles in the US) (optional)
      * @param  string $after (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookBrowseAMarketplaceCategory'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function facebookBrowseAMarketplaceCategoryAsyncWithHttpInfo($category, $location = 'nyc', $min_price = null, $max_price = null, $sort_by = null, $after = null, string $contentType = self::contentTypes['facebookBrowseAMarketplaceCategory'][0])
+    public function facebookBrowseAMarketplaceCategoryAsyncWithHttpInfo($category, $location = 'nyc', $min_price = null, $max_price = null, $sort_by = null, $radius = null, $after = null, string $contentType = self::contentTypes['facebookBrowseAMarketplaceCategory'][0])
     {
         $returnType = 'mixed';
-        $request = $this->facebookBrowseAMarketplaceCategoryRequest($category, $location, $min_price, $max_price, $sort_by, $after, $contentType);
+        $request = $this->facebookBrowseAMarketplaceCategoryRequest($category, $location, $min_price, $max_price, $sort_by, $radius, $after, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -470,13 +474,14 @@ class FacebookApi
      * @param  int $min_price (optional)
      * @param  int $max_price (optional)
      * @param  string $sort_by (optional)
+     * @param  int $radius Radius around the location (km, or miles in the US) (optional)
      * @param  string $after (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookBrowseAMarketplaceCategory'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function facebookBrowseAMarketplaceCategoryRequest($category, $location = 'nyc', $min_price = null, $max_price = null, $sort_by = null, $after = null, string $contentType = self::contentTypes['facebookBrowseAMarketplaceCategory'][0])
+    public function facebookBrowseAMarketplaceCategoryRequest($category, $location = 'nyc', $min_price = null, $max_price = null, $sort_by = null, $radius = null, $after = null, string $contentType = self::contentTypes['facebookBrowseAMarketplaceCategory'][0])
     {
 
         // verify the required parameter 'category' is set
@@ -485,6 +490,7 @@ class FacebookApi
                 'Missing the required parameter $category when calling facebookBrowseAMarketplaceCategory'
             );
         }
+
 
 
 
@@ -531,6 +537,15 @@ class FacebookApi
             $sort_by,
             'sort_by', // param base name
             'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $radius,
+            'radius', // param base name
+            'integer', // openApiType
             'form', // style
             true, // explode
             false // required

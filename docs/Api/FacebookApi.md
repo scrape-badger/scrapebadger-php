@@ -33,7 +33,7 @@ All URIs are relative to https://scrapebadger.com, except if the operation defin
 ## `facebookBrowseAMarketplaceCategory()`
 
 ```php
-facebookBrowseAMarketplaceCategory($category, $location, $min_price, $max_price, $sort_by, $after): mixed
+facebookBrowseAMarketplaceCategory($category, $location, $min_price, $max_price, $sort_by, $radius, $after): mixed
 ```
 
 Browse a Marketplace category
@@ -64,10 +64,11 @@ $location = 'nyc'; // string
 $min_price = 56; // int
 $max_price = 56; // int
 $sort_by = 'sort_by_example'; // string
+$radius = 56; // int | Radius around the location (km, or miles in the US)
 $after = 'after_example'; // string
 
 try {
-    $result = $apiInstance->facebookBrowseAMarketplaceCategory($category, $location, $min_price, $max_price, $sort_by, $after);
+    $result = $apiInstance->facebookBrowseAMarketplaceCategory($category, $location, $min_price, $max_price, $sort_by, $radius, $after);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling FacebookApi->facebookBrowseAMarketplaceCategory: ', $e->getMessage(), PHP_EOL;
@@ -83,6 +84,7 @@ try {
 | **min_price** | **int**|  | [optional] |
 | **max_price** | **int**|  | [optional] |
 | **sort_by** | **string**|  | [optional] |
+| **radius** | **int**| Radius around the location (km, or miles in the US) | [optional] |
 | **after** | **string**|  | [optional] |
 
 ### Return type

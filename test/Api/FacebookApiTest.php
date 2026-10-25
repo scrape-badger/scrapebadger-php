@@ -240,6 +240,18 @@ class FacebookApiTest extends TestCase
     }
 
     /**
+     * Test case for facebookResolveATownPostcodeToAMarketplaceLocation
+     *
+     * Resolve a town/postcode to a Marketplace location.
+     *
+     */
+    public function testFacebookResolveATownPostcodeToAMarketplaceLocation()
+    {
+        // TODO: implement
+        self::markTestIncomplete('Not implemented');
+    }
+
+    /**
      * Test case for facebookSearchAdvertiserPages
      *
      * Search advertiser pages.

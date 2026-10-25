@@ -18,6 +18,7 @@ All URIs are relative to https://scrapebadger.com, except if the operation defin
 | [**facebookGetProfilePosts()**](FacebookApi.md#facebookGetProfilePosts) | **GET** /v1/facebook/profiles/{identifier}/posts | Get profile posts |
 | [**facebookListCategories()**](FacebookApi.md#facebookListCategories) | **GET** /v1/facebook/marketplace/categories | List categories |
 | [**facebookListLocations()**](FacebookApi.md#facebookListLocations) | **GET** /v1/facebook/marketplace/locations | List locations |
+| [**facebookResolveATownPostcodeToAMarketplaceLocation()**](FacebookApi.md#facebookResolveATownPostcodeToAMarketplaceLocation) | **GET** /v1/facebook/marketplace/locations/resolve | Resolve a town/postcode to a Marketplace location |
 | [**facebookSearchAdvertiserPages()**](FacebookApi.md#facebookSearchAdvertiserPages) | **GET** /v1/facebook/ads/pages/search | Search advertiser pages |
 | [**facebookSearchEvents()**](FacebookApi.md#facebookSearchEvents) | **GET** /v1/facebook/search/events | Search events |
 | [**facebookSearchEverything()**](FacebookApi.md#facebookSearchEverything) | **GET** /v1/facebook/search | Search everything |
@@ -906,6 +907,74 @@ try {
 ### Parameters
 
 This endpoint does not need any parameter.
+
+### Return type
+
+**mixed**
+
+### Authorization
+
+[ApiKeyAuth](../../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `application/json`
+
+[[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
+[[Back to Model list]](../../README.md#models)
+[[Back to README]](../../README.md)
+
+## `facebookResolveATownPostcodeToAMarketplaceLocation()`
+
+```php
+facebookResolveATownPostcodeToAMarketplaceLocation($query, $latitude, $longitude, $country): mixed
+```
+
+Resolve a town/postcode to a Marketplace location
+
+Resolve a town, postcode or coordinates to a Facebook Marketplace place id.  Facebook keys Marketplace by place, not coordinates, and only a place slug or numeric place id works as ``location``. Pass the returned ``place_id`` as ``location`` on Marketplace search/category to centre results anywhere, not just the preset catalogue. Postcodes resolve exactly; a bare town name in an ambiguous country is best paired with ``country`` (e.g. ``gb``).
+
+### Example
+
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+// Configure API key authorization: ApiKeyAuth
+$config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKey('X-API-Key', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// $config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKeyPrefix('X-API-Key', 'Bearer');
+
+
+$apiInstance = new ScrapeBadger\Api\FacebookApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client(),
+    $config
+);
+$query = 'query_example'; // string | Town, city, postcode or address (e.g. 'Durham', 'DH1 3LE')
+$latitude = 3.4; // float | Resolve this exact point instead
+$longitude = 3.4; // float
+$country = 'country_example'; // string | ISO country code hint for an ambiguous name (e.g. gb)
+
+try {
+    $result = $apiInstance->facebookResolveATownPostcodeToAMarketplaceLocation($query, $latitude, $longitude, $country);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling FacebookApi->facebookResolveATownPostcodeToAMarketplaceLocation: ', $e->getMessage(), PHP_EOL;
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+| ------------- | ------------- | ------------- | ------------- |
+| **query** | **string**| Town, city, postcode or address (e.g. &#39;Durham&#39;, &#39;DH1 3LE&#39;) | [optional] |
+| **latitude** | **float**| Resolve this exact point instead | [optional] |
+| **longitude** | **float**|  | [optional] |
+| **country** | **string**| ISO country code hint for an ambiguous name (e.g. gb) | [optional] |
 
 ### Return type
 

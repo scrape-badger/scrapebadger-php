@@ -82,4 +82,28 @@ class AccountApiTest extends TestCase
         // TODO: implement
         self::markTestIncomplete('Not implemented');
     }
+
+    /**
+     * Test case for accountGetTheWebhookSigningSecret
+     *
+     * Get the webhook signing secret.
+     *
+     */
+    public function testAccountGetTheWebhookSigningSecret()
+    {
+        // TODO: implement
+        self::markTestIncomplete('Not implemented');
+    }
+
+    /**
+     * Test case for accountRotateTheWebhookSigningSecret
+     *
+     * Rotate the webhook signing secret.
+     *
+     */
+    public function testAccountRotateTheWebhookSigningSecret()
+    {
+        // TODO: implement
+        self::markTestIncomplete('Not implemented');
+    }
 }

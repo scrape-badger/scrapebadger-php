@@ -12,6 +12,7 @@ docs/Api/AmazonApi.md
 docs/Api/ApartmentsApi.md
 docs/Api/AppStoreApi.md
 docs/Api/BaiduApi.md
+docs/Api/BatchApi.md
 docs/Api/BestBuyApi.md
 docs/Api/BingApi.md
 docs/Api/BookingApi.md
@@ -53,6 +54,10 @@ docs/Api/YouTubeApi.md
 docs/Api/ZillowApi.md
 docs/Model/AccountInfo.md
 docs/Model/AgentTrialInfo.md
+docs/Model/BatchItem.md
+docs/Model/BatchItemQueryValue.md
+docs/Model/BatchItemQueryValueAnyOfInner.md
+docs/Model/BatchRequest.md
 docs/Model/BillingLogListResponse.md
 docs/Model/BillingLogResponse.md
 docs/Model/Brandid.md
@@ -130,6 +135,7 @@ docs/Model/WebhookCreate.md
 docs/Model/WebhookListItem.md
 docs/Model/WebhookListResponse.md
 docs/Model/WebhookResponse.md
+docs/Model/WebhookSecret.md
 docs/Model/WebhookTestRequest.md
 docs/Model/WebhookTestResponse.md
 git_push.sh
@@ -141,6 +147,7 @@ lib/Api/AmazonApi.php
 lib/Api/ApartmentsApi.php
 lib/Api/AppStoreApi.php
 lib/Api/BaiduApi.php
+lib/Api/BatchApi.php
 lib/Api/BestBuyApi.php
 lib/Api/BingApi.php
 lib/Api/BookingApi.php
@@ -185,6 +192,10 @@ lib/Configuration.php
 lib/HeaderSelector.php
 lib/Model/AccountInfo.php
 lib/Model/AgentTrialInfo.php
+lib/Model/BatchItem.php
+lib/Model/BatchItemQueryValue.php
+lib/Model/BatchItemQueryValueAnyOfInner.php
+lib/Model/BatchRequest.php
 lib/Model/BillingLogListResponse.php
 lib/Model/BillingLogResponse.php
 lib/Model/Brandid.php
@@ -263,6 +274,7 @@ lib/Model/WebhookCreate.php
 lib/Model/WebhookListItem.php
 lib/Model/WebhookListResponse.php
 lib/Model/WebhookResponse.php
+lib/Model/WebhookSecret.php
 lib/Model/WebhookTestRequest.php
 lib/Model/WebhookTestResponse.php
 lib/ObjectSerializer.php
@@ -275,6 +287,7 @@ test/Api/AmazonApiTest.php
 test/Api/ApartmentsApiTest.php
 test/Api/AppStoreApiTest.php
 test/Api/BaiduApiTest.php
+test/Api/BatchApiTest.php
 test/Api/BestBuyApiTest.php
 test/Api/BingApiTest.php
 test/Api/BookingApiTest.php
@@ -316,6 +329,10 @@ test/Api/YouTubeApiTest.php
 test/Api/ZillowApiTest.php
 test/Model/AccountInfoTest.php
 test/Model/AgentTrialInfoTest.php
+test/Model/BatchItemQueryValueAnyOfInnerTest.php
+test/Model/BatchItemQueryValueTest.php
+test/Model/BatchItemTest.php
+test/Model/BatchRequestTest.php
 test/Model/BillingLogListResponseTest.php
 test/Model/BillingLogResponseTest.php
 test/Model/BrandidTest.php
@@ -393,5 +410,6 @@ test/Model/WebhookCreateTest.php
 test/Model/WebhookListItemTest.php
 test/Model/WebhookListResponseTest.php
 test/Model/WebhookResponseTest.php
+test/Model/WebhookSecretTest.php
 test/Model/WebhookTestRequestTest.php
 test/Model/WebhookTestResponseTest.php

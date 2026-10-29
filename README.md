@@ -231,6 +231,13 @@ Class | Method | HTTP request | Description
 *ChatGPTApi* | [**chatgptListChatgptModels**](docs/Api/ChatGPTApi.md#chatgptlistchatgptmodels) | **GET** /v1/chatgpt/models | List ChatGPT models
 *ChatGPTApi* | [**chatgptMeasureABrandSVisibilityInAChatgptAnswer**](docs/Api/ChatGPTApi.md#chatgptmeasureabrandsvisibilityinachatgptanswer) | **GET** /v1/chatgpt/brand-visibility | Measure a brand&#39;s visibility in a ChatGPT answer
 *ChatGPTApi* | [**chatgptMeasureABrandSVisibilityInAChatgptAnswerPost**](docs/Api/ChatGPTApi.md#chatgptmeasureabrandsvisibilityinachatgptanswerpost) | **POST** /v1/chatgpt/brand-visibility | Measure a brand&#39;s visibility in a ChatGPT answer (POST)
+*CopilotApi* | [**copilotAskCopilotAQuestion**](docs/Api/CopilotApi.md#copilotaskcopilotaquestion) | **GET** /v1/copilot/ask | Ask Copilot a question
+*CopilotApi* | [**copilotAskCopilotAQuestionPost**](docs/Api/CopilotApi.md#copilotaskcopilotaquestionpost) | **POST** /v1/copilot/ask | Ask Copilot a question (POST)
+*CopilotApi* | [**copilotCopilotScraperHealthCheck**](docs/Api/CopilotApi.md#copilotcopilotscraperhealthcheck) | **GET** /v1/copilot/health | Copilot scraper health check
+*CopilotApi* | [**copilotCopilotScraperHealthCheckHead**](docs/Api/CopilotApi.md#copilotcopilotscraperhealthcheckhead) | **HEAD** /v1/copilot/health | Copilot scraper health check
+*CopilotApi* | [**copilotListCopilotMarkets**](docs/Api/CopilotApi.md#copilotlistcopilotmarkets) | **GET** /v1/copilot/markets | List Copilot markets
+*CopilotApi* | [**copilotMeasureABrandSVisibilityInACopilotAnswer**](docs/Api/CopilotApi.md#copilotmeasureabrandsvisibilityinacopilotanswer) | **GET** /v1/copilot/brand-visibility | Measure a brand&#39;s visibility in a Copilot answer
+*CopilotApi* | [**copilotMeasureABrandSVisibilityInACopilotAnswerPost**](docs/Api/CopilotApi.md#copilotmeasureabrandsvisibilityinacopilotanswerpost) | **POST** /v1/copilot/brand-visibility | Measure a brand&#39;s visibility in a Copilot answer (POST)
 *DepopApi* | [**depopDepopScraperHealthCheck**](docs/Api/DepopApi.md#depopdepopscraperhealthcheck) | **GET** /v1/depop/health | Depop scraper health check
 *DepopApi* | [**depopDepopScraperHealthCheckHead**](docs/Api/DepopApi.md#depopdepopscraperhealthcheckhead) | **HEAD** /v1/depop/health | Depop scraper health check
 *DepopApi* | [**depopGetAUserSProducts**](docs/Api/DepopApi.md#depopgetausersproducts) | **GET** /v1/depop/users/{username}/products | Get a user&#39;s products

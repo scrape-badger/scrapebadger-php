@@ -2333,15 +2333,20 @@ class AmazonApi
      * @param  string $star 1-5 | one_star..five_star | positive | critical | all_stars (optional)
      * @param  bool $verified_only verified_only (optional, default to false)
      * @param  bool $media_only media_only (optional, default to false)
+     * @param  string $mode public (anonymous featured block) | full (authenticated account pool) (optional, default to 'public')
+     * @param  int $max_pages full mode: pages to walk per star sweep (optional, default to 10)
+     * @param  bool $per_star full mode: sweep each star filter and merge + dedupe (optional, default to false)
+     * @param  int $limit full mode: stop at this many distinct reviews (optional)
+     * @param  string $woot_offer full mode + .com: URL (or slug) of a CURRENT woot.com offer page carrying the ASIN — unlocks the anonymous woot reviews endpoint as a bonus transport after the account pool (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['amazonGetProductReviews'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return mixed|\ScrapeBadger\Model\HTTPValidationError
      */
-    public function amazonGetProductReviews($asin, $domain = 'com', $page = 1, $sort_by = 'helpful', $star = null, $verified_only = false, $media_only = false, string $contentType = self::contentTypes['amazonGetProductReviews'][0])
+    public function amazonGetProductReviews($asin, $domain = 'com', $page = 1, $sort_by = 'helpful', $star = null, $verified_only = false, $media_only = false, $mode = 'public', $max_pages = 10, $per_star = false, $limit = null, $woot_offer = null, string $contentType = self::contentTypes['amazonGetProductReviews'][0])
     {
-        list($response) = $this->amazonGetProductReviewsWithHttpInfo($asin, $domain, $page, $sort_by, $star, $verified_only, $media_only, $contentType);
+        list($response) = $this->amazonGetProductReviewsWithHttpInfo($asin, $domain, $page, $sort_by, $star, $verified_only, $media_only, $mode, $max_pages, $per_star, $limit, $woot_offer, $contentType);
         return $response;
     }
 
@@ -2357,15 +2362,20 @@ class AmazonApi
      * @param  string $star 1-5 | one_star..five_star | positive | critical | all_stars (optional)
      * @param  bool $verified_only (optional, default to false)
      * @param  bool $media_only (optional, default to false)
+     * @param  string $mode public (anonymous featured block) | full (authenticated account pool) (optional, default to 'public')
+     * @param  int $max_pages full mode: pages to walk per star sweep (optional, default to 10)
+     * @param  bool $per_star full mode: sweep each star filter and merge + dedupe (optional, default to false)
+     * @param  int $limit full mode: stop at this many distinct reviews (optional)
+     * @param  string $woot_offer full mode + .com: URL (or slug) of a CURRENT woot.com offer page carrying the ASIN — unlocks the anonymous woot reviews endpoint as a bonus transport after the account pool (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['amazonGetProductReviews'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
-    public function amazonGetProductReviewsWithHttpInfo($asin, $domain = 'com', $page = 1, $sort_by = 'helpful', $star = null, $verified_only = false, $media_only = false, string $contentType = self::contentTypes['amazonGetProductReviews'][0])
+    public function amazonGetProductReviewsWithHttpInfo($asin, $domain = 'com', $page = 1, $sort_by = 'helpful', $star = null, $verified_only = false, $media_only = false, $mode = 'public', $max_pages = 10, $per_star = false, $limit = null, $woot_offer = null, string $contentType = self::contentTypes['amazonGetProductReviews'][0])
     {
-        $request = $this->amazonGetProductReviewsRequest($asin, $domain, $page, $sort_by, $star, $verified_only, $media_only, $contentType);
+        $request = $this->amazonGetProductReviewsRequest($asin, $domain, $page, $sort_by, $star, $verified_only, $media_only, $mode, $max_pages, $per_star, $limit, $woot_offer, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -2523,14 +2533,19 @@ class AmazonApi
      * @param  string $star 1-5 | one_star..five_star | positive | critical | all_stars (optional)
      * @param  bool $verified_only (optional, default to false)
      * @param  bool $media_only (optional, default to false)
+     * @param  string $mode public (anonymous featured block) | full (authenticated account pool) (optional, default to 'public')
+     * @param  int $max_pages full mode: pages to walk per star sweep (optional, default to 10)
+     * @param  bool $per_star full mode: sweep each star filter and merge + dedupe (optional, default to false)
+     * @param  int $limit full mode: stop at this many distinct reviews (optional)
+     * @param  string $woot_offer full mode + .com: URL (or slug) of a CURRENT woot.com offer page carrying the ASIN — unlocks the anonymous woot reviews endpoint as a bonus transport after the account pool (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['amazonGetProductReviews'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function amazonGetProductReviewsAsync($asin, $domain = 'com', $page = 1, $sort_by = 'helpful', $star = null, $verified_only = false, $media_only = false, string $contentType = self::contentTypes['amazonGetProductReviews'][0])
+    public function amazonGetProductReviewsAsync($asin, $domain = 'com', $page = 1, $sort_by = 'helpful', $star = null, $verified_only = false, $media_only = false, $mode = 'public', $max_pages = 10, $per_star = false, $limit = null, $woot_offer = null, string $contentType = self::contentTypes['amazonGetProductReviews'][0])
     {
-        return $this->amazonGetProductReviewsAsyncWithHttpInfo($asin, $domain, $page, $sort_by, $star, $verified_only, $media_only, $contentType)
+        return $this->amazonGetProductReviewsAsyncWithHttpInfo($asin, $domain, $page, $sort_by, $star, $verified_only, $media_only, $mode, $max_pages, $per_star, $limit, $woot_offer, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -2550,15 +2565,20 @@ class AmazonApi
      * @param  string $star 1-5 | one_star..five_star | positive | critical | all_stars (optional)
      * @param  bool $verified_only (optional, default to false)
      * @param  bool $media_only (optional, default to false)
+     * @param  string $mode public (anonymous featured block) | full (authenticated account pool) (optional, default to 'public')
+     * @param  int $max_pages full mode: pages to walk per star sweep (optional, default to 10)
+     * @param  bool $per_star full mode: sweep each star filter and merge + dedupe (optional, default to false)
+     * @param  int $limit full mode: stop at this many distinct reviews (optional)
+     * @param  string $woot_offer full mode + .com: URL (or slug) of a CURRENT woot.com offer page carrying the ASIN — unlocks the anonymous woot reviews endpoint as a bonus transport after the account pool (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['amazonGetProductReviews'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function amazonGetProductReviewsAsyncWithHttpInfo($asin, $domain = 'com', $page = 1, $sort_by = 'helpful', $star = null, $verified_only = false, $media_only = false, string $contentType = self::contentTypes['amazonGetProductReviews'][0])
+    public function amazonGetProductReviewsAsyncWithHttpInfo($asin, $domain = 'com', $page = 1, $sort_by = 'helpful', $star = null, $verified_only = false, $media_only = false, $mode = 'public', $max_pages = 10, $per_star = false, $limit = null, $woot_offer = null, string $contentType = self::contentTypes['amazonGetProductReviews'][0])
     {
         $returnType = 'mixed';
-        $request = $this->amazonGetProductReviewsRequest($asin, $domain, $page, $sort_by, $star, $verified_only, $media_only, $contentType);
+        $request = $this->amazonGetProductReviewsRequest($asin, $domain, $page, $sort_by, $star, $verified_only, $media_only, $mode, $max_pages, $per_star, $limit, $woot_offer, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -2606,12 +2626,17 @@ class AmazonApi
      * @param  string $star 1-5 | one_star..five_star | positive | critical | all_stars (optional)
      * @param  bool $verified_only (optional, default to false)
      * @param  bool $media_only (optional, default to false)
+     * @param  string $mode public (anonymous featured block) | full (authenticated account pool) (optional, default to 'public')
+     * @param  int $max_pages full mode: pages to walk per star sweep (optional, default to 10)
+     * @param  bool $per_star full mode: sweep each star filter and merge + dedupe (optional, default to false)
+     * @param  int $limit full mode: stop at this many distinct reviews (optional)
+     * @param  string $woot_offer full mode + .com: URL (or slug) of a CURRENT woot.com offer page carrying the ASIN — unlocks the anonymous woot reviews endpoint as a bonus transport after the account pool (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['amazonGetProductReviews'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function amazonGetProductReviewsRequest($asin, $domain = 'com', $page = 1, $sort_by = 'helpful', $star = null, $verified_only = false, $media_only = false, string $contentType = self::contentTypes['amazonGetProductReviews'][0])
+    public function amazonGetProductReviewsRequest($asin, $domain = 'com', $page = 1, $sort_by = 'helpful', $star = null, $verified_only = false, $media_only = false, $mode = 'public', $max_pages = 10, $per_star = false, $limit = null, $woot_offer = null, string $contentType = self::contentTypes['amazonGetProductReviews'][0])
     {
 
         // verify the required parameter 'asin' is set
@@ -2632,6 +2657,23 @@ class AmazonApi
 
 
 
+
+
+        if ($max_pages !== null && $max_pages > 50) {
+            throw new \InvalidArgumentException('invalid value for "$max_pages" when calling AmazonApi.amazonGetProductReviews, must be smaller than or equal to 50.');
+        }
+        if ($max_pages !== null && $max_pages < 1) {
+            throw new \InvalidArgumentException('invalid value for "$max_pages" when calling AmazonApi.amazonGetProductReviews, must be bigger than or equal to 1.');
+        }
+        
+
+        if ($limit !== null && $limit > 1000) {
+            throw new \InvalidArgumentException('invalid value for "$limit" when calling AmazonApi.amazonGetProductReviews, must be smaller than or equal to 1000.');
+        }
+        if ($limit !== null && $limit < 1) {
+            throw new \InvalidArgumentException('invalid value for "$limit" when calling AmazonApi.amazonGetProductReviews, must be bigger than or equal to 1.');
+        }
+        
 
 
         $resourcePath = '/v1/amazon/products/{asin}/reviews';
@@ -2691,6 +2733,51 @@ class AmazonApi
             $media_only,
             'media_only', // param base name
             'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $mode,
+            'mode', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $max_pages,
+            'max_pages', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $per_star,
+            'per_star', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $limit,
+            'limit', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $woot_offer,
+            'woot_offer', // param base name
+            'string', // openApiType
             'form', // style
             true, // explode
             false // required

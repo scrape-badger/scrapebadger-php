@@ -1258,7 +1258,7 @@ redditSearchRedditPosts($q, $subreddit, $sort, $t, $limit, $after): mixed
 
 Search Reddit posts
 
-Search Reddit's current web UI globally or within a subreddit.  Pass pagination.after unchanged with the same query, scope, sort and time filter. Search cursors expire after 30 minutes. Reddit's native page may contain fewer rows than limit; continue while after is present.
+Search Reddit's current web UI globally or within one or more subreddits.  Pass pagination.after unchanged with the same query, scope, sort and time filter. Search cursors expire after 30 minutes. Reddit's native page may contain fewer rows than limit; continue while after is present.  Reddit reads only the first 256 UTF-8 bytes of a search query and ignores the rest, so a longer query returns 422. Several subreddits are searched as (q) (subreddit:a OR subreddit:b ...), and that whole string counts toward the limit: split long subreddit lists across requests.
 
 ### Example
 
@@ -1279,8 +1279,8 @@ $apiInstance = new ScrapeBadger\Api\RedditApi(
     new GuzzleHttp\Client(),
     $config
 );
-$q = 'q_example'; // string | Search query
-$subreddit = 'subreddit_example'; // string | Restrict to subreddit
+$q = 'q_example'; // string | Search query (Reddit search syntax), at most 256 UTF-8 bytes
+$subreddit = 'subreddit_example'; // string | Restrict to a subreddit, or several joined with + (sales+startups)
 $sort = 'relevance'; // string | Sort: relevance, hot, top, new, comments
 $t = 'all'; // string | Time: hour, day, week, month, year, all
 $limit = 25; // int
@@ -1298,8 +1298,8 @@ try {
 
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
-| **q** | **string**| Search query | |
-| **subreddit** | **string**| Restrict to subreddit | [optional] |
+| **q** | **string**| Search query (Reddit search syntax), at most 256 UTF-8 bytes | |
+| **subreddit** | **string**| Restrict to a subreddit, or several joined with + (sales+startups) | [optional] |
 | **sort** | **string**| Sort: relevance, hot, top, new, comments | [optional] [default to &#39;relevance&#39;] |
 | **t** | **string**| Time: hour, day, week, month, year, all | [optional] [default to &#39;all&#39;] |
 | **limit** | **int**|  | [optional] [default to 25] |
@@ -1330,7 +1330,7 @@ redditSearchSubreddits($q, $limit, $after): mixed
 
 Search subreddits
 
-Search communities using Reddit's current web UI ranking and pagination.  Pass pagination.after unchanged with the same query. Search cursors expire after 30 minutes. weekly_visitors and weekly_contributions are activity counters, separate from the subscriber count.
+Search communities using Reddit's current web UI ranking and pagination.  Pass pagination.after unchanged with the same query. Search cursors expire after 30 minutes. weekly_visitors and weekly_contributions are activity counters, separate from the subscriber count. A query over 256 UTF-8 bytes returns 422, because Reddit would silently drop the rest.
 
 ### Example
 
@@ -1351,7 +1351,7 @@ $apiInstance = new ScrapeBadger\Api\RedditApi(
     new GuzzleHttp\Client(),
     $config
 );
-$q = 'q_example'; // string | Search query
+$q = 'q_example'; // string | Search query, at most 256 UTF-8 bytes
 $limit = 25; // int
 $after = 'after_example'; // string
 
@@ -1367,7 +1367,7 @@ try {
 
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
-| **q** | **string**| Search query | |
+| **q** | **string**| Search query, at most 256 UTF-8 bytes | |
 | **limit** | **int**|  | [optional] [default to 25] |
 | **after** | **string**|  | [optional] |
 
@@ -1396,7 +1396,7 @@ redditSearchUsers($q, $limit, $after): mixed
 
 Search users
 
-Search profiles using Reddit's current web UI ranking and pagination.  Pass pagination.after unchanged with the same query. Search cursors expire after 30 minutes. The native page may contain fewer rows than limit.
+Search profiles using Reddit's current web UI ranking and pagination.  Pass pagination.after unchanged with the same query. Search cursors expire after 30 minutes. The native page may contain fewer rows than limit. A query over 256 UTF-8 bytes returns 422, because Reddit would silently drop the rest.
 
 ### Example
 
@@ -1417,7 +1417,7 @@ $apiInstance = new ScrapeBadger\Api\RedditApi(
     new GuzzleHttp\Client(),
     $config
 );
-$q = 'q_example'; // string | Search query
+$q = 'q_example'; // string | Search query, at most 256 UTF-8 bytes
 $limit = 25; // int
 $after = 'after_example'; // string
 
@@ -1433,7 +1433,7 @@ try {
 
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
-| **q** | **string**| Search query | |
+| **q** | **string**| Search query, at most 256 UTF-8 bytes | |
 | **limit** | **int**|  | [optional] [default to 25] |
 | **after** | **string**|  | [optional] |
 

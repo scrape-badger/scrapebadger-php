@@ -7147,8 +7147,8 @@ class RedditApi
      *
      * Search Reddit posts
      *
-     * @param  string $q Search query (required)
-     * @param  string $subreddit Restrict to subreddit (optional)
+     * @param  string $q Search query (Reddit search syntax), at most 256 UTF-8 bytes (required)
+     * @param  string $subreddit Restrict to a subreddit, or several joined with + (sales+startups) (optional)
      * @param  string $sort Sort: relevance, hot, top, new, comments (optional, default to 'relevance')
      * @param  string $t Time: hour, day, week, month, year, all (optional, default to 'all')
      * @param  int $limit limit (optional, default to 25)
@@ -7170,8 +7170,8 @@ class RedditApi
      *
      * Search Reddit posts
      *
-     * @param  string $q Search query (required)
-     * @param  string $subreddit Restrict to subreddit (optional)
+     * @param  string $q Search query (Reddit search syntax), at most 256 UTF-8 bytes (required)
+     * @param  string $subreddit Restrict to a subreddit, or several joined with + (sales+startups) (optional)
      * @param  string $sort Sort: relevance, hot, top, new, comments (optional, default to 'relevance')
      * @param  string $t Time: hour, day, week, month, year, all (optional, default to 'all')
      * @param  int $limit (optional, default to 25)
@@ -7335,8 +7335,8 @@ class RedditApi
      *
      * Search Reddit posts
      *
-     * @param  string $q Search query (required)
-     * @param  string $subreddit Restrict to subreddit (optional)
+     * @param  string $q Search query (Reddit search syntax), at most 256 UTF-8 bytes (required)
+     * @param  string $subreddit Restrict to a subreddit, or several joined with + (sales+startups) (optional)
      * @param  string $sort Sort: relevance, hot, top, new, comments (optional, default to 'relevance')
      * @param  string $t Time: hour, day, week, month, year, all (optional, default to 'all')
      * @param  int $limit (optional, default to 25)
@@ -7361,8 +7361,8 @@ class RedditApi
      *
      * Search Reddit posts
      *
-     * @param  string $q Search query (required)
-     * @param  string $subreddit Restrict to subreddit (optional)
+     * @param  string $q Search query (Reddit search syntax), at most 256 UTF-8 bytes (required)
+     * @param  string $subreddit Restrict to a subreddit, or several joined with + (sales+startups) (optional)
      * @param  string $sort Sort: relevance, hot, top, new, comments (optional, default to 'relevance')
      * @param  string $t Time: hour, day, week, month, year, all (optional, default to 'all')
      * @param  int $limit (optional, default to 25)
@@ -7416,8 +7416,8 @@ class RedditApi
     /**
      * Create request for operation 'redditSearchRedditPosts'
      *
-     * @param  string $q Search query (required)
-     * @param  string $subreddit Restrict to subreddit (optional)
+     * @param  string $q Search query (Reddit search syntax), at most 256 UTF-8 bytes (required)
+     * @param  string $subreddit Restrict to a subreddit, or several joined with + (sales+startups) (optional)
      * @param  string $sort Sort: relevance, hot, top, new, comments (optional, default to 'relevance')
      * @param  string $t Time: hour, day, week, month, year, all (optional, default to 'all')
      * @param  int $limit (optional, default to 25)
@@ -7577,7 +7577,7 @@ class RedditApi
      *
      * Search subreddits
      *
-     * @param  string $q Search query (required)
+     * @param  string $q Search query, at most 256 UTF-8 bytes (required)
      * @param  int $limit limit (optional, default to 25)
      * @param  string $after after (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['redditSearchSubreddits'] to see the possible values for this operation
@@ -7597,7 +7597,7 @@ class RedditApi
      *
      * Search subreddits
      *
-     * @param  string $q Search query (required)
+     * @param  string $q Search query, at most 256 UTF-8 bytes (required)
      * @param  int $limit (optional, default to 25)
      * @param  string $after (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['redditSearchSubreddits'] to see the possible values for this operation
@@ -7759,7 +7759,7 @@ class RedditApi
      *
      * Search subreddits
      *
-     * @param  string $q Search query (required)
+     * @param  string $q Search query, at most 256 UTF-8 bytes (required)
      * @param  int $limit (optional, default to 25)
      * @param  string $after (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['redditSearchSubreddits'] to see the possible values for this operation
@@ -7782,7 +7782,7 @@ class RedditApi
      *
      * Search subreddits
      *
-     * @param  string $q Search query (required)
+     * @param  string $q Search query, at most 256 UTF-8 bytes (required)
      * @param  int $limit (optional, default to 25)
      * @param  string $after (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['redditSearchSubreddits'] to see the possible values for this operation
@@ -7834,7 +7834,7 @@ class RedditApi
     /**
      * Create request for operation 'redditSearchSubreddits'
      *
-     * @param  string $q Search query (required)
+     * @param  string $q Search query, at most 256 UTF-8 bytes (required)
      * @param  int $limit (optional, default to 25)
      * @param  string $after (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['redditSearchSubreddits'] to see the possible values for this operation
@@ -7962,7 +7962,7 @@ class RedditApi
      *
      * Search users
      *
-     * @param  string $q Search query (required)
+     * @param  string $q Search query, at most 256 UTF-8 bytes (required)
      * @param  int $limit limit (optional, default to 25)
      * @param  string $after after (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['redditSearchUsers'] to see the possible values for this operation
@@ -7982,7 +7982,7 @@ class RedditApi
      *
      * Search users
      *
-     * @param  string $q Search query (required)
+     * @param  string $q Search query, at most 256 UTF-8 bytes (required)
      * @param  int $limit (optional, default to 25)
      * @param  string $after (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['redditSearchUsers'] to see the possible values for this operation
@@ -8144,7 +8144,7 @@ class RedditApi
      *
      * Search users
      *
-     * @param  string $q Search query (required)
+     * @param  string $q Search query, at most 256 UTF-8 bytes (required)
      * @param  int $limit (optional, default to 25)
      * @param  string $after (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['redditSearchUsers'] to see the possible values for this operation
@@ -8167,7 +8167,7 @@ class RedditApi
      *
      * Search users
      *
-     * @param  string $q Search query (required)
+     * @param  string $q Search query, at most 256 UTF-8 bytes (required)
      * @param  int $limit (optional, default to 25)
      * @param  string $after (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['redditSearchUsers'] to see the possible values for this operation
@@ -8219,7 +8219,7 @@ class RedditApi
     /**
      * Create request for operation 'redditSearchUsers'
      *
-     * @param  string $q Search query (required)
+     * @param  string $q Search query, at most 256 UTF-8 bytes (required)
      * @param  int $limit (optional, default to 25)
      * @param  string $after (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['redditSearchUsers'] to see the possible values for this operation

@@ -163,7 +163,7 @@ $apiInstance = new ScrapeBadger\Api\AirbnbApi(
 );
 $room_id = 'room_id_example'; // string
 $month = 1; // int | Start month (1-12)
-$year = 2026; // int | Start year
+$year = 56; // int | Start year (current UTC year when omitted)
 $months = 12; // int | Number of months (max 12)
 $currency = 'currency_example'; // string
 $locale = 'locale_example'; // string
@@ -182,7 +182,7 @@ try {
 | ------------- | ------------- | ------------- | ------------- |
 | **room_id** | **string**|  | |
 | **month** | **int**| Start month (1-12) | [optional] [default to 1] |
-| **year** | **int**| Start year | [optional] [default to 2026] |
+| **year** | **int**| Start year (current UTC year when omitted) | [optional] |
 | **months** | **int**| Number of months (max 12) | [optional] [default to 12] |
 | **currency** | **string**|  | [optional] |
 | **locale** | **string**|  | [optional] |

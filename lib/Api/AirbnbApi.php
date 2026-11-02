@@ -736,7 +736,7 @@ class AirbnbApi
      *
      * @param  string $room_id room_id (required)
      * @param  int $month Start month (1-12) (optional, default to 1)
-     * @param  int $year Start year (optional, default to 2026)
+     * @param  int $year Start year (current UTC year when omitted) (optional)
      * @param  int $months Number of months (max 12) (optional, default to 12)
      * @param  string $currency currency (optional)
      * @param  string $locale locale (optional)
@@ -746,7 +746,7 @@ class AirbnbApi
      * @throws \InvalidArgumentException
      * @return mixed|\ScrapeBadger\Model\HTTPValidationError
      */
-    public function airbnbGetAvailabilityCalendar($room_id, $month = 1, $year = 2026, $months = 12, $currency = null, $locale = null, string $contentType = self::contentTypes['airbnbGetAvailabilityCalendar'][0])
+    public function airbnbGetAvailabilityCalendar($room_id, $month = 1, $year = null, $months = 12, $currency = null, $locale = null, string $contentType = self::contentTypes['airbnbGetAvailabilityCalendar'][0])
     {
         list($response) = $this->airbnbGetAvailabilityCalendarWithHttpInfo($room_id, $month, $year, $months, $currency, $locale, $contentType);
         return $response;
@@ -759,7 +759,7 @@ class AirbnbApi
      *
      * @param  string $room_id (required)
      * @param  int $month Start month (1-12) (optional, default to 1)
-     * @param  int $year Start year (optional, default to 2026)
+     * @param  int $year Start year (current UTC year when omitted) (optional)
      * @param  int $months Number of months (max 12) (optional, default to 12)
      * @param  string $currency (optional)
      * @param  string $locale (optional)
@@ -769,7 +769,7 @@ class AirbnbApi
      * @throws \InvalidArgumentException
      * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
-    public function airbnbGetAvailabilityCalendarWithHttpInfo($room_id, $month = 1, $year = 2026, $months = 12, $currency = null, $locale = null, string $contentType = self::contentTypes['airbnbGetAvailabilityCalendar'][0])
+    public function airbnbGetAvailabilityCalendarWithHttpInfo($room_id, $month = 1, $year = null, $months = 12, $currency = null, $locale = null, string $contentType = self::contentTypes['airbnbGetAvailabilityCalendar'][0])
     {
         $request = $this->airbnbGetAvailabilityCalendarRequest($room_id, $month, $year, $months, $currency, $locale, $contentType);
 
@@ -924,7 +924,7 @@ class AirbnbApi
      *
      * @param  string $room_id (required)
      * @param  int $month Start month (1-12) (optional, default to 1)
-     * @param  int $year Start year (optional, default to 2026)
+     * @param  int $year Start year (current UTC year when omitted) (optional)
      * @param  int $months Number of months (max 12) (optional, default to 12)
      * @param  string $currency (optional)
      * @param  string $locale (optional)
@@ -933,7 +933,7 @@ class AirbnbApi
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function airbnbGetAvailabilityCalendarAsync($room_id, $month = 1, $year = 2026, $months = 12, $currency = null, $locale = null, string $contentType = self::contentTypes['airbnbGetAvailabilityCalendar'][0])
+    public function airbnbGetAvailabilityCalendarAsync($room_id, $month = 1, $year = null, $months = 12, $currency = null, $locale = null, string $contentType = self::contentTypes['airbnbGetAvailabilityCalendar'][0])
     {
         return $this->airbnbGetAvailabilityCalendarAsyncWithHttpInfo($room_id, $month, $year, $months, $currency, $locale, $contentType)
             ->then(
@@ -950,7 +950,7 @@ class AirbnbApi
      *
      * @param  string $room_id (required)
      * @param  int $month Start month (1-12) (optional, default to 1)
-     * @param  int $year Start year (optional, default to 2026)
+     * @param  int $year Start year (current UTC year when omitted) (optional)
      * @param  int $months Number of months (max 12) (optional, default to 12)
      * @param  string $currency (optional)
      * @param  string $locale (optional)
@@ -959,7 +959,7 @@ class AirbnbApi
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function airbnbGetAvailabilityCalendarAsyncWithHttpInfo($room_id, $month = 1, $year = 2026, $months = 12, $currency = null, $locale = null, string $contentType = self::contentTypes['airbnbGetAvailabilityCalendar'][0])
+    public function airbnbGetAvailabilityCalendarAsyncWithHttpInfo($room_id, $month = 1, $year = null, $months = 12, $currency = null, $locale = null, string $contentType = self::contentTypes['airbnbGetAvailabilityCalendar'][0])
     {
         $returnType = 'mixed';
         $request = $this->airbnbGetAvailabilityCalendarRequest($room_id, $month, $year, $months, $currency, $locale, $contentType);
@@ -1005,7 +1005,7 @@ class AirbnbApi
      *
      * @param  string $room_id (required)
      * @param  int $month Start month (1-12) (optional, default to 1)
-     * @param  int $year Start year (optional, default to 2026)
+     * @param  int $year Start year (current UTC year when omitted) (optional)
      * @param  int $months Number of months (max 12) (optional, default to 12)
      * @param  string $currency (optional)
      * @param  string $locale (optional)
@@ -1014,7 +1014,7 @@ class AirbnbApi
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function airbnbGetAvailabilityCalendarRequest($room_id, $month = 1, $year = 2026, $months = 12, $currency = null, $locale = null, string $contentType = self::contentTypes['airbnbGetAvailabilityCalendar'][0])
+    public function airbnbGetAvailabilityCalendarRequest($room_id, $month = 1, $year = null, $months = 12, $currency = null, $locale = null, string $contentType = self::contentTypes['airbnbGetAvailabilityCalendar'][0])
     {
 
         // verify the required parameter 'room_id' is set

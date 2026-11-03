@@ -15,7 +15,7 @@ All URIs are relative to https://scrapebadger.com, except if the operation defin
 ## `perplexityAskPerplexityAQuestion()`
 
 ```php
-perplexityAskPerplexityAQuestion($prompt, $country, $strict_country): mixed
+perplexityAskPerplexityAQuestion($prompt, $country, $strict_country, $location): mixed
 ```
 
 Ask Perplexity a question
@@ -44,9 +44,10 @@ $apiInstance = new ScrapeBadger\Api\PerplexityApi(
 $prompt = 'prompt_example'; // string | The prompt to send to Perplexity (max 4096 characters).
 $country = 'country_example'; // string | ISO-3166 alpha-2 egress country, e.g. 'US', 'GB', 'DE'.
 $strict_country = false; // bool | Answer only from an exit in `country`, never another one; 503 `country_unavailable` (not billed) when none answers. Requires `country`.
+$location = 'location_example'; // string | Where the asker is: a city (tokyo, osaka, seoul, new-york, london, ...) or 'lat,lng' in decimal degrees. Perplexity answers a local-sounding question for it instead of the exit IP's city. It does not pick the egress: `country` does.
 
 try {
-    $result = $apiInstance->perplexityAskPerplexityAQuestion($prompt, $country, $strict_country);
+    $result = $apiInstance->perplexityAskPerplexityAQuestion($prompt, $country, $strict_country, $location);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling PerplexityApi->perplexityAskPerplexityAQuestion: ', $e->getMessage(), PHP_EOL;
@@ -60,6 +61,7 @@ try {
 | **prompt** | **string**| The prompt to send to Perplexity (max 4096 characters). | |
 | **country** | **string**| ISO-3166 alpha-2 egress country, e.g. &#39;US&#39;, &#39;GB&#39;, &#39;DE&#39;. | [optional] |
 | **strict_country** | **bool**| Answer only from an exit in &#x60;country&#x60;, never another one; 503 &#x60;country_unavailable&#x60; (not billed) when none answers. Requires &#x60;country&#x60;. | [optional] [default to false] |
+| **location** | **string**| Where the asker is: a city (tokyo, osaka, seoul, new-york, london, ...) or &#39;lat,lng&#39; in decimal degrees. Perplexity answers a local-sounding question for it instead of the exit IP&#39;s city. It does not pick the egress: &#x60;country&#x60; does. | [optional] |
 
 ### Return type
 
@@ -140,7 +142,7 @@ This endpoint does not need any parameter.
 ## `perplexityMeasureABrandSVisibilityInAPerplexityAnswer()`
 
 ```php
-perplexityMeasureABrandSVisibilityInAPerplexityAnswer($prompt, $brand, $domain, $aliases, $competitors, $country, $strict_country): mixed
+perplexityMeasureABrandSVisibilityInAPerplexityAnswer($prompt, $brand, $domain, $aliases, $competitors, $country, $strict_country, $location): mixed
 ```
 
 Measure a brand's visibility in a Perplexity answer
@@ -173,9 +175,10 @@ $aliases = 'aliases_example'; // string | Comma-separated alternative names.
 $competitors = 'competitors_example'; // string | Comma-separated competitor names.
 $country = 'country_example'; // string | ISO-3166 alpha-2 egress country.
 $strict_country = false; // bool | Answer only from an exit in `country`, never another one; 503 `country_unavailable` (not billed) when none answers. Requires `country`.
+$location = 'location_example'; // string | Where the asker is: a city (tokyo, osaka, seoul, new-york, london, ...) or 'lat,lng' in decimal degrees. Perplexity answers a local-sounding question for it instead of the exit IP's city. It does not pick the egress: `country` does.
 
 try {
-    $result = $apiInstance->perplexityMeasureABrandSVisibilityInAPerplexityAnswer($prompt, $brand, $domain, $aliases, $competitors, $country, $strict_country);
+    $result = $apiInstance->perplexityMeasureABrandSVisibilityInAPerplexityAnswer($prompt, $brand, $domain, $aliases, $competitors, $country, $strict_country, $location);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling PerplexityApi->perplexityMeasureABrandSVisibilityInAPerplexityAnswer: ', $e->getMessage(), PHP_EOL;
@@ -193,6 +196,7 @@ try {
 | **competitors** | **string**| Comma-separated competitor names. | [optional] |
 | **country** | **string**| ISO-3166 alpha-2 egress country. | [optional] |
 | **strict_country** | **bool**| Answer only from an exit in &#x60;country&#x60;, never another one; 503 &#x60;country_unavailable&#x60; (not billed) when none answers. Requires &#x60;country&#x60;. | [optional] [default to false] |
+| **location** | **string**| Where the asker is: a city (tokyo, osaka, seoul, new-york, london, ...) or &#39;lat,lng&#39; in decimal degrees. Perplexity answers a local-sounding question for it instead of the exit IP&#39;s city. It does not pick the egress: &#x60;country&#x60; does. | [optional] |
 
 ### Return type
 

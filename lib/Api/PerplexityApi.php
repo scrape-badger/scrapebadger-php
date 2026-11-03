@@ -145,15 +145,16 @@ class PerplexityApi
      * @param  string $prompt The prompt to send to Perplexity (max 4096 characters). (required)
      * @param  string $country ISO-3166 alpha-2 egress country, e.g. &#39;US&#39;, &#39;GB&#39;, &#39;DE&#39;. (optional)
      * @param  bool $strict_country Answer only from an exit in &#x60;country&#x60;, never another one; 503 &#x60;country_unavailable&#x60; (not billed) when none answers. Requires &#x60;country&#x60;. (optional, default to false)
+     * @param  string $location Where the asker is: a city (tokyo, osaka, seoul, new-york, london, ...) or &#39;lat,lng&#39; in decimal degrees. Perplexity answers a local-sounding question for it instead of the exit IP&#39;s city. It does not pick the egress: &#x60;country&#x60; does. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['perplexityAskPerplexityAQuestion'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return mixed|\ScrapeBadger\Model\HTTPValidationError
      */
-    public function perplexityAskPerplexityAQuestion($prompt, $country = null, $strict_country = false, string $contentType = self::contentTypes['perplexityAskPerplexityAQuestion'][0])
+    public function perplexityAskPerplexityAQuestion($prompt, $country = null, $strict_country = false, $location = null, string $contentType = self::contentTypes['perplexityAskPerplexityAQuestion'][0])
     {
-        list($response) = $this->perplexityAskPerplexityAQuestionWithHttpInfo($prompt, $country, $strict_country, $contentType);
+        list($response) = $this->perplexityAskPerplexityAQuestionWithHttpInfo($prompt, $country, $strict_country, $location, $contentType);
         return $response;
     }
 
@@ -165,15 +166,16 @@ class PerplexityApi
      * @param  string $prompt The prompt to send to Perplexity (max 4096 characters). (required)
      * @param  string $country ISO-3166 alpha-2 egress country, e.g. &#39;US&#39;, &#39;GB&#39;, &#39;DE&#39;. (optional)
      * @param  bool $strict_country Answer only from an exit in &#x60;country&#x60;, never another one; 503 &#x60;country_unavailable&#x60; (not billed) when none answers. Requires &#x60;country&#x60;. (optional, default to false)
+     * @param  string $location Where the asker is: a city (tokyo, osaka, seoul, new-york, london, ...) or &#39;lat,lng&#39; in decimal degrees. Perplexity answers a local-sounding question for it instead of the exit IP&#39;s city. It does not pick the egress: &#x60;country&#x60; does. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['perplexityAskPerplexityAQuestion'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
-    public function perplexityAskPerplexityAQuestionWithHttpInfo($prompt, $country = null, $strict_country = false, string $contentType = self::contentTypes['perplexityAskPerplexityAQuestion'][0])
+    public function perplexityAskPerplexityAQuestionWithHttpInfo($prompt, $country = null, $strict_country = false, $location = null, string $contentType = self::contentTypes['perplexityAskPerplexityAQuestion'][0])
     {
-        $request = $this->perplexityAskPerplexityAQuestionRequest($prompt, $country, $strict_country, $contentType);
+        $request = $this->perplexityAskPerplexityAQuestionRequest($prompt, $country, $strict_country, $location, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -327,14 +329,15 @@ class PerplexityApi
      * @param  string $prompt The prompt to send to Perplexity (max 4096 characters). (required)
      * @param  string $country ISO-3166 alpha-2 egress country, e.g. &#39;US&#39;, &#39;GB&#39;, &#39;DE&#39;. (optional)
      * @param  bool $strict_country Answer only from an exit in &#x60;country&#x60;, never another one; 503 &#x60;country_unavailable&#x60; (not billed) when none answers. Requires &#x60;country&#x60;. (optional, default to false)
+     * @param  string $location Where the asker is: a city (tokyo, osaka, seoul, new-york, london, ...) or &#39;lat,lng&#39; in decimal degrees. Perplexity answers a local-sounding question for it instead of the exit IP&#39;s city. It does not pick the egress: &#x60;country&#x60; does. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['perplexityAskPerplexityAQuestion'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function perplexityAskPerplexityAQuestionAsync($prompt, $country = null, $strict_country = false, string $contentType = self::contentTypes['perplexityAskPerplexityAQuestion'][0])
+    public function perplexityAskPerplexityAQuestionAsync($prompt, $country = null, $strict_country = false, $location = null, string $contentType = self::contentTypes['perplexityAskPerplexityAQuestion'][0])
     {
-        return $this->perplexityAskPerplexityAQuestionAsyncWithHttpInfo($prompt, $country, $strict_country, $contentType)
+        return $this->perplexityAskPerplexityAQuestionAsyncWithHttpInfo($prompt, $country, $strict_country, $location, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -350,15 +353,16 @@ class PerplexityApi
      * @param  string $prompt The prompt to send to Perplexity (max 4096 characters). (required)
      * @param  string $country ISO-3166 alpha-2 egress country, e.g. &#39;US&#39;, &#39;GB&#39;, &#39;DE&#39;. (optional)
      * @param  bool $strict_country Answer only from an exit in &#x60;country&#x60;, never another one; 503 &#x60;country_unavailable&#x60; (not billed) when none answers. Requires &#x60;country&#x60;. (optional, default to false)
+     * @param  string $location Where the asker is: a city (tokyo, osaka, seoul, new-york, london, ...) or &#39;lat,lng&#39; in decimal degrees. Perplexity answers a local-sounding question for it instead of the exit IP&#39;s city. It does not pick the egress: &#x60;country&#x60; does. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['perplexityAskPerplexityAQuestion'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function perplexityAskPerplexityAQuestionAsyncWithHttpInfo($prompt, $country = null, $strict_country = false, string $contentType = self::contentTypes['perplexityAskPerplexityAQuestion'][0])
+    public function perplexityAskPerplexityAQuestionAsyncWithHttpInfo($prompt, $country = null, $strict_country = false, $location = null, string $contentType = self::contentTypes['perplexityAskPerplexityAQuestion'][0])
     {
         $returnType = 'mixed';
-        $request = $this->perplexityAskPerplexityAQuestionRequest($prompt, $country, $strict_country, $contentType);
+        $request = $this->perplexityAskPerplexityAQuestionRequest($prompt, $country, $strict_country, $location, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -402,12 +406,13 @@ class PerplexityApi
      * @param  string $prompt The prompt to send to Perplexity (max 4096 characters). (required)
      * @param  string $country ISO-3166 alpha-2 egress country, e.g. &#39;US&#39;, &#39;GB&#39;, &#39;DE&#39;. (optional)
      * @param  bool $strict_country Answer only from an exit in &#x60;country&#x60;, never another one; 503 &#x60;country_unavailable&#x60; (not billed) when none answers. Requires &#x60;country&#x60;. (optional, default to false)
+     * @param  string $location Where the asker is: a city (tokyo, osaka, seoul, new-york, london, ...) or &#39;lat,lng&#39; in decimal degrees. Perplexity answers a local-sounding question for it instead of the exit IP&#39;s city. It does not pick the egress: &#x60;country&#x60; does. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['perplexityAskPerplexityAQuestion'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function perplexityAskPerplexityAQuestionRequest($prompt, $country = null, $strict_country = false, string $contentType = self::contentTypes['perplexityAskPerplexityAQuestion'][0])
+    public function perplexityAskPerplexityAQuestionRequest($prompt, $country = null, $strict_country = false, $location = null, string $contentType = self::contentTypes['perplexityAskPerplexityAQuestion'][0])
     {
 
         // verify the required parameter 'prompt' is set
@@ -416,6 +421,7 @@ class PerplexityApi
                 'Missing the required parameter $prompt when calling perplexityAskPerplexityAQuestion'
             );
         }
+
 
 
 
@@ -450,6 +456,15 @@ class PerplexityApi
             $strict_country,
             'strict_country', // param base name
             'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $location,
+            'location', // param base name
+            'string', // openApiType
             'form', // style
             true, // explode
             false // required
@@ -821,15 +836,16 @@ class PerplexityApi
      * @param  string $competitors Comma-separated competitor names. (optional)
      * @param  string $country ISO-3166 alpha-2 egress country. (optional)
      * @param  bool $strict_country Answer only from an exit in &#x60;country&#x60;, never another one; 503 &#x60;country_unavailable&#x60; (not billed) when none answers. Requires &#x60;country&#x60;. (optional, default to false)
+     * @param  string $location Where the asker is: a city (tokyo, osaka, seoul, new-york, london, ...) or &#39;lat,lng&#39; in decimal degrees. Perplexity answers a local-sounding question for it instead of the exit IP&#39;s city. It does not pick the egress: &#x60;country&#x60; does. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['perplexityMeasureABrandSVisibilityInAPerplexityAnswer'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return mixed|\ScrapeBadger\Model\HTTPValidationError
      */
-    public function perplexityMeasureABrandSVisibilityInAPerplexityAnswer($prompt, $brand, $domain = null, $aliases = null, $competitors = null, $country = null, $strict_country = false, string $contentType = self::contentTypes['perplexityMeasureABrandSVisibilityInAPerplexityAnswer'][0])
+    public function perplexityMeasureABrandSVisibilityInAPerplexityAnswer($prompt, $brand, $domain = null, $aliases = null, $competitors = null, $country = null, $strict_country = false, $location = null, string $contentType = self::contentTypes['perplexityMeasureABrandSVisibilityInAPerplexityAnswer'][0])
     {
-        list($response) = $this->perplexityMeasureABrandSVisibilityInAPerplexityAnswerWithHttpInfo($prompt, $brand, $domain, $aliases, $competitors, $country, $strict_country, $contentType);
+        list($response) = $this->perplexityMeasureABrandSVisibilityInAPerplexityAnswerWithHttpInfo($prompt, $brand, $domain, $aliases, $competitors, $country, $strict_country, $location, $contentType);
         return $response;
     }
 
@@ -845,15 +861,16 @@ class PerplexityApi
      * @param  string $competitors Comma-separated competitor names. (optional)
      * @param  string $country ISO-3166 alpha-2 egress country. (optional)
      * @param  bool $strict_country Answer only from an exit in &#x60;country&#x60;, never another one; 503 &#x60;country_unavailable&#x60; (not billed) when none answers. Requires &#x60;country&#x60;. (optional, default to false)
+     * @param  string $location Where the asker is: a city (tokyo, osaka, seoul, new-york, london, ...) or &#39;lat,lng&#39; in decimal degrees. Perplexity answers a local-sounding question for it instead of the exit IP&#39;s city. It does not pick the egress: &#x60;country&#x60; does. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['perplexityMeasureABrandSVisibilityInAPerplexityAnswer'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
-    public function perplexityMeasureABrandSVisibilityInAPerplexityAnswerWithHttpInfo($prompt, $brand, $domain = null, $aliases = null, $competitors = null, $country = null, $strict_country = false, string $contentType = self::contentTypes['perplexityMeasureABrandSVisibilityInAPerplexityAnswer'][0])
+    public function perplexityMeasureABrandSVisibilityInAPerplexityAnswerWithHttpInfo($prompt, $brand, $domain = null, $aliases = null, $competitors = null, $country = null, $strict_country = false, $location = null, string $contentType = self::contentTypes['perplexityMeasureABrandSVisibilityInAPerplexityAnswer'][0])
     {
-        $request = $this->perplexityMeasureABrandSVisibilityInAPerplexityAnswerRequest($prompt, $brand, $domain, $aliases, $competitors, $country, $strict_country, $contentType);
+        $request = $this->perplexityMeasureABrandSVisibilityInAPerplexityAnswerRequest($prompt, $brand, $domain, $aliases, $competitors, $country, $strict_country, $location, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -1011,14 +1028,15 @@ class PerplexityApi
      * @param  string $competitors Comma-separated competitor names. (optional)
      * @param  string $country ISO-3166 alpha-2 egress country. (optional)
      * @param  bool $strict_country Answer only from an exit in &#x60;country&#x60;, never another one; 503 &#x60;country_unavailable&#x60; (not billed) when none answers. Requires &#x60;country&#x60;. (optional, default to false)
+     * @param  string $location Where the asker is: a city (tokyo, osaka, seoul, new-york, london, ...) or &#39;lat,lng&#39; in decimal degrees. Perplexity answers a local-sounding question for it instead of the exit IP&#39;s city. It does not pick the egress: &#x60;country&#x60; does. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['perplexityMeasureABrandSVisibilityInAPerplexityAnswer'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function perplexityMeasureABrandSVisibilityInAPerplexityAnswerAsync($prompt, $brand, $domain = null, $aliases = null, $competitors = null, $country = null, $strict_country = false, string $contentType = self::contentTypes['perplexityMeasureABrandSVisibilityInAPerplexityAnswer'][0])
+    public function perplexityMeasureABrandSVisibilityInAPerplexityAnswerAsync($prompt, $brand, $domain = null, $aliases = null, $competitors = null, $country = null, $strict_country = false, $location = null, string $contentType = self::contentTypes['perplexityMeasureABrandSVisibilityInAPerplexityAnswer'][0])
     {
-        return $this->perplexityMeasureABrandSVisibilityInAPerplexityAnswerAsyncWithHttpInfo($prompt, $brand, $domain, $aliases, $competitors, $country, $strict_country, $contentType)
+        return $this->perplexityMeasureABrandSVisibilityInAPerplexityAnswerAsyncWithHttpInfo($prompt, $brand, $domain, $aliases, $competitors, $country, $strict_country, $location, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -1038,15 +1056,16 @@ class PerplexityApi
      * @param  string $competitors Comma-separated competitor names. (optional)
      * @param  string $country ISO-3166 alpha-2 egress country. (optional)
      * @param  bool $strict_country Answer only from an exit in &#x60;country&#x60;, never another one; 503 &#x60;country_unavailable&#x60; (not billed) when none answers. Requires &#x60;country&#x60;. (optional, default to false)
+     * @param  string $location Where the asker is: a city (tokyo, osaka, seoul, new-york, london, ...) or &#39;lat,lng&#39; in decimal degrees. Perplexity answers a local-sounding question for it instead of the exit IP&#39;s city. It does not pick the egress: &#x60;country&#x60; does. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['perplexityMeasureABrandSVisibilityInAPerplexityAnswer'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function perplexityMeasureABrandSVisibilityInAPerplexityAnswerAsyncWithHttpInfo($prompt, $brand, $domain = null, $aliases = null, $competitors = null, $country = null, $strict_country = false, string $contentType = self::contentTypes['perplexityMeasureABrandSVisibilityInAPerplexityAnswer'][0])
+    public function perplexityMeasureABrandSVisibilityInAPerplexityAnswerAsyncWithHttpInfo($prompt, $brand, $domain = null, $aliases = null, $competitors = null, $country = null, $strict_country = false, $location = null, string $contentType = self::contentTypes['perplexityMeasureABrandSVisibilityInAPerplexityAnswer'][0])
     {
         $returnType = 'mixed';
-        $request = $this->perplexityMeasureABrandSVisibilityInAPerplexityAnswerRequest($prompt, $brand, $domain, $aliases, $competitors, $country, $strict_country, $contentType);
+        $request = $this->perplexityMeasureABrandSVisibilityInAPerplexityAnswerRequest($prompt, $brand, $domain, $aliases, $competitors, $country, $strict_country, $location, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -1094,12 +1113,13 @@ class PerplexityApi
      * @param  string $competitors Comma-separated competitor names. (optional)
      * @param  string $country ISO-3166 alpha-2 egress country. (optional)
      * @param  bool $strict_country Answer only from an exit in &#x60;country&#x60;, never another one; 503 &#x60;country_unavailable&#x60; (not billed) when none answers. Requires &#x60;country&#x60;. (optional, default to false)
+     * @param  string $location Where the asker is: a city (tokyo, osaka, seoul, new-york, london, ...) or &#39;lat,lng&#39; in decimal degrees. Perplexity answers a local-sounding question for it instead of the exit IP&#39;s city. It does not pick the egress: &#x60;country&#x60; does. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['perplexityMeasureABrandSVisibilityInAPerplexityAnswer'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function perplexityMeasureABrandSVisibilityInAPerplexityAnswerRequest($prompt, $brand, $domain = null, $aliases = null, $competitors = null, $country = null, $strict_country = false, string $contentType = self::contentTypes['perplexityMeasureABrandSVisibilityInAPerplexityAnswer'][0])
+    public function perplexityMeasureABrandSVisibilityInAPerplexityAnswerRequest($prompt, $brand, $domain = null, $aliases = null, $competitors = null, $country = null, $strict_country = false, $location = null, string $contentType = self::contentTypes['perplexityMeasureABrandSVisibilityInAPerplexityAnswer'][0])
     {
 
         // verify the required parameter 'prompt' is set
@@ -1115,6 +1135,7 @@ class PerplexityApi
                 'Missing the required parameter $brand when calling perplexityMeasureABrandSVisibilityInAPerplexityAnswer'
             );
         }
+
 
 
 
@@ -1188,6 +1209,15 @@ class PerplexityApi
             $strict_country,
             'strict_country', // param base name
             'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $location,
+            'location', // param base name
+            'string', // openApiType
             'form', // style
             true, // explode
             false // required

@@ -5,6 +5,7 @@ All URIs are relative to https://scrapebadger.com, except if the operation defin
 | Method | HTTP request | Description |
 | ------------- | ------------- | ------------- |
 | [**githubGetProfile()**](GitHubApi.md#githubGetProfile) | **GET** /v1/github/profiles/{username} | Get profile |
+| [**githubGetRepository()**](GitHubApi.md#githubGetRepository) | **GET** /v1/github/repositories/{owner}/{repo} | Get repository |
 
 
 ## `githubGetProfile()`
@@ -63,6 +64,70 @@ try {
 ### Return type
 
 [**\ScrapeBadger\Model\GitHubProfileResponse**](../Model/GitHubProfileResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `application/json`
+
+[[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
+[[Back to Model list]](../../README.md#models)
+[[Back to README]](../../README.md)
+
+## `githubGetRepository()`
+
+```php
+githubGetRepository($owner, $repo): \ScrapeBadger\Model\GitHubRepositoryResponse
+```
+
+Get repository
+
+Public default-branch repository detail, native README, files and latest commit.  Use owner.login and name from a profile repository summary. Root file and contributor previews are not exhaustive recursive trees or membership lists. No GitHub token, market, ref, search or pagination parameter is accepted.
+
+### Example
+
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+// Configure API key authorization: ApiKeyAuth
+$config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKey('X-API-Key', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// $config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKeyPrefix('X-API-Key', 'Bearer');
+
+
+$apiInstance = new ScrapeBadger\Api\GitHubApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client(),
+    $config
+);
+$owner = 'owner_example'; // string
+$repo = 'repo_example'; // string
+
+try {
+    $result = $apiInstance->githubGetRepository($owner, $repo);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling GitHubApi->githubGetRepository: ', $e->getMessage(), PHP_EOL;
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+| ------------- | ------------- | ------------- | ------------- |
+| **owner** | **string**|  | |
+| **repo** | **string**|  | |
+
+### Return type
+
+[**\ScrapeBadger\Model\GitHubRepositoryResponse**](../Model/GitHubRepositoryResponse.md)
 
 ### Authorization
 

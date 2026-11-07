@@ -320,6 +320,7 @@ Class | Method | HTTP request | Description
 *GeminiApi* | [**geminiMeasureABrandSVisibilityInAGeminiAnswer**](docs/Api/GeminiApi.md#geminimeasureabrandsvisibilityinageminianswer) | **GET** /v1/gemini/brand-visibility | Measure a brand&#39;s visibility in a Gemini answer
 *GeminiApi* | [**geminiMeasureABrandSVisibilityInAGeminiAnswerPost**](docs/Api/GeminiApi.md#geminimeasureabrandsvisibilityinageminianswerpost) | **POST** /v1/gemini/brand-visibility | Measure a brand&#39;s visibility in a Gemini answer (POST)
 *GitHubApi* | [**githubGetProfile**](docs/Api/GitHubApi.md#githubgetprofile) | **GET** /v1/github/profiles/{username} | Get profile
+*GitHubApi* | [**githubGetRepository**](docs/Api/GitHubApi.md#githubgetrepository) | **GET** /v1/github/repositories/{owner}/{repo} | Get repository
 *GoogleApi* | [**googleGetAuthorCitationsPerYearChart**](docs/Api/GoogleApi.md#googlegetauthorcitationsperyearchart) | **GET** /v1/google/scholar/author/citation | Get author citations-per-year chart
 *GoogleApi* | [**googleGetBusinessPosts**](docs/Api/GoogleApi.md#googlegetbusinessposts) | **GET** /v1/google/maps/posts | Get business posts
 *GoogleApi* | [**googleGetCitationFormatsForAScholarPaper**](docs/Api/GoogleApi.md#googlegetcitationformatsforascholarpaper) | **GET** /v1/google/scholar/cite | Get citation formats for a Scholar paper
@@ -789,14 +790,31 @@ Class | Method | HTTP request | Description
 - [GitHubActivityOverview](docs/Model/GitHubActivityOverview.md)
 - [GitHubActivityRow](docs/Model/GitHubActivityRow.md)
 - [GitHubCalendarDay](docs/Model/GitHubCalendarDay.md)
+- [GitHubCommitActor](docs/Model/GitHubCommitActor.md)
+- [GitHubCommitChecks](docs/Model/GitHubCommitChecks.md)
+- [GitHubCommunityFile](docs/Model/GitHubCommunityFile.md)
 - [GitHubContributions](docs/Model/GitHubContributions.md)
+- [GitHubForkComparison](docs/Model/GitHubForkComparison.md)
+- [GitHubFundingLink](docs/Model/GitHubFundingLink.md)
 - [GitHubLanguage](docs/Model/GitHubLanguage.md)
+- [GitHubLatestCommit](docs/Model/GitHubLatestCommit.md)
 - [GitHubNamedLink](docs/Model/GitHubNamedLink.md)
 - [GitHubPagination](docs/Model/GitHubPagination.md)
 - [GitHubProfile](docs/Model/GitHubProfile.md)
 - [GitHubProfileResponse](docs/Model/GitHubProfileResponse.md)
 - [GitHubReadme](docs/Model/GitHubReadme.md)
+- [GitHubReadmeHeading](docs/Model/GitHubReadmeHeading.md)
 - [GitHubRepository](docs/Model/GitHubRepository.md)
+- [GitHubRepositoryAccount](docs/Model/GitHubRepositoryAccount.md)
+- [GitHubRepositoryFile](docs/Model/GitHubRepositoryFile.md)
+- [GitHubRepositoryFunding](docs/Model/GitHubRepositoryFunding.md)
+- [GitHubRepositoryIdentity](docs/Model/GitHubRepositoryIdentity.md)
+- [GitHubRepositoryLanguage](docs/Model/GitHubRepositoryLanguage.md)
+- [GitHubRepositoryLicense](docs/Model/GitHubRepositoryLicense.md)
+- [GitHubRepositoryReadme](docs/Model/GitHubRepositoryReadme.md)
+- [GitHubRepositoryReference](docs/Model/GitHubRepositoryReference.md)
+- [GitHubRepositoryRelease](docs/Model/GitHubRepositoryRelease.md)
+- [GitHubRepositoryResponse](docs/Model/GitHubRepositoryResponse.md)
 - [GitHubSocialAccount](docs/Model/GitHubSocialAccount.md)
 - [GitHubStatus](docs/Model/GitHubStatus.md)
 - [GitHubTextLink](docs/Model/GitHubTextLink.md)

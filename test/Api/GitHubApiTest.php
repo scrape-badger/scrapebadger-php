@@ -82,4 +82,16 @@ class GitHubApiTest extends TestCase
         // TODO: implement
         self::markTestIncomplete('Not implemented');
     }
+
+    /**
+     * Test case for githubGetRepository
+     *
+     * Get repository.
+     *
+     */
+    public function testGithubGetRepository()
+    {
+        // TODO: implement
+        self::markTestIncomplete('Not implemented');
+    }
 }

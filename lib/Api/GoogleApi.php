@@ -5776,13 +5776,16 @@ class GoogleApi
      * @param  int $filter filter (optional)
      * @param  int $nfpr Disable auto-correction (optional, default to 0)
      * @param  string $output output (optional, default to 'json')
+     * @param  string $oq Original query sent to Google. Defaults to q; an empty string omits it. (optional)
+     * @param  string $sourceid Google source identifier. Defaults to chrome; an empty string omits it. (optional)
+     * @param  string $ie Google input encoding hint. Defaults to UTF-8; an empty string omits it. (optional)
      * @param  string $google_domain Alias for domain; Google requests use google.com with country targeting. (optional)
      * @param  float $lat Latitude; supply together with lon instead of location or uule. (optional)
      * @param  float $lon Longitude; supply together with lat. (optional)
      * @param  float $radius Location accuracy in meters; requires lat/lon or a named city with a known center. (optional)
      * @param  string $color_scheme Google color scheme. (optional)
      * @param  string $tbm Google search type. Use output&#x3D;html for verticals; dedicated APIs provide parsed vertical results. (optional)
-     * @param  string $udm Google result filter: 14 web, 18 forums. Other verticals require output&#x3D;html. (optional)
+     * @param  string $udm Google result filter: web or 14 for web, 18 for forums. Other verticals require output&#x3D;html. (optional)
      * @param  bool $no_cache Bypass result caches and request a fresh Google fetch. (optional, default to false)
      * @param  string $as_dt Site restriction mode: i includes, e excludes as_sitesearch. (optional)
      * @param  string $as_epq Exact phrase. (optional)
@@ -5810,9 +5813,9 @@ class GoogleApi
      * @throws \InvalidArgumentException
      * @return mixed|\ScrapeBadger\Model\HTTPValidationError
      */
-    public function googleGoogleLightWebSearch($q, $gl = 'us', $hl = 'en', $num = 10, $start = 0, $domain = 'google.com', $location = null, $uule = null, $lr = null, $tbs = null, $safe = 'off', $filter = null, $nfpr = 0, $output = 'json', $google_domain = null, $lat = null, $lon = null, $radius = null, $color_scheme = null, $tbm = null, $udm = null, $no_cache = false, $as_dt = null, $as_epq = null, $as_eq = null, $as_lq = null, $as_nlo = null, $as_nhi = null, $as_oq = null, $as_q = null, $as_qdr = null, $as_rq = null, $as_sitesearch = null, $device = null, $user_agent = null, $cr = null, $ludocid = null, $lsig = null, $kgmid = null, $si = null, $ibp = null, $uds = null, string $contentType = self::contentTypes['googleGoogleLightWebSearch'][0])
+    public function googleGoogleLightWebSearch($q, $gl = 'us', $hl = 'en', $num = 10, $start = 0, $domain = 'google.com', $location = null, $uule = null, $lr = null, $tbs = null, $safe = 'off', $filter = null, $nfpr = 0, $output = 'json', $oq = null, $sourceid = null, $ie = null, $google_domain = null, $lat = null, $lon = null, $radius = null, $color_scheme = null, $tbm = null, $udm = null, $no_cache = false, $as_dt = null, $as_epq = null, $as_eq = null, $as_lq = null, $as_nlo = null, $as_nhi = null, $as_oq = null, $as_q = null, $as_qdr = null, $as_rq = null, $as_sitesearch = null, $device = null, $user_agent = null, $cr = null, $ludocid = null, $lsig = null, $kgmid = null, $si = null, $ibp = null, $uds = null, string $contentType = self::contentTypes['googleGoogleLightWebSearch'][0])
     {
-        list($response) = $this->googleGoogleLightWebSearchWithHttpInfo($q, $gl, $hl, $num, $start, $domain, $location, $uule, $lr, $tbs, $safe, $filter, $nfpr, $output, $google_domain, $lat, $lon, $radius, $color_scheme, $tbm, $udm, $no_cache, $as_dt, $as_epq, $as_eq, $as_lq, $as_nlo, $as_nhi, $as_oq, $as_q, $as_qdr, $as_rq, $as_sitesearch, $device, $user_agent, $cr, $ludocid, $lsig, $kgmid, $si, $ibp, $uds, $contentType);
+        list($response) = $this->googleGoogleLightWebSearchWithHttpInfo($q, $gl, $hl, $num, $start, $domain, $location, $uule, $lr, $tbs, $safe, $filter, $nfpr, $output, $oq, $sourceid, $ie, $google_domain, $lat, $lon, $radius, $color_scheme, $tbm, $udm, $no_cache, $as_dt, $as_epq, $as_eq, $as_lq, $as_nlo, $as_nhi, $as_oq, $as_q, $as_qdr, $as_rq, $as_sitesearch, $device, $user_agent, $cr, $ludocid, $lsig, $kgmid, $si, $ibp, $uds, $contentType);
         return $response;
     }
 
@@ -5835,13 +5838,16 @@ class GoogleApi
      * @param  int $filter (optional)
      * @param  int $nfpr Disable auto-correction (optional, default to 0)
      * @param  string $output (optional, default to 'json')
+     * @param  string $oq Original query sent to Google. Defaults to q; an empty string omits it. (optional)
+     * @param  string $sourceid Google source identifier. Defaults to chrome; an empty string omits it. (optional)
+     * @param  string $ie Google input encoding hint. Defaults to UTF-8; an empty string omits it. (optional)
      * @param  string $google_domain Alias for domain; Google requests use google.com with country targeting. (optional)
      * @param  float $lat Latitude; supply together with lon instead of location or uule. (optional)
      * @param  float $lon Longitude; supply together with lat. (optional)
      * @param  float $radius Location accuracy in meters; requires lat/lon or a named city with a known center. (optional)
      * @param  string $color_scheme Google color scheme. (optional)
      * @param  string $tbm Google search type. Use output&#x3D;html for verticals; dedicated APIs provide parsed vertical results. (optional)
-     * @param  string $udm Google result filter: 14 web, 18 forums. Other verticals require output&#x3D;html. (optional)
+     * @param  string $udm Google result filter: web or 14 for web, 18 for forums. Other verticals require output&#x3D;html. (optional)
      * @param  bool $no_cache Bypass result caches and request a fresh Google fetch. (optional, default to false)
      * @param  string $as_dt Site restriction mode: i includes, e excludes as_sitesearch. (optional)
      * @param  string $as_epq Exact phrase. (optional)
@@ -5869,9 +5875,9 @@ class GoogleApi
      * @throws \InvalidArgumentException
      * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
-    public function googleGoogleLightWebSearchWithHttpInfo($q, $gl = 'us', $hl = 'en', $num = 10, $start = 0, $domain = 'google.com', $location = null, $uule = null, $lr = null, $tbs = null, $safe = 'off', $filter = null, $nfpr = 0, $output = 'json', $google_domain = null, $lat = null, $lon = null, $radius = null, $color_scheme = null, $tbm = null, $udm = null, $no_cache = false, $as_dt = null, $as_epq = null, $as_eq = null, $as_lq = null, $as_nlo = null, $as_nhi = null, $as_oq = null, $as_q = null, $as_qdr = null, $as_rq = null, $as_sitesearch = null, $device = null, $user_agent = null, $cr = null, $ludocid = null, $lsig = null, $kgmid = null, $si = null, $ibp = null, $uds = null, string $contentType = self::contentTypes['googleGoogleLightWebSearch'][0])
+    public function googleGoogleLightWebSearchWithHttpInfo($q, $gl = 'us', $hl = 'en', $num = 10, $start = 0, $domain = 'google.com', $location = null, $uule = null, $lr = null, $tbs = null, $safe = 'off', $filter = null, $nfpr = 0, $output = 'json', $oq = null, $sourceid = null, $ie = null, $google_domain = null, $lat = null, $lon = null, $radius = null, $color_scheme = null, $tbm = null, $udm = null, $no_cache = false, $as_dt = null, $as_epq = null, $as_eq = null, $as_lq = null, $as_nlo = null, $as_nhi = null, $as_oq = null, $as_q = null, $as_qdr = null, $as_rq = null, $as_sitesearch = null, $device = null, $user_agent = null, $cr = null, $ludocid = null, $lsig = null, $kgmid = null, $si = null, $ibp = null, $uds = null, string $contentType = self::contentTypes['googleGoogleLightWebSearch'][0])
     {
-        $request = $this->googleGoogleLightWebSearchRequest($q, $gl, $hl, $num, $start, $domain, $location, $uule, $lr, $tbs, $safe, $filter, $nfpr, $output, $google_domain, $lat, $lon, $radius, $color_scheme, $tbm, $udm, $no_cache, $as_dt, $as_epq, $as_eq, $as_lq, $as_nlo, $as_nhi, $as_oq, $as_q, $as_qdr, $as_rq, $as_sitesearch, $device, $user_agent, $cr, $ludocid, $lsig, $kgmid, $si, $ibp, $uds, $contentType);
+        $request = $this->googleGoogleLightWebSearchRequest($q, $gl, $hl, $num, $start, $domain, $location, $uule, $lr, $tbs, $safe, $filter, $nfpr, $output, $oq, $sourceid, $ie, $google_domain, $lat, $lon, $radius, $color_scheme, $tbm, $udm, $no_cache, $as_dt, $as_epq, $as_eq, $as_lq, $as_nlo, $as_nhi, $as_oq, $as_q, $as_qdr, $as_rq, $as_sitesearch, $device, $user_agent, $cr, $ludocid, $lsig, $kgmid, $si, $ibp, $uds, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -6036,13 +6042,16 @@ class GoogleApi
      * @param  int $filter (optional)
      * @param  int $nfpr Disable auto-correction (optional, default to 0)
      * @param  string $output (optional, default to 'json')
+     * @param  string $oq Original query sent to Google. Defaults to q; an empty string omits it. (optional)
+     * @param  string $sourceid Google source identifier. Defaults to chrome; an empty string omits it. (optional)
+     * @param  string $ie Google input encoding hint. Defaults to UTF-8; an empty string omits it. (optional)
      * @param  string $google_domain Alias for domain; Google requests use google.com with country targeting. (optional)
      * @param  float $lat Latitude; supply together with lon instead of location or uule. (optional)
      * @param  float $lon Longitude; supply together with lat. (optional)
      * @param  float $radius Location accuracy in meters; requires lat/lon or a named city with a known center. (optional)
      * @param  string $color_scheme Google color scheme. (optional)
      * @param  string $tbm Google search type. Use output&#x3D;html for verticals; dedicated APIs provide parsed vertical results. (optional)
-     * @param  string $udm Google result filter: 14 web, 18 forums. Other verticals require output&#x3D;html. (optional)
+     * @param  string $udm Google result filter: web or 14 for web, 18 for forums. Other verticals require output&#x3D;html. (optional)
      * @param  bool $no_cache Bypass result caches and request a fresh Google fetch. (optional, default to false)
      * @param  string $as_dt Site restriction mode: i includes, e excludes as_sitesearch. (optional)
      * @param  string $as_epq Exact phrase. (optional)
@@ -6069,9 +6078,9 @@ class GoogleApi
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function googleGoogleLightWebSearchAsync($q, $gl = 'us', $hl = 'en', $num = 10, $start = 0, $domain = 'google.com', $location = null, $uule = null, $lr = null, $tbs = null, $safe = 'off', $filter = null, $nfpr = 0, $output = 'json', $google_domain = null, $lat = null, $lon = null, $radius = null, $color_scheme = null, $tbm = null, $udm = null, $no_cache = false, $as_dt = null, $as_epq = null, $as_eq = null, $as_lq = null, $as_nlo = null, $as_nhi = null, $as_oq = null, $as_q = null, $as_qdr = null, $as_rq = null, $as_sitesearch = null, $device = null, $user_agent = null, $cr = null, $ludocid = null, $lsig = null, $kgmid = null, $si = null, $ibp = null, $uds = null, string $contentType = self::contentTypes['googleGoogleLightWebSearch'][0])
+    public function googleGoogleLightWebSearchAsync($q, $gl = 'us', $hl = 'en', $num = 10, $start = 0, $domain = 'google.com', $location = null, $uule = null, $lr = null, $tbs = null, $safe = 'off', $filter = null, $nfpr = 0, $output = 'json', $oq = null, $sourceid = null, $ie = null, $google_domain = null, $lat = null, $lon = null, $radius = null, $color_scheme = null, $tbm = null, $udm = null, $no_cache = false, $as_dt = null, $as_epq = null, $as_eq = null, $as_lq = null, $as_nlo = null, $as_nhi = null, $as_oq = null, $as_q = null, $as_qdr = null, $as_rq = null, $as_sitesearch = null, $device = null, $user_agent = null, $cr = null, $ludocid = null, $lsig = null, $kgmid = null, $si = null, $ibp = null, $uds = null, string $contentType = self::contentTypes['googleGoogleLightWebSearch'][0])
     {
-        return $this->googleGoogleLightWebSearchAsyncWithHttpInfo($q, $gl, $hl, $num, $start, $domain, $location, $uule, $lr, $tbs, $safe, $filter, $nfpr, $output, $google_domain, $lat, $lon, $radius, $color_scheme, $tbm, $udm, $no_cache, $as_dt, $as_epq, $as_eq, $as_lq, $as_nlo, $as_nhi, $as_oq, $as_q, $as_qdr, $as_rq, $as_sitesearch, $device, $user_agent, $cr, $ludocid, $lsig, $kgmid, $si, $ibp, $uds, $contentType)
+        return $this->googleGoogleLightWebSearchAsyncWithHttpInfo($q, $gl, $hl, $num, $start, $domain, $location, $uule, $lr, $tbs, $safe, $filter, $nfpr, $output, $oq, $sourceid, $ie, $google_domain, $lat, $lon, $radius, $color_scheme, $tbm, $udm, $no_cache, $as_dt, $as_epq, $as_eq, $as_lq, $as_nlo, $as_nhi, $as_oq, $as_q, $as_qdr, $as_rq, $as_sitesearch, $device, $user_agent, $cr, $ludocid, $lsig, $kgmid, $si, $ibp, $uds, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -6098,13 +6107,16 @@ class GoogleApi
      * @param  int $filter (optional)
      * @param  int $nfpr Disable auto-correction (optional, default to 0)
      * @param  string $output (optional, default to 'json')
+     * @param  string $oq Original query sent to Google. Defaults to q; an empty string omits it. (optional)
+     * @param  string $sourceid Google source identifier. Defaults to chrome; an empty string omits it. (optional)
+     * @param  string $ie Google input encoding hint. Defaults to UTF-8; an empty string omits it. (optional)
      * @param  string $google_domain Alias for domain; Google requests use google.com with country targeting. (optional)
      * @param  float $lat Latitude; supply together with lon instead of location or uule. (optional)
      * @param  float $lon Longitude; supply together with lat. (optional)
      * @param  float $radius Location accuracy in meters; requires lat/lon or a named city with a known center. (optional)
      * @param  string $color_scheme Google color scheme. (optional)
      * @param  string $tbm Google search type. Use output&#x3D;html for verticals; dedicated APIs provide parsed vertical results. (optional)
-     * @param  string $udm Google result filter: 14 web, 18 forums. Other verticals require output&#x3D;html. (optional)
+     * @param  string $udm Google result filter: web or 14 for web, 18 for forums. Other verticals require output&#x3D;html. (optional)
      * @param  bool $no_cache Bypass result caches and request a fresh Google fetch. (optional, default to false)
      * @param  string $as_dt Site restriction mode: i includes, e excludes as_sitesearch. (optional)
      * @param  string $as_epq Exact phrase. (optional)
@@ -6131,10 +6143,10 @@ class GoogleApi
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function googleGoogleLightWebSearchAsyncWithHttpInfo($q, $gl = 'us', $hl = 'en', $num = 10, $start = 0, $domain = 'google.com', $location = null, $uule = null, $lr = null, $tbs = null, $safe = 'off', $filter = null, $nfpr = 0, $output = 'json', $google_domain = null, $lat = null, $lon = null, $radius = null, $color_scheme = null, $tbm = null, $udm = null, $no_cache = false, $as_dt = null, $as_epq = null, $as_eq = null, $as_lq = null, $as_nlo = null, $as_nhi = null, $as_oq = null, $as_q = null, $as_qdr = null, $as_rq = null, $as_sitesearch = null, $device = null, $user_agent = null, $cr = null, $ludocid = null, $lsig = null, $kgmid = null, $si = null, $ibp = null, $uds = null, string $contentType = self::contentTypes['googleGoogleLightWebSearch'][0])
+    public function googleGoogleLightWebSearchAsyncWithHttpInfo($q, $gl = 'us', $hl = 'en', $num = 10, $start = 0, $domain = 'google.com', $location = null, $uule = null, $lr = null, $tbs = null, $safe = 'off', $filter = null, $nfpr = 0, $output = 'json', $oq = null, $sourceid = null, $ie = null, $google_domain = null, $lat = null, $lon = null, $radius = null, $color_scheme = null, $tbm = null, $udm = null, $no_cache = false, $as_dt = null, $as_epq = null, $as_eq = null, $as_lq = null, $as_nlo = null, $as_nhi = null, $as_oq = null, $as_q = null, $as_qdr = null, $as_rq = null, $as_sitesearch = null, $device = null, $user_agent = null, $cr = null, $ludocid = null, $lsig = null, $kgmid = null, $si = null, $ibp = null, $uds = null, string $contentType = self::contentTypes['googleGoogleLightWebSearch'][0])
     {
         $returnType = 'mixed';
-        $request = $this->googleGoogleLightWebSearchRequest($q, $gl, $hl, $num, $start, $domain, $location, $uule, $lr, $tbs, $safe, $filter, $nfpr, $output, $google_domain, $lat, $lon, $radius, $color_scheme, $tbm, $udm, $no_cache, $as_dt, $as_epq, $as_eq, $as_lq, $as_nlo, $as_nhi, $as_oq, $as_q, $as_qdr, $as_rq, $as_sitesearch, $device, $user_agent, $cr, $ludocid, $lsig, $kgmid, $si, $ibp, $uds, $contentType);
+        $request = $this->googleGoogleLightWebSearchRequest($q, $gl, $hl, $num, $start, $domain, $location, $uule, $lr, $tbs, $safe, $filter, $nfpr, $output, $oq, $sourceid, $ie, $google_domain, $lat, $lon, $radius, $color_scheme, $tbm, $udm, $no_cache, $as_dt, $as_epq, $as_eq, $as_lq, $as_nlo, $as_nhi, $as_oq, $as_q, $as_qdr, $as_rq, $as_sitesearch, $device, $user_agent, $cr, $ludocid, $lsig, $kgmid, $si, $ibp, $uds, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -6189,13 +6201,16 @@ class GoogleApi
      * @param  int $filter (optional)
      * @param  int $nfpr Disable auto-correction (optional, default to 0)
      * @param  string $output (optional, default to 'json')
+     * @param  string $oq Original query sent to Google. Defaults to q; an empty string omits it. (optional)
+     * @param  string $sourceid Google source identifier. Defaults to chrome; an empty string omits it. (optional)
+     * @param  string $ie Google input encoding hint. Defaults to UTF-8; an empty string omits it. (optional)
      * @param  string $google_domain Alias for domain; Google requests use google.com with country targeting. (optional)
      * @param  float $lat Latitude; supply together with lon instead of location or uule. (optional)
      * @param  float $lon Longitude; supply together with lat. (optional)
      * @param  float $radius Location accuracy in meters; requires lat/lon or a named city with a known center. (optional)
      * @param  string $color_scheme Google color scheme. (optional)
      * @param  string $tbm Google search type. Use output&#x3D;html for verticals; dedicated APIs provide parsed vertical results. (optional)
-     * @param  string $udm Google result filter: 14 web, 18 forums. Other verticals require output&#x3D;html. (optional)
+     * @param  string $udm Google result filter: web or 14 for web, 18 for forums. Other verticals require output&#x3D;html. (optional)
      * @param  bool $no_cache Bypass result caches and request a fresh Google fetch. (optional, default to false)
      * @param  string $as_dt Site restriction mode: i includes, e excludes as_sitesearch. (optional)
      * @param  string $as_epq Exact phrase. (optional)
@@ -6222,7 +6237,7 @@ class GoogleApi
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function googleGoogleLightWebSearchRequest($q, $gl = 'us', $hl = 'en', $num = 10, $start = 0, $domain = 'google.com', $location = null, $uule = null, $lr = null, $tbs = null, $safe = 'off', $filter = null, $nfpr = 0, $output = 'json', $google_domain = null, $lat = null, $lon = null, $radius = null, $color_scheme = null, $tbm = null, $udm = null, $no_cache = false, $as_dt = null, $as_epq = null, $as_eq = null, $as_lq = null, $as_nlo = null, $as_nhi = null, $as_oq = null, $as_q = null, $as_qdr = null, $as_rq = null, $as_sitesearch = null, $device = null, $user_agent = null, $cr = null, $ludocid = null, $lsig = null, $kgmid = null, $si = null, $ibp = null, $uds = null, string $contentType = self::contentTypes['googleGoogleLightWebSearch'][0])
+    public function googleGoogleLightWebSearchRequest($q, $gl = 'us', $hl = 'en', $num = 10, $start = 0, $domain = 'google.com', $location = null, $uule = null, $lr = null, $tbs = null, $safe = 'off', $filter = null, $nfpr = 0, $output = 'json', $oq = null, $sourceid = null, $ie = null, $google_domain = null, $lat = null, $lon = null, $radius = null, $color_scheme = null, $tbm = null, $udm = null, $no_cache = false, $as_dt = null, $as_epq = null, $as_eq = null, $as_lq = null, $as_nlo = null, $as_nhi = null, $as_oq = null, $as_q = null, $as_qdr = null, $as_rq = null, $as_sitesearch = null, $device = null, $user_agent = null, $cr = null, $ludocid = null, $lsig = null, $kgmid = null, $si = null, $ibp = null, $uds = null, string $contentType = self::contentTypes['googleGoogleLightWebSearch'][0])
     {
 
         // verify the required parameter 'q' is set
@@ -6261,6 +6276,9 @@ class GoogleApi
 
 
 
+
+
+
         if ($lat !== null && $lat > 90) {
             throw new \InvalidArgumentException('invalid value for "$lat" when calling GoogleApi.googleGoogleLightWebSearch, must be smaller than or equal to 90.');
         }
@@ -6284,8 +6302,8 @@ class GoogleApi
         
 
 
-        if ($udm !== null && !preg_match("/^[0-9]{1,3}$/", $udm)) {
-            throw new \InvalidArgumentException("invalid value for \"udm\" when calling GoogleApi.googleGoogleLightWebSearch, must conform to the pattern /^[0-9]{1,3}$/.");
+        if ($udm !== null && !preg_match("/^(web|[0-9]{1,3})$/", $udm)) {
+            throw new \InvalidArgumentException("invalid value for \"udm\" when calling GoogleApi.googleGoogleLightWebSearch, must conform to the pattern /^(web|[0-9]{1,3})$/.");
         }
         
 
@@ -6441,6 +6459,33 @@ class GoogleApi
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
             $output,
             'output', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $oq,
+            'oq', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $sourceid,
+            'sourceid', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $ie,
+            'ie', // param base name
             'string', // openApiType
             'form', // style
             true, // explode
@@ -8189,13 +8234,16 @@ class GoogleApi
      * @param  bool $ai_overview Chase deferred AI Overview page_token with a follow-up fetch and merge the result. Adds ~1s when the SERP defers the overview; the request price is unchanged. (optional, default to false)
      * @param  string $mode mode (optional, default to 'full')
      * @param  string $expand_related_questions Open all People Also Ask answers (true) or the first N (0-99). (optional)
+     * @param  string $oq Original query sent to Google. Defaults to q; an empty string omits it. (optional)
+     * @param  string $sourceid Google source identifier. Defaults to chrome; an empty string omits it. (optional)
+     * @param  string $ie Google input encoding hint. Defaults to UTF-8; an empty string omits it. (optional)
      * @param  string $google_domain Alias for domain; Google requests use google.com with country targeting. (optional)
      * @param  float $lat Latitude; supply together with lon instead of location or uule. (optional)
      * @param  float $lon Longitude; supply together with lat. (optional)
      * @param  float $radius Location accuracy in meters; requires lat/lon or a named city with a known center. (optional)
      * @param  string $color_scheme Google color scheme. (optional)
      * @param  string $tbm Google search type. Use output&#x3D;html for verticals; dedicated APIs provide parsed vertical results. (optional)
-     * @param  string $udm Google result filter: 14 web, 18 forums. Other verticals require output&#x3D;html. (optional)
+     * @param  string $udm Google result filter: web or 14 for web, 18 for forums. Other verticals require output&#x3D;html. (optional)
      * @param  bool $no_cache Bypass result caches and request a fresh Google fetch. (optional, default to false)
      * @param  string $as_dt Site restriction mode: i includes, e excludes as_sitesearch. (optional)
      * @param  string $as_epq Exact phrase. (optional)
@@ -8214,9 +8262,9 @@ class GoogleApi
      * @throws \InvalidArgumentException
      * @return mixed|\ScrapeBadger\Model\HTTPValidationError
      */
-    public function googleGoogleWebSearch($q, $gl = 'us', $hl = 'en', $num = 10, $start = 0, $domain = 'google.com', $device = 'desktop', $user_agent = null, $output = 'json', $location = null, $lr = null, $tbs = null, $safe = 'off', $uule = null, $filter = null, $nfpr = 0, $cr = null, $ludocid = null, $lsig = null, $kgmid = null, $si = null, $ibp = null, $uds = null, $ai_overview = false, $mode = 'full', $expand_related_questions = null, $google_domain = null, $lat = null, $lon = null, $radius = null, $color_scheme = null, $tbm = null, $udm = null, $no_cache = false, $as_dt = null, $as_epq = null, $as_eq = null, $as_lq = null, $as_nlo = null, $as_nhi = null, $as_oq = null, $as_q = null, $as_qdr = null, $as_rq = null, $as_sitesearch = null, string $contentType = self::contentTypes['googleGoogleWebSearch'][0])
+    public function googleGoogleWebSearch($q, $gl = 'us', $hl = 'en', $num = 10, $start = 0, $domain = 'google.com', $device = 'desktop', $user_agent = null, $output = 'json', $location = null, $lr = null, $tbs = null, $safe = 'off', $uule = null, $filter = null, $nfpr = 0, $cr = null, $ludocid = null, $lsig = null, $kgmid = null, $si = null, $ibp = null, $uds = null, $ai_overview = false, $mode = 'full', $expand_related_questions = null, $oq = null, $sourceid = null, $ie = null, $google_domain = null, $lat = null, $lon = null, $radius = null, $color_scheme = null, $tbm = null, $udm = null, $no_cache = false, $as_dt = null, $as_epq = null, $as_eq = null, $as_lq = null, $as_nlo = null, $as_nhi = null, $as_oq = null, $as_q = null, $as_qdr = null, $as_rq = null, $as_sitesearch = null, string $contentType = self::contentTypes['googleGoogleWebSearch'][0])
     {
-        list($response) = $this->googleGoogleWebSearchWithHttpInfo($q, $gl, $hl, $num, $start, $domain, $device, $user_agent, $output, $location, $lr, $tbs, $safe, $uule, $filter, $nfpr, $cr, $ludocid, $lsig, $kgmid, $si, $ibp, $uds, $ai_overview, $mode, $expand_related_questions, $google_domain, $lat, $lon, $radius, $color_scheme, $tbm, $udm, $no_cache, $as_dt, $as_epq, $as_eq, $as_lq, $as_nlo, $as_nhi, $as_oq, $as_q, $as_qdr, $as_rq, $as_sitesearch, $contentType);
+        list($response) = $this->googleGoogleWebSearchWithHttpInfo($q, $gl, $hl, $num, $start, $domain, $device, $user_agent, $output, $location, $lr, $tbs, $safe, $uule, $filter, $nfpr, $cr, $ludocid, $lsig, $kgmid, $si, $ibp, $uds, $ai_overview, $mode, $expand_related_questions, $oq, $sourceid, $ie, $google_domain, $lat, $lon, $radius, $color_scheme, $tbm, $udm, $no_cache, $as_dt, $as_epq, $as_eq, $as_lq, $as_nlo, $as_nhi, $as_oq, $as_q, $as_qdr, $as_rq, $as_sitesearch, $contentType);
         return $response;
     }
 
@@ -8251,13 +8299,16 @@ class GoogleApi
      * @param  bool $ai_overview Chase deferred AI Overview page_token with a follow-up fetch and merge the result. Adds ~1s when the SERP defers the overview; the request price is unchanged. (optional, default to false)
      * @param  string $mode (optional, default to 'full')
      * @param  string $expand_related_questions Open all People Also Ask answers (true) or the first N (0-99). (optional)
+     * @param  string $oq Original query sent to Google. Defaults to q; an empty string omits it. (optional)
+     * @param  string $sourceid Google source identifier. Defaults to chrome; an empty string omits it. (optional)
+     * @param  string $ie Google input encoding hint. Defaults to UTF-8; an empty string omits it. (optional)
      * @param  string $google_domain Alias for domain; Google requests use google.com with country targeting. (optional)
      * @param  float $lat Latitude; supply together with lon instead of location or uule. (optional)
      * @param  float $lon Longitude; supply together with lat. (optional)
      * @param  float $radius Location accuracy in meters; requires lat/lon or a named city with a known center. (optional)
      * @param  string $color_scheme Google color scheme. (optional)
      * @param  string $tbm Google search type. Use output&#x3D;html for verticals; dedicated APIs provide parsed vertical results. (optional)
-     * @param  string $udm Google result filter: 14 web, 18 forums. Other verticals require output&#x3D;html. (optional)
+     * @param  string $udm Google result filter: web or 14 for web, 18 for forums. Other verticals require output&#x3D;html. (optional)
      * @param  bool $no_cache Bypass result caches and request a fresh Google fetch. (optional, default to false)
      * @param  string $as_dt Site restriction mode: i includes, e excludes as_sitesearch. (optional)
      * @param  string $as_epq Exact phrase. (optional)
@@ -8276,9 +8327,9 @@ class GoogleApi
      * @throws \InvalidArgumentException
      * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
-    public function googleGoogleWebSearchWithHttpInfo($q, $gl = 'us', $hl = 'en', $num = 10, $start = 0, $domain = 'google.com', $device = 'desktop', $user_agent = null, $output = 'json', $location = null, $lr = null, $tbs = null, $safe = 'off', $uule = null, $filter = null, $nfpr = 0, $cr = null, $ludocid = null, $lsig = null, $kgmid = null, $si = null, $ibp = null, $uds = null, $ai_overview = false, $mode = 'full', $expand_related_questions = null, $google_domain = null, $lat = null, $lon = null, $radius = null, $color_scheme = null, $tbm = null, $udm = null, $no_cache = false, $as_dt = null, $as_epq = null, $as_eq = null, $as_lq = null, $as_nlo = null, $as_nhi = null, $as_oq = null, $as_q = null, $as_qdr = null, $as_rq = null, $as_sitesearch = null, string $contentType = self::contentTypes['googleGoogleWebSearch'][0])
+    public function googleGoogleWebSearchWithHttpInfo($q, $gl = 'us', $hl = 'en', $num = 10, $start = 0, $domain = 'google.com', $device = 'desktop', $user_agent = null, $output = 'json', $location = null, $lr = null, $tbs = null, $safe = 'off', $uule = null, $filter = null, $nfpr = 0, $cr = null, $ludocid = null, $lsig = null, $kgmid = null, $si = null, $ibp = null, $uds = null, $ai_overview = false, $mode = 'full', $expand_related_questions = null, $oq = null, $sourceid = null, $ie = null, $google_domain = null, $lat = null, $lon = null, $radius = null, $color_scheme = null, $tbm = null, $udm = null, $no_cache = false, $as_dt = null, $as_epq = null, $as_eq = null, $as_lq = null, $as_nlo = null, $as_nhi = null, $as_oq = null, $as_q = null, $as_qdr = null, $as_rq = null, $as_sitesearch = null, string $contentType = self::contentTypes['googleGoogleWebSearch'][0])
     {
-        $request = $this->googleGoogleWebSearchRequest($q, $gl, $hl, $num, $start, $domain, $device, $user_agent, $output, $location, $lr, $tbs, $safe, $uule, $filter, $nfpr, $cr, $ludocid, $lsig, $kgmid, $si, $ibp, $uds, $ai_overview, $mode, $expand_related_questions, $google_domain, $lat, $lon, $radius, $color_scheme, $tbm, $udm, $no_cache, $as_dt, $as_epq, $as_eq, $as_lq, $as_nlo, $as_nhi, $as_oq, $as_q, $as_qdr, $as_rq, $as_sitesearch, $contentType);
+        $request = $this->googleGoogleWebSearchRequest($q, $gl, $hl, $num, $start, $domain, $device, $user_agent, $output, $location, $lr, $tbs, $safe, $uule, $filter, $nfpr, $cr, $ludocid, $lsig, $kgmid, $si, $ibp, $uds, $ai_overview, $mode, $expand_related_questions, $oq, $sourceid, $ie, $google_domain, $lat, $lon, $radius, $color_scheme, $tbm, $udm, $no_cache, $as_dt, $as_epq, $as_eq, $as_lq, $as_nlo, $as_nhi, $as_oq, $as_q, $as_qdr, $as_rq, $as_sitesearch, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -8455,13 +8506,16 @@ class GoogleApi
      * @param  bool $ai_overview Chase deferred AI Overview page_token with a follow-up fetch and merge the result. Adds ~1s when the SERP defers the overview; the request price is unchanged. (optional, default to false)
      * @param  string $mode (optional, default to 'full')
      * @param  string $expand_related_questions Open all People Also Ask answers (true) or the first N (0-99). (optional)
+     * @param  string $oq Original query sent to Google. Defaults to q; an empty string omits it. (optional)
+     * @param  string $sourceid Google source identifier. Defaults to chrome; an empty string omits it. (optional)
+     * @param  string $ie Google input encoding hint. Defaults to UTF-8; an empty string omits it. (optional)
      * @param  string $google_domain Alias for domain; Google requests use google.com with country targeting. (optional)
      * @param  float $lat Latitude; supply together with lon instead of location or uule. (optional)
      * @param  float $lon Longitude; supply together with lat. (optional)
      * @param  float $radius Location accuracy in meters; requires lat/lon or a named city with a known center. (optional)
      * @param  string $color_scheme Google color scheme. (optional)
      * @param  string $tbm Google search type. Use output&#x3D;html for verticals; dedicated APIs provide parsed vertical results. (optional)
-     * @param  string $udm Google result filter: 14 web, 18 forums. Other verticals require output&#x3D;html. (optional)
+     * @param  string $udm Google result filter: web or 14 for web, 18 for forums. Other verticals require output&#x3D;html. (optional)
      * @param  bool $no_cache Bypass result caches and request a fresh Google fetch. (optional, default to false)
      * @param  string $as_dt Site restriction mode: i includes, e excludes as_sitesearch. (optional)
      * @param  string $as_epq Exact phrase. (optional)
@@ -8479,9 +8533,9 @@ class GoogleApi
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function googleGoogleWebSearchAsync($q, $gl = 'us', $hl = 'en', $num = 10, $start = 0, $domain = 'google.com', $device = 'desktop', $user_agent = null, $output = 'json', $location = null, $lr = null, $tbs = null, $safe = 'off', $uule = null, $filter = null, $nfpr = 0, $cr = null, $ludocid = null, $lsig = null, $kgmid = null, $si = null, $ibp = null, $uds = null, $ai_overview = false, $mode = 'full', $expand_related_questions = null, $google_domain = null, $lat = null, $lon = null, $radius = null, $color_scheme = null, $tbm = null, $udm = null, $no_cache = false, $as_dt = null, $as_epq = null, $as_eq = null, $as_lq = null, $as_nlo = null, $as_nhi = null, $as_oq = null, $as_q = null, $as_qdr = null, $as_rq = null, $as_sitesearch = null, string $contentType = self::contentTypes['googleGoogleWebSearch'][0])
+    public function googleGoogleWebSearchAsync($q, $gl = 'us', $hl = 'en', $num = 10, $start = 0, $domain = 'google.com', $device = 'desktop', $user_agent = null, $output = 'json', $location = null, $lr = null, $tbs = null, $safe = 'off', $uule = null, $filter = null, $nfpr = 0, $cr = null, $ludocid = null, $lsig = null, $kgmid = null, $si = null, $ibp = null, $uds = null, $ai_overview = false, $mode = 'full', $expand_related_questions = null, $oq = null, $sourceid = null, $ie = null, $google_domain = null, $lat = null, $lon = null, $radius = null, $color_scheme = null, $tbm = null, $udm = null, $no_cache = false, $as_dt = null, $as_epq = null, $as_eq = null, $as_lq = null, $as_nlo = null, $as_nhi = null, $as_oq = null, $as_q = null, $as_qdr = null, $as_rq = null, $as_sitesearch = null, string $contentType = self::contentTypes['googleGoogleWebSearch'][0])
     {
-        return $this->googleGoogleWebSearchAsyncWithHttpInfo($q, $gl, $hl, $num, $start, $domain, $device, $user_agent, $output, $location, $lr, $tbs, $safe, $uule, $filter, $nfpr, $cr, $ludocid, $lsig, $kgmid, $si, $ibp, $uds, $ai_overview, $mode, $expand_related_questions, $google_domain, $lat, $lon, $radius, $color_scheme, $tbm, $udm, $no_cache, $as_dt, $as_epq, $as_eq, $as_lq, $as_nlo, $as_nhi, $as_oq, $as_q, $as_qdr, $as_rq, $as_sitesearch, $contentType)
+        return $this->googleGoogleWebSearchAsyncWithHttpInfo($q, $gl, $hl, $num, $start, $domain, $device, $user_agent, $output, $location, $lr, $tbs, $safe, $uule, $filter, $nfpr, $cr, $ludocid, $lsig, $kgmid, $si, $ibp, $uds, $ai_overview, $mode, $expand_related_questions, $oq, $sourceid, $ie, $google_domain, $lat, $lon, $radius, $color_scheme, $tbm, $udm, $no_cache, $as_dt, $as_epq, $as_eq, $as_lq, $as_nlo, $as_nhi, $as_oq, $as_q, $as_qdr, $as_rq, $as_sitesearch, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -8520,13 +8574,16 @@ class GoogleApi
      * @param  bool $ai_overview Chase deferred AI Overview page_token with a follow-up fetch and merge the result. Adds ~1s when the SERP defers the overview; the request price is unchanged. (optional, default to false)
      * @param  string $mode (optional, default to 'full')
      * @param  string $expand_related_questions Open all People Also Ask answers (true) or the first N (0-99). (optional)
+     * @param  string $oq Original query sent to Google. Defaults to q; an empty string omits it. (optional)
+     * @param  string $sourceid Google source identifier. Defaults to chrome; an empty string omits it. (optional)
+     * @param  string $ie Google input encoding hint. Defaults to UTF-8; an empty string omits it. (optional)
      * @param  string $google_domain Alias for domain; Google requests use google.com with country targeting. (optional)
      * @param  float $lat Latitude; supply together with lon instead of location or uule. (optional)
      * @param  float $lon Longitude; supply together with lat. (optional)
      * @param  float $radius Location accuracy in meters; requires lat/lon or a named city with a known center. (optional)
      * @param  string $color_scheme Google color scheme. (optional)
      * @param  string $tbm Google search type. Use output&#x3D;html for verticals; dedicated APIs provide parsed vertical results. (optional)
-     * @param  string $udm Google result filter: 14 web, 18 forums. Other verticals require output&#x3D;html. (optional)
+     * @param  string $udm Google result filter: web or 14 for web, 18 for forums. Other verticals require output&#x3D;html. (optional)
      * @param  bool $no_cache Bypass result caches and request a fresh Google fetch. (optional, default to false)
      * @param  string $as_dt Site restriction mode: i includes, e excludes as_sitesearch. (optional)
      * @param  string $as_epq Exact phrase. (optional)
@@ -8544,10 +8601,10 @@ class GoogleApi
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function googleGoogleWebSearchAsyncWithHttpInfo($q, $gl = 'us', $hl = 'en', $num = 10, $start = 0, $domain = 'google.com', $device = 'desktop', $user_agent = null, $output = 'json', $location = null, $lr = null, $tbs = null, $safe = 'off', $uule = null, $filter = null, $nfpr = 0, $cr = null, $ludocid = null, $lsig = null, $kgmid = null, $si = null, $ibp = null, $uds = null, $ai_overview = false, $mode = 'full', $expand_related_questions = null, $google_domain = null, $lat = null, $lon = null, $radius = null, $color_scheme = null, $tbm = null, $udm = null, $no_cache = false, $as_dt = null, $as_epq = null, $as_eq = null, $as_lq = null, $as_nlo = null, $as_nhi = null, $as_oq = null, $as_q = null, $as_qdr = null, $as_rq = null, $as_sitesearch = null, string $contentType = self::contentTypes['googleGoogleWebSearch'][0])
+    public function googleGoogleWebSearchAsyncWithHttpInfo($q, $gl = 'us', $hl = 'en', $num = 10, $start = 0, $domain = 'google.com', $device = 'desktop', $user_agent = null, $output = 'json', $location = null, $lr = null, $tbs = null, $safe = 'off', $uule = null, $filter = null, $nfpr = 0, $cr = null, $ludocid = null, $lsig = null, $kgmid = null, $si = null, $ibp = null, $uds = null, $ai_overview = false, $mode = 'full', $expand_related_questions = null, $oq = null, $sourceid = null, $ie = null, $google_domain = null, $lat = null, $lon = null, $radius = null, $color_scheme = null, $tbm = null, $udm = null, $no_cache = false, $as_dt = null, $as_epq = null, $as_eq = null, $as_lq = null, $as_nlo = null, $as_nhi = null, $as_oq = null, $as_q = null, $as_qdr = null, $as_rq = null, $as_sitesearch = null, string $contentType = self::contentTypes['googleGoogleWebSearch'][0])
     {
         $returnType = 'mixed';
-        $request = $this->googleGoogleWebSearchRequest($q, $gl, $hl, $num, $start, $domain, $device, $user_agent, $output, $location, $lr, $tbs, $safe, $uule, $filter, $nfpr, $cr, $ludocid, $lsig, $kgmid, $si, $ibp, $uds, $ai_overview, $mode, $expand_related_questions, $google_domain, $lat, $lon, $radius, $color_scheme, $tbm, $udm, $no_cache, $as_dt, $as_epq, $as_eq, $as_lq, $as_nlo, $as_nhi, $as_oq, $as_q, $as_qdr, $as_rq, $as_sitesearch, $contentType);
+        $request = $this->googleGoogleWebSearchRequest($q, $gl, $hl, $num, $start, $domain, $device, $user_agent, $output, $location, $lr, $tbs, $safe, $uule, $filter, $nfpr, $cr, $ludocid, $lsig, $kgmid, $si, $ibp, $uds, $ai_overview, $mode, $expand_related_questions, $oq, $sourceid, $ie, $google_domain, $lat, $lon, $radius, $color_scheme, $tbm, $udm, $no_cache, $as_dt, $as_epq, $as_eq, $as_lq, $as_nlo, $as_nhi, $as_oq, $as_q, $as_qdr, $as_rq, $as_sitesearch, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -8614,13 +8671,16 @@ class GoogleApi
      * @param  bool $ai_overview Chase deferred AI Overview page_token with a follow-up fetch and merge the result. Adds ~1s when the SERP defers the overview; the request price is unchanged. (optional, default to false)
      * @param  string $mode (optional, default to 'full')
      * @param  string $expand_related_questions Open all People Also Ask answers (true) or the first N (0-99). (optional)
+     * @param  string $oq Original query sent to Google. Defaults to q; an empty string omits it. (optional)
+     * @param  string $sourceid Google source identifier. Defaults to chrome; an empty string omits it. (optional)
+     * @param  string $ie Google input encoding hint. Defaults to UTF-8; an empty string omits it. (optional)
      * @param  string $google_domain Alias for domain; Google requests use google.com with country targeting. (optional)
      * @param  float $lat Latitude; supply together with lon instead of location or uule. (optional)
      * @param  float $lon Longitude; supply together with lat. (optional)
      * @param  float $radius Location accuracy in meters; requires lat/lon or a named city with a known center. (optional)
      * @param  string $color_scheme Google color scheme. (optional)
      * @param  string $tbm Google search type. Use output&#x3D;html for verticals; dedicated APIs provide parsed vertical results. (optional)
-     * @param  string $udm Google result filter: 14 web, 18 forums. Other verticals require output&#x3D;html. (optional)
+     * @param  string $udm Google result filter: web or 14 for web, 18 for forums. Other verticals require output&#x3D;html. (optional)
      * @param  bool $no_cache Bypass result caches and request a fresh Google fetch. (optional, default to false)
      * @param  string $as_dt Site restriction mode: i includes, e excludes as_sitesearch. (optional)
      * @param  string $as_epq Exact phrase. (optional)
@@ -8638,7 +8698,7 @@ class GoogleApi
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function googleGoogleWebSearchRequest($q, $gl = 'us', $hl = 'en', $num = 10, $start = 0, $domain = 'google.com', $device = 'desktop', $user_agent = null, $output = 'json', $location = null, $lr = null, $tbs = null, $safe = 'off', $uule = null, $filter = null, $nfpr = 0, $cr = null, $ludocid = null, $lsig = null, $kgmid = null, $si = null, $ibp = null, $uds = null, $ai_overview = false, $mode = 'full', $expand_related_questions = null, $google_domain = null, $lat = null, $lon = null, $radius = null, $color_scheme = null, $tbm = null, $udm = null, $no_cache = false, $as_dt = null, $as_epq = null, $as_eq = null, $as_lq = null, $as_nlo = null, $as_nhi = null, $as_oq = null, $as_q = null, $as_qdr = null, $as_rq = null, $as_sitesearch = null, string $contentType = self::contentTypes['googleGoogleWebSearch'][0])
+    public function googleGoogleWebSearchRequest($q, $gl = 'us', $hl = 'en', $num = 10, $start = 0, $domain = 'google.com', $device = 'desktop', $user_agent = null, $output = 'json', $location = null, $lr = null, $tbs = null, $safe = 'off', $uule = null, $filter = null, $nfpr = 0, $cr = null, $ludocid = null, $lsig = null, $kgmid = null, $si = null, $ibp = null, $uds = null, $ai_overview = false, $mode = 'full', $expand_related_questions = null, $oq = null, $sourceid = null, $ie = null, $google_domain = null, $lat = null, $lon = null, $radius = null, $color_scheme = null, $tbm = null, $udm = null, $no_cache = false, $as_dt = null, $as_epq = null, $as_eq = null, $as_lq = null, $as_nlo = null, $as_nhi = null, $as_oq = null, $as_q = null, $as_qdr = null, $as_rq = null, $as_sitesearch = null, string $contentType = self::contentTypes['googleGoogleWebSearch'][0])
     {
 
         // verify the required parameter 'q' is set
@@ -8692,6 +8752,9 @@ class GoogleApi
         }
         
 
+
+
+
         if ($lat !== null && $lat > 90) {
             throw new \InvalidArgumentException('invalid value for "$lat" when calling GoogleApi.googleGoogleWebSearch, must be smaller than or equal to 90.');
         }
@@ -8715,8 +8778,8 @@ class GoogleApi
         
 
 
-        if ($udm !== null && !preg_match("/^[0-9]{1,3}$/", $udm)) {
-            throw new \InvalidArgumentException("invalid value for \"udm\" when calling GoogleApi.googleGoogleWebSearch, must conform to the pattern /^[0-9]{1,3}$/.");
+        if ($udm !== null && !preg_match("/^(web|[0-9]{1,3})$/", $udm)) {
+            throw new \InvalidArgumentException("invalid value for \"udm\" when calling GoogleApi.googleGoogleWebSearch, must conform to the pattern /^(web|[0-9]{1,3})$/.");
         }
         
 
@@ -8971,6 +9034,33 @@ class GoogleApi
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
             $expand_related_questions,
             'expand_related_questions', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $oq,
+            'oq', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $sourceid,
+            'sourceid', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $ie,
+            'ie', // param base name
             'string', // openApiType
             'form', // style
             true, // explode

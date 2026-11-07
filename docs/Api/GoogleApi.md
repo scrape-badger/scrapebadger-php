@@ -965,7 +965,7 @@ try {
 ## `googleGoogleLightWebSearch()`
 
 ```php
-googleGoogleLightWebSearch($q, $gl, $hl, $num, $start, $domain, $location, $uule, $lr, $tbs, $safe, $filter, $nfpr, $output, $google_domain, $lat, $lon, $radius, $color_scheme, $tbm, $udm, $no_cache, $as_dt, $as_epq, $as_eq, $as_lq, $as_nlo, $as_nhi, $as_oq, $as_q, $as_qdr, $as_rq, $as_sitesearch, $device, $user_agent, $cr, $ludocid, $lsig, $kgmid, $si, $ibp, $uds): mixed
+googleGoogleLightWebSearch($q, $gl, $hl, $num, $start, $domain, $location, $uule, $lr, $tbs, $safe, $filter, $nfpr, $output, $oq, $sourceid, $ie, $google_domain, $lat, $lon, $radius, $color_scheme, $tbm, $udm, $no_cache, $as_dt, $as_epq, $as_eq, $as_lq, $as_nlo, $as_nhi, $as_oq, $as_q, $as_qdr, $as_rq, $as_sitesearch, $device, $user_agent, $cr, $ludocid, $lsig, $kgmid, $si, $ibp, $uds): mixed
 ```
 
 Google Light web search
@@ -1005,13 +1005,16 @@ $safe = 'off'; // string | Safe search: off or active
 $filter = 56; // int
 $nfpr = 0; // int | Disable auto-correction
 $output = 'json'; // string
+$oq = 'oq_example'; // string | Original query sent to Google. Defaults to q; an empty string omits it.
+$sourceid = 'sourceid_example'; // string | Google source identifier. Defaults to chrome; an empty string omits it.
+$ie = 'ie_example'; // string | Google input encoding hint. Defaults to UTF-8; an empty string omits it.
 $google_domain = 'google_domain_example'; // string | Alias for domain; Google requests use google.com with country targeting.
 $lat = 3.4; // float | Latitude; supply together with lon instead of location or uule.
 $lon = 3.4; // float | Longitude; supply together with lat.
 $radius = 3.4; // float | Location accuracy in meters; requires lat/lon or a named city with a known center.
 $color_scheme = 'color_scheme_example'; // string | Google color scheme.
 $tbm = 'tbm_example'; // string | Google search type. Use output=html for verticals; dedicated APIs provide parsed vertical results.
-$udm = 'udm_example'; // string | Google result filter: 14 web, 18 forums. Other verticals require output=html.
+$udm = 'udm_example'; // string | Google result filter: web or 14 for web, 18 for forums. Other verticals require output=html.
 $no_cache = false; // bool | Bypass result caches and request a fresh Google fetch.
 $as_dt = 'as_dt_example'; // string | Site restriction mode: i includes, e excludes as_sitesearch.
 $as_epq = 'as_epq_example'; // string | Exact phrase.
@@ -1035,7 +1038,7 @@ $ibp = 'ibp_example'; // string | Layout control.
 $uds = 'uds_example'; // string | Google filter string.
 
 try {
-    $result = $apiInstance->googleGoogleLightWebSearch($q, $gl, $hl, $num, $start, $domain, $location, $uule, $lr, $tbs, $safe, $filter, $nfpr, $output, $google_domain, $lat, $lon, $radius, $color_scheme, $tbm, $udm, $no_cache, $as_dt, $as_epq, $as_eq, $as_lq, $as_nlo, $as_nhi, $as_oq, $as_q, $as_qdr, $as_rq, $as_sitesearch, $device, $user_agent, $cr, $ludocid, $lsig, $kgmid, $si, $ibp, $uds);
+    $result = $apiInstance->googleGoogleLightWebSearch($q, $gl, $hl, $num, $start, $domain, $location, $uule, $lr, $tbs, $safe, $filter, $nfpr, $output, $oq, $sourceid, $ie, $google_domain, $lat, $lon, $radius, $color_scheme, $tbm, $udm, $no_cache, $as_dt, $as_epq, $as_eq, $as_lq, $as_nlo, $as_nhi, $as_oq, $as_q, $as_qdr, $as_rq, $as_sitesearch, $device, $user_agent, $cr, $ludocid, $lsig, $kgmid, $si, $ibp, $uds);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling GoogleApi->googleGoogleLightWebSearch: ', $e->getMessage(), PHP_EOL;
@@ -1060,13 +1063,16 @@ try {
 | **filter** | **int**|  | [optional] |
 | **nfpr** | **int**| Disable auto-correction | [optional] [default to 0] |
 | **output** | **string**|  | [optional] [default to &#39;json&#39;] |
+| **oq** | **string**| Original query sent to Google. Defaults to q; an empty string omits it. | [optional] |
+| **sourceid** | **string**| Google source identifier. Defaults to chrome; an empty string omits it. | [optional] |
+| **ie** | **string**| Google input encoding hint. Defaults to UTF-8; an empty string omits it. | [optional] |
 | **google_domain** | **string**| Alias for domain; Google requests use google.com with country targeting. | [optional] |
 | **lat** | **float**| Latitude; supply together with lon instead of location or uule. | [optional] |
 | **lon** | **float**| Longitude; supply together with lat. | [optional] |
 | **radius** | **float**| Location accuracy in meters; requires lat/lon or a named city with a known center. | [optional] |
 | **color_scheme** | **string**| Google color scheme. | [optional] |
 | **tbm** | **string**| Google search type. Use output&#x3D;html for verticals; dedicated APIs provide parsed vertical results. | [optional] |
-| **udm** | **string**| Google result filter: 14 web, 18 forums. Other verticals require output&#x3D;html. | [optional] |
+| **udm** | **string**| Google result filter: web or 14 for web, 18 for forums. Other verticals require output&#x3D;html. | [optional] |
 | **no_cache** | **bool**| Bypass result caches and request a fresh Google fetch. | [optional] [default to false] |
 | **as_dt** | **string**| Site restriction mode: i includes, e excludes as_sitesearch. | [optional] |
 | **as_epq** | **string**| Exact phrase. | [optional] |
@@ -1365,7 +1371,7 @@ try {
 ## `googleGoogleWebSearch()`
 
 ```php
-googleGoogleWebSearch($q, $gl, $hl, $num, $start, $domain, $device, $user_agent, $output, $location, $lr, $tbs, $safe, $uule, $filter, $nfpr, $cr, $ludocid, $lsig, $kgmid, $si, $ibp, $uds, $ai_overview, $mode, $expand_related_questions, $google_domain, $lat, $lon, $radius, $color_scheme, $tbm, $udm, $no_cache, $as_dt, $as_epq, $as_eq, $as_lq, $as_nlo, $as_nhi, $as_oq, $as_q, $as_qdr, $as_rq, $as_sitesearch): mixed
+googleGoogleWebSearch($q, $gl, $hl, $num, $start, $domain, $device, $user_agent, $output, $location, $lr, $tbs, $safe, $uule, $filter, $nfpr, $cr, $ludocid, $lsig, $kgmid, $si, $ibp, $uds, $ai_overview, $mode, $expand_related_questions, $oq, $sourceid, $ie, $google_domain, $lat, $lon, $radius, $color_scheme, $tbm, $udm, $no_cache, $as_dt, $as_epq, $as_eq, $as_lq, $as_nlo, $as_nhi, $as_oq, $as_q, $as_qdr, $as_rq, $as_sitesearch): mixed
 ```
 
 Google web search
@@ -1417,13 +1423,16 @@ $uds = 'uds_example'; // string | Google filter string
 $ai_overview = false; // bool | Chase deferred AI Overview page_token with a follow-up fetch and merge the result. Adds ~1s when the SERP defers the overview; the request price is unchanged.
 $mode = 'full'; // string
 $expand_related_questions = 'expand_related_questions_example'; // string | Open all People Also Ask answers (true) or the first N (0-99).
+$oq = 'oq_example'; // string | Original query sent to Google. Defaults to q; an empty string omits it.
+$sourceid = 'sourceid_example'; // string | Google source identifier. Defaults to chrome; an empty string omits it.
+$ie = 'ie_example'; // string | Google input encoding hint. Defaults to UTF-8; an empty string omits it.
 $google_domain = 'google_domain_example'; // string | Alias for domain; Google requests use google.com with country targeting.
 $lat = 3.4; // float | Latitude; supply together with lon instead of location or uule.
 $lon = 3.4; // float | Longitude; supply together with lat.
 $radius = 3.4; // float | Location accuracy in meters; requires lat/lon or a named city with a known center.
 $color_scheme = 'color_scheme_example'; // string | Google color scheme.
 $tbm = 'tbm_example'; // string | Google search type. Use output=html for verticals; dedicated APIs provide parsed vertical results.
-$udm = 'udm_example'; // string | Google result filter: 14 web, 18 forums. Other verticals require output=html.
+$udm = 'udm_example'; // string | Google result filter: web or 14 for web, 18 for forums. Other verticals require output=html.
 $no_cache = false; // bool | Bypass result caches and request a fresh Google fetch.
 $as_dt = 'as_dt_example'; // string | Site restriction mode: i includes, e excludes as_sitesearch.
 $as_epq = 'as_epq_example'; // string | Exact phrase.
@@ -1438,7 +1447,7 @@ $as_rq = 'as_rq_example'; // string | Related URL; availability depends on Googl
 $as_sitesearch = 'as_sitesearch_example'; // string | Restrict results to a site.
 
 try {
-    $result = $apiInstance->googleGoogleWebSearch($q, $gl, $hl, $num, $start, $domain, $device, $user_agent, $output, $location, $lr, $tbs, $safe, $uule, $filter, $nfpr, $cr, $ludocid, $lsig, $kgmid, $si, $ibp, $uds, $ai_overview, $mode, $expand_related_questions, $google_domain, $lat, $lon, $radius, $color_scheme, $tbm, $udm, $no_cache, $as_dt, $as_epq, $as_eq, $as_lq, $as_nlo, $as_nhi, $as_oq, $as_q, $as_qdr, $as_rq, $as_sitesearch);
+    $result = $apiInstance->googleGoogleWebSearch($q, $gl, $hl, $num, $start, $domain, $device, $user_agent, $output, $location, $lr, $tbs, $safe, $uule, $filter, $nfpr, $cr, $ludocid, $lsig, $kgmid, $si, $ibp, $uds, $ai_overview, $mode, $expand_related_questions, $oq, $sourceid, $ie, $google_domain, $lat, $lon, $radius, $color_scheme, $tbm, $udm, $no_cache, $as_dt, $as_epq, $as_eq, $as_lq, $as_nlo, $as_nhi, $as_oq, $as_q, $as_qdr, $as_rq, $as_sitesearch);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling GoogleApi->googleGoogleWebSearch: ', $e->getMessage(), PHP_EOL;
@@ -1475,13 +1484,16 @@ try {
 | **ai_overview** | **bool**| Chase deferred AI Overview page_token with a follow-up fetch and merge the result. Adds ~1s when the SERP defers the overview; the request price is unchanged. | [optional] [default to false] |
 | **mode** | **string**|  | [optional] [default to &#39;full&#39;] |
 | **expand_related_questions** | **string**| Open all People Also Ask answers (true) or the first N (0-99). | [optional] |
+| **oq** | **string**| Original query sent to Google. Defaults to q; an empty string omits it. | [optional] |
+| **sourceid** | **string**| Google source identifier. Defaults to chrome; an empty string omits it. | [optional] |
+| **ie** | **string**| Google input encoding hint. Defaults to UTF-8; an empty string omits it. | [optional] |
 | **google_domain** | **string**| Alias for domain; Google requests use google.com with country targeting. | [optional] |
 | **lat** | **float**| Latitude; supply together with lon instead of location or uule. | [optional] |
 | **lon** | **float**| Longitude; supply together with lat. | [optional] |
 | **radius** | **float**| Location accuracy in meters; requires lat/lon or a named city with a known center. | [optional] |
 | **color_scheme** | **string**| Google color scheme. | [optional] |
 | **tbm** | **string**| Google search type. Use output&#x3D;html for verticals; dedicated APIs provide parsed vertical results. | [optional] |
-| **udm** | **string**| Google result filter: 14 web, 18 forums. Other verticals require output&#x3D;html. | [optional] |
+| **udm** | **string**| Google result filter: web or 14 for web, 18 for forums. Other verticals require output&#x3D;html. | [optional] |
 | **no_cache** | **bool**| Bypass result caches and request a fresh Google fetch. | [optional] [default to false] |
 | **as_dt** | **string**| Site restriction mode: i includes, e excludes as_sitesearch. | [optional] |
 | **as_epq** | **string**| Exact phrase. | [optional] |

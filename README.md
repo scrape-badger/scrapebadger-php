@@ -192,6 +192,10 @@ Class | Method | HTTP request | Description
 *AppStoreApi* | [**appStoreListMarkets**](docs/Api/AppStoreApi.md#appstorelistmarkets) | **GET** /v1/app-store/markets | List markets
 *AppStoreApi* | [**appStoreSearchApps**](docs/Api/AppStoreApi.md#appstoresearchapps) | **GET** /v1/app-store/search | Search apps
 *AppStoreApi* | [**appStoreTopCharts**](docs/Api/AppStoreApi.md#appstoretopcharts) | **GET** /v1/app-store/charts | Top charts
+*AutoScout24Api* | [**autoscout24CheckAutoscout24Health**](docs/Api/AutoScout24Api.md#autoscout24checkautoscout24health) | **GET** /v1/autoscout24/health | Check AutoScout24 health
+*AutoScout24Api* | [**autoscout24ListMarkets**](docs/Api/AutoScout24Api.md#autoscout24listmarkets) | **GET** /v1/autoscout24/markets | List markets
+*AutoScout24Api* | [**autoscout24ListSearchFilters**](docs/Api/AutoScout24Api.md#autoscout24listsearchfilters) | **GET** /v1/autoscout24/filters | List search filters
+*AutoScout24Api* | [**autoscout24SearchVehicles**](docs/Api/AutoScout24Api.md#autoscout24searchvehicles) | **GET** /v1/autoscout24/search | Search vehicles
 *BaiduApi* | [**baiduBaiduImageSearch**](docs/Api/BaiduApi.md#baidubaiduimagesearch) | **GET** /v1/baidu/images | Baidu image search
 *BaiduApi* | [**baiduBaiduNewsSearch**](docs/Api/BaiduApi.md#baidubaidunewssearch) | **GET** /v1/baidu/news | Baidu news search
 *BaiduApi* | [**baiduBaiduScraperHealthCheck**](docs/Api/BaiduApi.md#baidubaiduscraperhealthcheck) | **GET** /v1/baidu/health | Baidu scraper health check
@@ -224,6 +228,12 @@ Class | Method | HTTP request | Description
 *BookingApi* | [**bookingGetRoomTypesAndLiveRates**](docs/Api/BookingApi.md#bookinggetroomtypesandliverates) | **GET** /v1/booking/properties/{country_code}/{slug}/rooms | Get room types and live rates
 *BookingApi* | [**bookingSearchDestinations**](docs/Api/BookingApi.md#bookingsearchdestinations) | **GET** /v1/booking/destinations | Search destinations
 *BookingApi* | [**bookingSearchProperties**](docs/Api/BookingApi.md#bookingsearchproperties) | **GET** /v1/booking/search | Search properties
+*BraveApi* | [**braveAutocomplete**](docs/Api/BraveApi.md#braveautocomplete) | **GET** /v1/brave/autocomplete | Autocomplete
+*BraveApi* | [**braveImageSearch**](docs/Api/BraveApi.md#braveimagesearch) | **GET** /v1/brave/images | Image search
+*BraveApi* | [**braveListSupportedLocales**](docs/Api/BraveApi.md#bravelistsupportedlocales) | **GET** /v1/brave/locales | List supported locales
+*BraveApi* | [**braveNewsSearch**](docs/Api/BraveApi.md#bravenewssearch) | **GET** /v1/brave/news | News search
+*BraveApi* | [**braveVideoSearch**](docs/Api/BraveApi.md#bravevideosearch) | **GET** /v1/brave/videos | Video search
+*BraveApi* | [**braveWebSearch**](docs/Api/BraveApi.md#bravewebsearch) | **GET** /v1/brave/search | Web search
 *ChatGPTApi* | [**chatgptAskChatgptAQuestion**](docs/Api/ChatGPTApi.md#chatgptaskchatgptaquestion) | **GET** /v1/chatgpt/ask | Ask ChatGPT a question
 *ChatGPTApi* | [**chatgptAskChatgptAQuestionPost**](docs/Api/ChatGPTApi.md#chatgptaskchatgptaquestionpost) | **POST** /v1/chatgpt/ask | Ask ChatGPT a question (POST)
 *ChatGPTApi* | [**chatgptChatgptScraperHealthCheck**](docs/Api/ChatGPTApi.md#chatgptchatgptscraperhealthcheck) | **GET** /v1/chatgpt/health | ChatGPT scraper health check
@@ -308,6 +318,7 @@ Class | Method | HTTP request | Description
 *GeminiApi* | [**geminiGeminiScraperHealthCheckHead**](docs/Api/GeminiApi.md#geminigeminiscraperhealthcheckhead) | **HEAD** /v1/gemini/health | Gemini scraper health check
 *GeminiApi* | [**geminiMeasureABrandSVisibilityInAGeminiAnswer**](docs/Api/GeminiApi.md#geminimeasureabrandsvisibilityinageminianswer) | **GET** /v1/gemini/brand-visibility | Measure a brand&#39;s visibility in a Gemini answer
 *GeminiApi* | [**geminiMeasureABrandSVisibilityInAGeminiAnswerPost**](docs/Api/GeminiApi.md#geminimeasureabrandsvisibilityinageminianswerpost) | **POST** /v1/gemini/brand-visibility | Measure a brand&#39;s visibility in a Gemini answer (POST)
+*GitHubApi* | [**githubGetProfile**](docs/Api/GitHubApi.md#githubgetprofile) | **GET** /v1/github/profiles/{username} | Get profile
 *GoogleApi* | [**googleGetAuthorCitationsPerYearChart**](docs/Api/GoogleApi.md#googlegetauthorcitationsperyearchart) | **GET** /v1/google/scholar/author/citation | Get author citations-per-year chart
 *GoogleApi* | [**googleGetBusinessPosts**](docs/Api/GoogleApi.md#googlegetbusinessposts) | **GET** /v1/google/maps/posts | Get business posts
 *GoogleApi* | [**googleGetCitationFormatsForAScholarPaper**](docs/Api/GoogleApi.md#googlegetcitationformatsforascholarpaper) | **GET** /v1/google/scholar/cite | Get citation formats for a Scholar paper
@@ -717,24 +728,48 @@ Class | Method | HTTP request | Description
 ## Models
 
 - [AccountInfo](docs/Model/AccountInfo.md)
+- [Age](docs/Model/Age.md)
 - [AgentTrialInfo](docs/Model/AgentTrialInfo.md)
+- [Article](docs/Model/Article.md)
+- [AutoScout24FiltersResponse](docs/Model/AutoScout24FiltersResponse.md)
+- [AutoScout24Listing](docs/Model/AutoScout24Listing.md)
+- [AutoScout24Market](docs/Model/AutoScout24Market.md)
+- [AutoScout24MarketsResponse](docs/Model/AutoScout24MarketsResponse.md)
+- [AutoScout24SearchResponse](docs/Model/AutoScout24SearchResponse.md)
 - [BatchItem](docs/Model/BatchItem.md)
 - [BatchItemQueryValue](docs/Model/BatchItemQueryValue.md)
 - [BatchItemQueryValueAnyOfInner](docs/Model/BatchItemQueryValueAnyOfInner.md)
 - [BatchRequest](docs/Model/BatchRequest.md)
 - [BillingLogListResponse](docs/Model/BillingLogListResponse.md)
 - [BillingLogResponse](docs/Model/BillingLogResponse.md)
+- [Book](docs/Model/Book.md)
 - [Brandid](docs/Model/Brandid.md)
 - [Brandname](docs/Model/Brandname.md)
 - [BrandsResponse](docs/Model/BrandsResponse.md)
+- [BraveAutocompleteResponse](docs/Model/BraveAutocompleteResponse.md)
+- [BraveLocaleOption](docs/Model/BraveLocaleOption.md)
+- [BraveLocalesResponse](docs/Model/BraveLocalesResponse.md)
+- [BravePagedResponse](docs/Model/BravePagedResponse.md)
+- [BraveResponse](docs/Model/BraveResponse.md)
+- [BraveResult](docs/Model/BraveResult.md)
+- [BraveSearchResponse](docs/Model/BraveSearchResponse.md)
+- [BraveSuggestion](docs/Model/BraveSuggestion.md)
 - [Categoryname](docs/Model/Categoryname.md)
+- [Cluster](docs/Model/Cluster.md)
 - [ColorsResponse](docs/Model/ColorsResponse.md)
 - [Colour](docs/Model/Colour.md)
 - [Colourwayid](docs/Model/Colourwayid.md)
+- [Confidence](docs/Model/Confidence.md)
+- [Data](docs/Model/Data.md)
+- [DeepResults](docs/Model/DeepResults.md)
 - [Description](docs/Model/Description.md)
+- [Description1](docs/Model/Description1.md)
+- [DisplayUrl](docs/Model/DisplayUrl.md)
 - [ExtractRequest](docs/Model/ExtractRequest.md)
 - [ExtractRequestExtractRulesValue](docs/Model/ExtractRequestExtractRulesValue.md)
 - [ExtractRule](docs/Model/ExtractRule.md)
+- [FamilyFriendly](docs/Model/FamilyFriendly.md)
+- [Faq](docs/Model/Faq.md)
 - [FeedbackRequest](docs/Model/FeedbackRequest.md)
 - [FilterRuleCreate](docs/Model/FilterRuleCreate.md)
 - [FilterRuleDeliveryLogListResponse](docs/Model/FilterRuleDeliveryLogListResponse.md)
@@ -745,27 +780,68 @@ Class | Method | HTTP request | Description
 - [FilterRuleValidateRequest](docs/Model/FilterRuleValidateRequest.md)
 - [FilterRuleValidateResponse](docs/Model/FilterRuleValidateResponse.md)
 - [Gender](docs/Model/Gender.md)
+- [GitHubAccountPreview](docs/Model/GitHubAccountPreview.md)
+- [GitHubAchievement](docs/Model/GitHubAchievement.md)
+- [GitHubActivityBlock](docs/Model/GitHubActivityBlock.md)
+- [GitHubActivityOverview](docs/Model/GitHubActivityOverview.md)
+- [GitHubActivityRow](docs/Model/GitHubActivityRow.md)
+- [GitHubCalendarDay](docs/Model/GitHubCalendarDay.md)
+- [GitHubContributions](docs/Model/GitHubContributions.md)
+- [GitHubLanguage](docs/Model/GitHubLanguage.md)
+- [GitHubNamedLink](docs/Model/GitHubNamedLink.md)
+- [GitHubPagination](docs/Model/GitHubPagination.md)
+- [GitHubProfile](docs/Model/GitHubProfile.md)
+- [GitHubProfileResponse](docs/Model/GitHubProfileResponse.md)
+- [GitHubReadme](docs/Model/GitHubReadme.md)
+- [GitHubRepository](docs/Model/GitHubRepository.md)
+- [GitHubSocialAccount](docs/Model/GitHubSocialAccount.md)
+- [GitHubStatus](docs/Model/GitHubStatus.md)
+- [GitHubTextLink](docs/Model/GitHubTextLink.md)
 - [HTTPValidationError](docs/Model/HTTPValidationError.md)
 - [Imageurl](docs/Model/Imageurl.md)
+- [IsLive](docs/Model/IsLive.md)
 - [Isinstock](docs/Model/Isinstock.md)
 - [Isrestockingsoon](docs/Model/Isrestockingsoon.md)
 - [Issellingfast](docs/Model/Issellingfast.md)
 - [ItemDetailResponse](docs/Model/ItemDetailResponse.md)
+- [Language](docs/Model/Language.md)
+- [Location](docs/Model/Location.md)
 - [MarketsResponse](docs/Model/MarketsResponse.md)
+- [MetaUrl](docs/Model/MetaUrl.md)
 - [NextOffset](docs/Model/NextOffset.md)
+- [NextPage](docs/Model/NextPage.md)
+- [Organization](docs/Model/Organization.md)
+- [PageAge](docs/Model/PageAge.md)
+- [PageFetched](docs/Model/PageFetched.md)
+- [PageFetchedAt](docs/Model/PageFetchedAt.md)
+- [PageFetchedUtc](docs/Model/PageFetchedUtc.md)
 - [PortalApiRoutersV1AsosSearchResponse](docs/Model/PortalApiRoutersV1AsosSearchResponse.md)
 - [PortalApiRoutersV1TwitterFilterRulesFilterRulePricingResponse](docs/Model/PortalApiRoutersV1TwitterFilterRulesFilterRulePricingResponse.md)
 - [PortalApiRoutersVintedSchemasSearchResponse](docs/Model/PortalApiRoutersVintedSchemasSearchResponse.md)
 - [Price](docs/Model/Price.md)
 - [PriceValue](docs/Model/PriceValue.md)
 - [Product](docs/Model/Product.md)
+- [Product1](docs/Model/Product1.md)
+- [ProductCluster](docs/Model/ProductCluster.md)
 - [ProductPrice](docs/Model/ProductPrice.md)
 - [ProductResponse](docs/Model/ProductResponse.md)
 - [Productcode](docs/Model/Productcode.md)
+- [Profile](docs/Model/Profile.md)
+- [Properties](docs/Model/Properties.md)
+- [PublishedAt](docs/Model/PublishedAt.md)
+- [PublishedUtc](docs/Model/PublishedUtc.md)
+- [Qa](docs/Model/Qa.md)
 - [QuoteRequest](docs/Model/QuoteRequest.md)
+- [Rating](docs/Model/Rating.md)
 - [Ratings](docs/Model/Ratings.md)
+- [Recipe](docs/Model/Recipe.md)
+- [Review](docs/Model/Review.md)
 - [ScreenshotRequest](docs/Model/ScreenshotRequest.md)
 - [Searchterm](docs/Model/Searchterm.md)
+- [SiteName](docs/Model/SiteName.md)
+- [Snippet](docs/Model/Snippet.md)
+- [Software](docs/Model/Software.md)
+- [Source](docs/Model/Source.md)
 - [StatusesResponse](docs/Model/StatusesResponse.md)
 - [StockProduct](docs/Model/StockProduct.md)
 - [StockResponse](docs/Model/StockResponse.md)
@@ -774,14 +850,18 @@ Class | Method | HTTP request | Description
 - [StreamMonitorResponse](docs/Model/StreamMonitorResponse.md)
 - [StreamMonitorUpdate](docs/Model/StreamMonitorUpdate.md)
 - [SubscriptionInfo](docs/Model/SubscriptionInfo.md)
+- [Subtype](docs/Model/Subtype.md)
+- [Thumbnail](docs/Model/Thumbnail.md)
 - [TweetDeliveryLogListResponse](docs/Model/TweetDeliveryLogListResponse.md)
 - [TweetDeliveryLogResponse](docs/Model/TweetDeliveryLogResponse.md)
+- [Type](docs/Model/Type.md)
 - [Url](docs/Model/Url.md)
 - [UserItemsResponse](docs/Model/UserItemsResponse.md)
 - [UserProfileResponse](docs/Model/UserProfileResponse.md)
 - [ValidationError](docs/Model/ValidationError.md)
 - [ValidationErrorLocInner](docs/Model/ValidationErrorLocInner.md)
 - [Variant](docs/Model/Variant.md)
+- [Video](docs/Model/Video.md)
 - [VintedBrand](docs/Model/VintedBrand.md)
 - [VintedColor](docs/Model/VintedColor.md)
 - [VintedImageSearchRequest](docs/Model/VintedImageSearchRequest.md)

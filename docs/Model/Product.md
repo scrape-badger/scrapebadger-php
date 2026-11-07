@@ -21,7 +21,7 @@ Name | Type | Description | Notes
 **is_restocking_soon** | [**\ScrapeBadger\Model\Isrestockingsoon**](Isrestockingsoon.md) |  | [optional]
 **is_in_stock** | [**\ScrapeBadger\Model\Isinstock**](Isinstock.md) |  | [optional]
 **gender** | [**\ScrapeBadger\Model\Gender**](Gender.md) |  | [optional]
-**description** | [**\ScrapeBadger\Model\Description**](Description.md) |  | [optional]
+**description** | [**\ScrapeBadger\Model\Description1**](Description1.md) |  | [optional]
 **ratings** | [**\ScrapeBadger\Model\Ratings**](Ratings.md) |  | [optional]
 **breadcrumbs** | **array<string,mixed>[]** |  | [optional]
 

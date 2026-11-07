@@ -1,0 +1,61 @@
+# # GitHubProfile
+
+## Properties
+
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**login** | **string** |  |
+**link** | **string** |  |
+**is_organization** | **bool** |  |
+**id** | **int** |  | [optional]
+**node_id** | **string** |  | [optional]
+**type** | **string** |  | [optional]
+**user_view_type** | **string** |  | [optional]
+**site_admin** | **bool** |  | [optional]
+**name** | **string** |  | [optional]
+**avatar_url** | **string** |  | [optional]
+**bio** | **string** |  | [optional]
+**description** | **string** |  | [optional]
+**pronouns** | **string** |  | [optional]
+**local_time** | **string** |  | [optional]
+**utc_offset** | **float** |  | [optional]
+**company** | **string** |  | [optional]
+**location** | **string** |  | [optional]
+**email** | **string** |  | [optional]
+**website** | **string** |  | [optional]
+**twitter_username** | **string** |  | [optional]
+**hireable** | **bool** |  | [optional]
+**social_accounts** | [**\ScrapeBadger\Model\GitHubSocialAccount[]**](GitHubSocialAccount.md) |  | [optional]
+**status** | [**\ScrapeBadger\Model\GitHubStatus**](GitHubStatus.md) |  | [optional]
+**followers** | **int** |  | [optional]
+**following** | **int** |  | [optional]
+**repos** | **int** |  | [optional]
+**public_repos** | **int** |  | [optional]
+**public_gists** | **int** |  | [optional]
+**followers_display_count** | **int** |  | [optional]
+**following_display_count** | **int** |  | [optional]
+**repos_display_count** | **int** |  | [optional]
+**followers_approximate** | **bool** |  | [optional]
+**following_approximate** | **bool** |  | [optional]
+**repos_approximate** | **bool** |  | [optional]
+**starred_count** | **int** |  | [optional]
+**starred_count_approximate** | **bool** |  | [optional]
+**projects_count** | **int** |  | [optional]
+**projects_count_approximate** | **bool** |  | [optional]
+**packages_count** | **int** |  | [optional]
+**packages_count_approximate** | **bool** |  | [optional]
+**sponsoring_count** | **int** |  | [optional]
+**sponsoring_count_approximate** | **bool** |  | [optional]
+**is_sponsorable** | **bool** |  | [optional]
+**sponsors_link** | **string** |  | [optional]
+**is_verified** | **bool** |  | [optional]
+**has_organization_projects** | **bool** |  | [optional]
+**has_repository_projects** | **bool** |  | [optional]
+**created_at** | **string** |  | [optional]
+**created_utc** | **float** |  | [optional]
+**updated_at** | **string** |  | [optional]
+**updated_utc** | **float** |  | [optional]
+**archived_at** | **string** |  | [optional]
+**archived_utc** | **float** |  | [optional]
+
+[[Back to Model list]](../../README.md#models) [[Back to API list]](../../README.md#endpoints) [[Back to README]](../../README.md)

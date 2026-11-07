@@ -74,7 +74,7 @@ class Product implements ModelInterface, ArrayAccess, \JsonSerializable
         'is_restocking_soon' => '\ScrapeBadger\Model\Isrestockingsoon',
         'is_in_stock' => '\ScrapeBadger\Model\Isinstock',
         'gender' => '\ScrapeBadger\Model\Gender',
-        'description' => '\ScrapeBadger\Model\Description',
+        'description' => '\ScrapeBadger\Model\Description1',
         'ratings' => '\ScrapeBadger\Model\Ratings',
         'breadcrumbs' => 'array<string,mixed>[]'
     ];
@@ -897,7 +897,7 @@ class Product implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Gets description
      *
-     * @return \ScrapeBadger\Model\Description|null
+     * @return \ScrapeBadger\Model\Description1|null
      */
     public function getDescription()
     {
@@ -907,7 +907,7 @@ class Product implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets description
      *
-     * @param \ScrapeBadger\Model\Description|null $description description
+     * @param \ScrapeBadger\Model\Description1|null $description description
      *
      * @return self
      */

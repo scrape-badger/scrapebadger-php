@@ -5,6 +5,7 @@ All URIs are relative to https://scrapebadger.com, except if the operation defin
 | Method | HTTP request | Description |
 | ------------- | ------------- | ------------- |
 | [**autoscout24CheckAutoscout24Health()**](AutoScout24Api.md#autoscout24CheckAutoscout24Health) | **GET** /v1/autoscout24/health | Check AutoScout24 health |
+| [**autoscout24GetListing()**](AutoScout24Api.md#autoscout24GetListing) | **GET** /v1/autoscout24/listing | Get listing |
 | [**autoscout24ListMarkets()**](AutoScout24Api.md#autoscout24ListMarkets) | **GET** /v1/autoscout24/markets | List markets |
 | [**autoscout24ListSearchFilters()**](AutoScout24Api.md#autoscout24ListSearchFilters) | **GET** /v1/autoscout24/filters | List search filters |
 | [**autoscout24SearchVehicles()**](AutoScout24Api.md#autoscout24SearchVehicles) | **GET** /v1/autoscout24/search | Search vehicles |
@@ -53,6 +54,72 @@ This endpoint does not need any parameter.
 ### Return type
 
 **mixed**
+
+### Authorization
+
+[ApiKeyAuth](../../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `application/json`
+
+[[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
+[[Back to Model list]](../../README.md#models)
+[[Back to README]](../../README.md)
+
+## `autoscout24GetListing()`
+
+```php
+autoscout24GetListing($url, $listing_id, $market): \ScrapeBadger\Model\AutoScout24ListingResponse
+```
+
+Get listing
+
+Full public vehicle specifications, equipment, photos, price and seller data.  Exactly one of url or listing_id is required. Supported markets match /markets. Successful detail costs 10 credits; removed or missing listings return an unbilled 404. Invalid inputs return 422 and source failures 503.
+
+### Example
+
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+// Configure API key authorization: ApiKeyAuth
+$config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKey('X-API-Key', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// $config = ScrapeBadger\Configuration::getDefaultConfiguration()->setApiKeyPrefix('X-API-Key', 'Bearer');
+
+
+$apiInstance = new ScrapeBadger\Api\AutoScout24Api(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client(),
+    $config
+);
+$url = 'url_example'; // string | Full HTTPS listing URL from search results. Supply url or listing_id, not both.
+$listing_id = 'listing_id_example'; // string | Listing UUID from search results; requires no SEO slug.
+$market = 'market_example'; // string | Inferred from URL, otherwise de. Explicit market must match the URL host.
+
+try {
+    $result = $apiInstance->autoscout24GetListing($url, $listing_id, $market);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling AutoScout24Api->autoscout24GetListing: ', $e->getMessage(), PHP_EOL;
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+| ------------- | ------------- | ------------- | ------------- |
+| **url** | **string**| Full HTTPS listing URL from search results. Supply url or listing_id, not both. | [optional] |
+| **listing_id** | **string**| Listing UUID from search results; requires no SEO slug. | [optional] |
+| **market** | **string**| Inferred from URL, otherwise de. Explicit market must match the URL host. | [optional] |
+
+### Return type
+
+[**\ScrapeBadger\Model\AutoScout24ListingResponse**](../Model/AutoScout24ListingResponse.md)
 
 ### Authorization
 
@@ -198,7 +265,7 @@ autoscout24SearchVehicles($market, $make, $model, $price_min, $price_max, $milea
 
 Search vehicles
 
-Search live vehicle cards, seller/location information and current filter taxonomy.  Browsing is capped at 200 pages (normally 20 cards each). Narrow the query to reach more inventory. Empty results cost zero credits. Listing detail is not included in this API.
+Search live vehicle cards, seller/location information and current filter taxonomy.  Browsing is capped at 200 pages (normally 20 cards each). Narrow the query to reach more inventory. Empty results cost zero credits. Pass a result's url or id to /listing for its full specifications and equipment.
 
 ### Example
 

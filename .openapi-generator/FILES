@@ -62,6 +62,8 @@ docs/Model/AgentTrialInfo.md
 docs/Model/Article.md
 docs/Model/AutoScout24FiltersResponse.md
 docs/Model/AutoScout24Listing.md
+docs/Model/AutoScout24ListingDetail.md
+docs/Model/AutoScout24ListingResponse.md
 docs/Model/AutoScout24Market.md
 docs/Model/AutoScout24MarketsResponse.md
 docs/Model/AutoScout24SearchResponse.md
@@ -273,6 +275,8 @@ lib/Model/AgentTrialInfo.php
 lib/Model/Article.php
 lib/Model/AutoScout24FiltersResponse.php
 lib/Model/AutoScout24Listing.php
+lib/Model/AutoScout24ListingDetail.php
+lib/Model/AutoScout24ListingResponse.php
 lib/Model/AutoScout24Market.php
 lib/Model/AutoScout24MarketsResponse.php
 lib/Model/AutoScout24SearchResponse.php
@@ -482,6 +486,8 @@ test/Model/AgeTest.php
 test/Model/AgentTrialInfoTest.php
 test/Model/ArticleTest.php
 test/Model/AutoScout24FiltersResponseTest.php
+test/Model/AutoScout24ListingDetailTest.php
+test/Model/AutoScout24ListingResponseTest.php
 test/Model/AutoScout24ListingTest.php
 test/Model/AutoScout24MarketTest.php
 test/Model/AutoScout24MarketsResponseTest.php

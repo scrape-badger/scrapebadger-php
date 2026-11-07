@@ -163,7 +163,7 @@ class BraveResult implements ModelInterface, ArrayAccess, \JsonSerializable
         'title' => false,
         'url' => false,
         'snippet' => false,
-        'description' => false,
+        'description' => true,
         'display_url' => false,
         'site_name' => false,
         'language' => false,
@@ -713,7 +713,14 @@ class BraveResult implements ModelInterface, ArrayAccess, \JsonSerializable
     public function setDescription($description)
     {
         if (is_null($description)) {
-            throw new \InvalidArgumentException('non-nullable description cannot be null');
+            array_push($this->openAPINullablesSetToNull, 'description');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('description', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
         }
         $this->container['description'] = $description;
 

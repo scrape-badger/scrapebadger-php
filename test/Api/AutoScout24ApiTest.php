@@ -84,6 +84,18 @@ class AutoScout24ApiTest extends TestCase
     }
 
     /**
+     * Test case for autoscout24GetListing
+     *
+     * Get listing.
+     *
+     */
+    public function testAutoscout24GetListing()
+    {
+        // TODO: implement
+        self::markTestIncomplete('Not implemented');
+    }
+
+    /**
      * Test case for autoscout24ListMarkets
      *
      * List markets.

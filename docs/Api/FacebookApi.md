@@ -1252,12 +1252,12 @@ try {
 ## `facebookSearchMarketplace()`
 
 ```php
-facebookSearchMarketplace($query, $location, $min_price, $max_price, $days_since_listed, $sort_by, $item_condition, $delivery_method, $radius, $after): mixed
+facebookSearchMarketplace($query, $location, $min_price, $max_price, $days_since_listed, $sort_by, $item_condition, $delivery_method, $radius, $after, $strict_filters, $include_details): mixed
 ```
 
 Search Marketplace
 
-Search Facebook Marketplace listings by keyword and location.  ``location`` must be a Facebook location slug (``london``, ``newcastleupontyne``) or a numeric Facebook place id — the ``city_page_id`` on any listing is one. Human-readable names such as ``Durham, UK`` are rejected with a 400 rather than silently searching Facebook's San Francisco default.
+Search Facebook Marketplace listings by keyword and location.  ``location`` must be a Facebook location slug (``london``, ``newcastleupontyne``) or a numeric Facebook place id — the ``city_page_id`` on any listing is one. Human-readable names such as ``Durham, UK`` are rejected with a 400 rather than silently searching Facebook's San Francisco default.  Set strict_filters=true for locally enforced radius (always km) and age. Public price-range continuations are bounded to eight pages; sort the full collected set for newest-first monitoring. Coverage and freshness are partial.
 
 ### Example
 
@@ -1288,9 +1288,11 @@ $item_condition = 'item_condition_example'; // string
 $delivery_method = 'delivery_method_example'; // string
 $radius = 56; // int | Search radius around the location (km, or miles in the US)
 $after = 'after_example'; // string
+$strict_filters = false; // bool | Verify radius in km and age locally; use bounded public search continuations with partial-coverage diagnostics
+$include_details = false; // bool | Enrich returned listings with full public descriptions and photos; enables verified search
 
 try {
-    $result = $apiInstance->facebookSearchMarketplace($query, $location, $min_price, $max_price, $days_since_listed, $sort_by, $item_condition, $delivery_method, $radius, $after);
+    $result = $apiInstance->facebookSearchMarketplace($query, $location, $min_price, $max_price, $days_since_listed, $sort_by, $item_condition, $delivery_method, $radius, $after, $strict_filters, $include_details);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling FacebookApi->facebookSearchMarketplace: ', $e->getMessage(), PHP_EOL;
@@ -1311,6 +1313,8 @@ try {
 | **delivery_method** | **string**|  | [optional] |
 | **radius** | **int**| Search radius around the location (km, or miles in the US) | [optional] |
 | **after** | **string**|  | [optional] |
+| **strict_filters** | **bool**| Verify radius in km and age locally; use bounded public search continuations with partial-coverage diagnostics | [optional] [default to false] |
+| **include_details** | **bool**| Enrich returned listings with full public descriptions and photos; enables verified search | [optional] [default to false] |
 
 ### Return type
 

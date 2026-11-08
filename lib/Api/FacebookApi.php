@@ -7055,15 +7055,17 @@ class FacebookApi
      * @param  string $delivery_method delivery_method (optional)
      * @param  int $radius Search radius around the location (km, or miles in the US) (optional)
      * @param  string $after after (optional)
+     * @param  bool $strict_filters Verify radius in km and age locally; use bounded public search continuations with partial-coverage diagnostics (optional, default to false)
+     * @param  bool $include_details Enrich returned listings with full public descriptions and photos; enables verified search (optional, default to false)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookSearchMarketplace'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return mixed|\ScrapeBadger\Model\HTTPValidationError
      */
-    public function facebookSearchMarketplace($query, $location = 'nyc', $min_price = null, $max_price = null, $days_since_listed = null, $sort_by = null, $item_condition = null, $delivery_method = null, $radius = null, $after = null, string $contentType = self::contentTypes['facebookSearchMarketplace'][0])
+    public function facebookSearchMarketplace($query, $location = 'nyc', $min_price = null, $max_price = null, $days_since_listed = null, $sort_by = null, $item_condition = null, $delivery_method = null, $radius = null, $after = null, $strict_filters = false, $include_details = false, string $contentType = self::contentTypes['facebookSearchMarketplace'][0])
     {
-        list($response) = $this->facebookSearchMarketplaceWithHttpInfo($query, $location, $min_price, $max_price, $days_since_listed, $sort_by, $item_condition, $delivery_method, $radius, $after, $contentType);
+        list($response) = $this->facebookSearchMarketplaceWithHttpInfo($query, $location, $min_price, $max_price, $days_since_listed, $sort_by, $item_condition, $delivery_method, $radius, $after, $strict_filters, $include_details, $contentType);
         return $response;
     }
 
@@ -7082,15 +7084,17 @@ class FacebookApi
      * @param  string $delivery_method (optional)
      * @param  int $radius Search radius around the location (km, or miles in the US) (optional)
      * @param  string $after (optional)
+     * @param  bool $strict_filters Verify radius in km and age locally; use bounded public search continuations with partial-coverage diagnostics (optional, default to false)
+     * @param  bool $include_details Enrich returned listings with full public descriptions and photos; enables verified search (optional, default to false)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookSearchMarketplace'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
-    public function facebookSearchMarketplaceWithHttpInfo($query, $location = 'nyc', $min_price = null, $max_price = null, $days_since_listed = null, $sort_by = null, $item_condition = null, $delivery_method = null, $radius = null, $after = null, string $contentType = self::contentTypes['facebookSearchMarketplace'][0])
+    public function facebookSearchMarketplaceWithHttpInfo($query, $location = 'nyc', $min_price = null, $max_price = null, $days_since_listed = null, $sort_by = null, $item_condition = null, $delivery_method = null, $radius = null, $after = null, $strict_filters = false, $include_details = false, string $contentType = self::contentTypes['facebookSearchMarketplace'][0])
     {
-        $request = $this->facebookSearchMarketplaceRequest($query, $location, $min_price, $max_price, $days_since_listed, $sort_by, $item_condition, $delivery_method, $radius, $after, $contentType);
+        $request = $this->facebookSearchMarketplaceRequest($query, $location, $min_price, $max_price, $days_since_listed, $sort_by, $item_condition, $delivery_method, $radius, $after, $strict_filters, $include_details, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -7251,14 +7255,16 @@ class FacebookApi
      * @param  string $delivery_method (optional)
      * @param  int $radius Search radius around the location (km, or miles in the US) (optional)
      * @param  string $after (optional)
+     * @param  bool $strict_filters Verify radius in km and age locally; use bounded public search continuations with partial-coverage diagnostics (optional, default to false)
+     * @param  bool $include_details Enrich returned listings with full public descriptions and photos; enables verified search (optional, default to false)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookSearchMarketplace'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function facebookSearchMarketplaceAsync($query, $location = 'nyc', $min_price = null, $max_price = null, $days_since_listed = null, $sort_by = null, $item_condition = null, $delivery_method = null, $radius = null, $after = null, string $contentType = self::contentTypes['facebookSearchMarketplace'][0])
+    public function facebookSearchMarketplaceAsync($query, $location = 'nyc', $min_price = null, $max_price = null, $days_since_listed = null, $sort_by = null, $item_condition = null, $delivery_method = null, $radius = null, $after = null, $strict_filters = false, $include_details = false, string $contentType = self::contentTypes['facebookSearchMarketplace'][0])
     {
-        return $this->facebookSearchMarketplaceAsyncWithHttpInfo($query, $location, $min_price, $max_price, $days_since_listed, $sort_by, $item_condition, $delivery_method, $radius, $after, $contentType)
+        return $this->facebookSearchMarketplaceAsyncWithHttpInfo($query, $location, $min_price, $max_price, $days_since_listed, $sort_by, $item_condition, $delivery_method, $radius, $after, $strict_filters, $include_details, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -7281,15 +7287,17 @@ class FacebookApi
      * @param  string $delivery_method (optional)
      * @param  int $radius Search radius around the location (km, or miles in the US) (optional)
      * @param  string $after (optional)
+     * @param  bool $strict_filters Verify radius in km and age locally; use bounded public search continuations with partial-coverage diagnostics (optional, default to false)
+     * @param  bool $include_details Enrich returned listings with full public descriptions and photos; enables verified search (optional, default to false)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookSearchMarketplace'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function facebookSearchMarketplaceAsyncWithHttpInfo($query, $location = 'nyc', $min_price = null, $max_price = null, $days_since_listed = null, $sort_by = null, $item_condition = null, $delivery_method = null, $radius = null, $after = null, string $contentType = self::contentTypes['facebookSearchMarketplace'][0])
+    public function facebookSearchMarketplaceAsyncWithHttpInfo($query, $location = 'nyc', $min_price = null, $max_price = null, $days_since_listed = null, $sort_by = null, $item_condition = null, $delivery_method = null, $radius = null, $after = null, $strict_filters = false, $include_details = false, string $contentType = self::contentTypes['facebookSearchMarketplace'][0])
     {
         $returnType = 'mixed';
-        $request = $this->facebookSearchMarketplaceRequest($query, $location, $min_price, $max_price, $days_since_listed, $sort_by, $item_condition, $delivery_method, $radius, $after, $contentType);
+        $request = $this->facebookSearchMarketplaceRequest($query, $location, $min_price, $max_price, $days_since_listed, $sort_by, $item_condition, $delivery_method, $radius, $after, $strict_filters, $include_details, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -7340,12 +7348,14 @@ class FacebookApi
      * @param  string $delivery_method (optional)
      * @param  int $radius Search radius around the location (km, or miles in the US) (optional)
      * @param  string $after (optional)
+     * @param  bool $strict_filters Verify radius in km and age locally; use bounded public search continuations with partial-coverage diagnostics (optional, default to false)
+     * @param  bool $include_details Enrich returned listings with full public descriptions and photos; enables verified search (optional, default to false)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['facebookSearchMarketplace'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function facebookSearchMarketplaceRequest($query, $location = 'nyc', $min_price = null, $max_price = null, $days_since_listed = null, $sort_by = null, $item_condition = null, $delivery_method = null, $radius = null, $after = null, string $contentType = self::contentTypes['facebookSearchMarketplace'][0])
+    public function facebookSearchMarketplaceRequest($query, $location = 'nyc', $min_price = null, $max_price = null, $days_since_listed = null, $sort_by = null, $item_condition = null, $delivery_method = null, $radius = null, $after = null, $strict_filters = false, $include_details = false, string $contentType = self::contentTypes['facebookSearchMarketplace'][0])
     {
 
         // verify the required parameter 'query' is set
@@ -7354,6 +7364,8 @@ class FacebookApi
                 'Missing the required parameter $query when calling facebookSearchMarketplace'
             );
         }
+
+
 
 
 
@@ -7458,6 +7470,24 @@ class FacebookApi
             $after,
             'after', // param base name
             'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $strict_filters,
+            'strict_filters', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $include_details,
+            'include_details', // param base name
+            'boolean', // openApiType
             'form', // style
             true, // explode
             false // required

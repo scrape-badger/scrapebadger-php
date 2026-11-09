@@ -2519,12 +2519,12 @@ try {
 ## `twitterListDeliveryLogsForAFilterRule()`
 
 ```php
-twitterListDeliveryLogsForAFilterRule($rule_id, $delivery_status, $author_username, $page, $page_size, $sort): \ScrapeBadger\Model\FilterRuleDeliveryLogListResponse
+twitterListDeliveryLogsForAFilterRule($rule_id)
 ```
 
 List delivery logs for a filter rule
 
-List tweet delivery logs for a specific filter rule.
+Removed on 2026-11-09 (SCR-396): ScrapeBadger no longer stores delivered tweets.  Always answers ``410 Gone`` with ``error: delivery_logs_removed``.
 
 ### Example
 
@@ -2546,15 +2546,9 @@ $apiInstance = new ScrapeBadger\Api\TwitterApi(
     $config
 );
 $rule_id = 'rule_id_example'; // string
-$delivery_status = 'delivery_status_example'; // string
-$author_username = 'author_username_example'; // string
-$page = 1; // int
-$page_size = 20; // int
-$sort = 'desc'; // string
 
 try {
-    $result = $apiInstance->twitterListDeliveryLogsForAFilterRule($rule_id, $delivery_status, $author_username, $page, $page_size, $sort);
-    print_r($result);
+    $apiInstance->twitterListDeliveryLogsForAFilterRule($rule_id);
 } catch (Exception $e) {
     echo 'Exception when calling TwitterApi->twitterListDeliveryLogsForAFilterRule: ', $e->getMessage(), PHP_EOL;
 }
@@ -2565,15 +2559,10 @@ try {
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
 | **rule_id** | **string**|  | |
-| **delivery_status** | **string**|  | [optional] |
-| **author_username** | **string**|  | [optional] |
-| **page** | **int**|  | [optional] [default to 1] |
-| **page_size** | **int**|  | [optional] [default to 20] |
-| **sort** | **string**|  | [optional] [default to &#39;desc&#39;] |
 
 ### Return type
 
-[**\ScrapeBadger\Model\FilterRuleDeliveryLogListResponse**](../Model/FilterRuleDeliveryLogListResponse.md)
+void (empty response body)
 
 ### Authorization
 
@@ -2723,12 +2712,12 @@ try {
 ## `twitterListTweetDeliveryLogs()`
 
 ```php
-twitterListTweetDeliveryLogs($monitor_id, $author_username, $delivery_status, $page, $page_size, $sort): \ScrapeBadger\Model\TweetDeliveryLogListResponse
+twitterListTweetDeliveryLogs()
 ```
 
 List tweet delivery logs
 
-List tweet delivery logs for the authenticated API key's monitors.
+Removed on 2026-11-09 (SCR-396): ScrapeBadger no longer stores delivered tweets.  Always answers ``410 Gone`` with ``error: delivery_logs_removed``. Each tweet is delivered to your webhook or WebSocket only; keep your own log there.
 
 ### Example
 
@@ -2749,16 +2738,9 @@ $apiInstance = new ScrapeBadger\Api\TwitterApi(
     new GuzzleHttp\Client(),
     $config
 );
-$monitor_id = 'monitor_id_example'; // string
-$author_username = 'author_username_example'; // string
-$delivery_status = 'delivery_status_example'; // string
-$page = 1; // int
-$page_size = 20; // int
-$sort = 'desc'; // string
 
 try {
-    $result = $apiInstance->twitterListTweetDeliveryLogs($monitor_id, $author_username, $delivery_status, $page, $page_size, $sort);
-    print_r($result);
+    $apiInstance->twitterListTweetDeliveryLogs();
 } catch (Exception $e) {
     echo 'Exception when calling TwitterApi->twitterListTweetDeliveryLogs: ', $e->getMessage(), PHP_EOL;
 }
@@ -2766,18 +2748,11 @@ try {
 
 ### Parameters
 
-| Name | Type | Description  | Notes |
-| ------------- | ------------- | ------------- | ------------- |
-| **monitor_id** | **string**|  | [optional] |
-| **author_username** | **string**|  | [optional] |
-| **delivery_status** | **string**|  | [optional] |
-| **page** | **int**|  | [optional] [default to 1] |
-| **page_size** | **int**|  | [optional] [default to 20] |
-| **sort** | **string**|  | [optional] [default to &#39;desc&#39;] |
+This endpoint does not need any parameter.
 
 ### Return type
 
-[**\ScrapeBadger\Model\TweetDeliveryLogListResponse**](../Model/TweetDeliveryLogListResponse.md)
+void (empty response body)
 
 ### Authorization
 

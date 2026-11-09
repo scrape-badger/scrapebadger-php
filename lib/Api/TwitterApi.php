@@ -13886,21 +13886,16 @@ class TwitterApi
      * List delivery logs for a filter rule
      *
      * @param  string $rule_id rule_id (required)
-     * @param  string $delivery_status delivery_status (optional)
-     * @param  string $author_username author_username (optional)
-     * @param  int $page page (optional, default to 1)
-     * @param  int $page_size page_size (optional, default to 20)
-     * @param  string $sort sort (optional, default to 'desc')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterListDeliveryLogsForAFilterRule'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \ScrapeBadger\Model\FilterRuleDeliveryLogListResponse|\ScrapeBadger\Model\HTTPValidationError
+     * @return void
+     * @deprecated
      */
-    public function twitterListDeliveryLogsForAFilterRule($rule_id, $delivery_status = null, $author_username = null, $page = 1, $page_size = 20, $sort = 'desc', string $contentType = self::contentTypes['twitterListDeliveryLogsForAFilterRule'][0])
+    public function twitterListDeliveryLogsForAFilterRule($rule_id, string $contentType = self::contentTypes['twitterListDeliveryLogsForAFilterRule'][0])
     {
-        list($response) = $this->twitterListDeliveryLogsForAFilterRuleWithHttpInfo($rule_id, $delivery_status, $author_username, $page, $page_size, $sort, $contentType);
-        return $response;
+        $this->twitterListDeliveryLogsForAFilterRuleWithHttpInfo($rule_id, $contentType);
     }
 
     /**
@@ -13909,20 +13904,16 @@ class TwitterApi
      * List delivery logs for a filter rule
      *
      * @param  string $rule_id (required)
-     * @param  string $delivery_status (optional)
-     * @param  string $author_username (optional)
-     * @param  int $page (optional, default to 1)
-     * @param  int $page_size (optional, default to 20)
-     * @param  string $sort (optional, default to 'desc')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterListDeliveryLogsForAFilterRule'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \ScrapeBadger\Model\FilterRuleDeliveryLogListResponse|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of null, HTTP status code, HTTP response headers (array of strings)
+     * @deprecated
      */
-    public function twitterListDeliveryLogsForAFilterRuleWithHttpInfo($rule_id, $delivery_status = null, $author_username = null, $page = 1, $page_size = 20, $sort = 'desc', string $contentType = self::contentTypes['twitterListDeliveryLogsForAFilterRule'][0])
+    public function twitterListDeliveryLogsForAFilterRuleWithHttpInfo($rule_id, string $contentType = self::contentTypes['twitterListDeliveryLogsForAFilterRule'][0])
     {
-        $request = $this->twitterListDeliveryLogsForAFilterRuleRequest($rule_id, $delivery_status, $author_username, $page, $page_size, $sort, $contentType);
+        $request = $this->twitterListDeliveryLogsForAFilterRuleRequest($rule_id, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -13947,110 +13938,14 @@ class TwitterApi
             $statusCode = $response->getStatusCode();
 
 
-            switch($statusCode) {
-                case 200:
-                    if ('\ScrapeBadger\Model\FilterRuleDeliveryLogListResponse' === '\SplFileObject') {
-                        $content = $response->getBody(); //stream goes to serializer
-                    } else {
-                        $content = (string) $response->getBody();
-                        if ('\ScrapeBadger\Model\FilterRuleDeliveryLogListResponse' !== 'string') {
-                            try {
-                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
-                            } catch (\JsonException $exception) {
-                                throw new ApiException(
-                                    sprintf(
-                                        'Error JSON decoding server response (%s)',
-                                        $request->getUri()
-                                    ),
-                                    $statusCode,
-                                    $response->getHeaders(),
-                                    $content
-                                );
-                            }
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\FilterRuleDeliveryLogListResponse', []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                case 422:
-                    if ('\ScrapeBadger\Model\HTTPValidationError' === '\SplFileObject') {
-                        $content = $response->getBody(); //stream goes to serializer
-                    } else {
-                        $content = (string) $response->getBody();
-                        if ('\ScrapeBadger\Model\HTTPValidationError' !== 'string') {
-                            try {
-                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
-                            } catch (\JsonException $exception) {
-                                throw new ApiException(
-                                    sprintf(
-                                        'Error JSON decoding server response (%s)',
-                                        $request->getUri()
-                                    ),
-                                    $statusCode,
-                                    $response->getHeaders(),
-                                    $content
-                                );
-                            }
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\HTTPValidationError', []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-            }
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        (string) $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    (string) $response->getBody()
-                );
-            }
-
-            $returnType = '\ScrapeBadger\Model\FilterRuleDeliveryLogListResponse';
-            if ($returnType === '\SplFileObject') {
-                $content = $response->getBody(); //stream goes to serializer
-            } else {
-                $content = (string) $response->getBody();
-                if ($returnType !== 'string') {
-                    try {
-                        $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
-                    } catch (\JsonException $exception) {
-                        throw new ApiException(
-                            sprintf(
-                                'Error JSON decoding server response (%s)',
-                                $request->getUri()
-                            ),
-                            $statusCode,
-                            $response->getHeaders(),
-                            $content
-                        );
-                    }
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
+            return [null, $statusCode, $response->getHeaders()];
 
         } catch (ApiException $e) {
             switch ($e->getCode()) {
-                case 200:
+                case 410:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        '\ScrapeBadger\Model\FilterRuleDeliveryLogListResponse',
+                        'mixed',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -14074,19 +13969,15 @@ class TwitterApi
      * List delivery logs for a filter rule
      *
      * @param  string $rule_id (required)
-     * @param  string $delivery_status (optional)
-     * @param  string $author_username (optional)
-     * @param  int $page (optional, default to 1)
-     * @param  int $page_size (optional, default to 20)
-     * @param  string $sort (optional, default to 'desc')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterListDeliveryLogsForAFilterRule'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
+     * @deprecated
      */
-    public function twitterListDeliveryLogsForAFilterRuleAsync($rule_id, $delivery_status = null, $author_username = null, $page = 1, $page_size = 20, $sort = 'desc', string $contentType = self::contentTypes['twitterListDeliveryLogsForAFilterRule'][0])
+    public function twitterListDeliveryLogsForAFilterRuleAsync($rule_id, string $contentType = self::contentTypes['twitterListDeliveryLogsForAFilterRule'][0])
     {
-        return $this->twitterListDeliveryLogsForAFilterRuleAsyncWithHttpInfo($rule_id, $delivery_status, $author_username, $page, $page_size, $sort, $contentType)
+        return $this->twitterListDeliveryLogsForAFilterRuleAsyncWithHttpInfo($rule_id, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -14100,39 +13991,22 @@ class TwitterApi
      * List delivery logs for a filter rule
      *
      * @param  string $rule_id (required)
-     * @param  string $delivery_status (optional)
-     * @param  string $author_username (optional)
-     * @param  int $page (optional, default to 1)
-     * @param  int $page_size (optional, default to 20)
-     * @param  string $sort (optional, default to 'desc')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterListDeliveryLogsForAFilterRule'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
+     * @deprecated
      */
-    public function twitterListDeliveryLogsForAFilterRuleAsyncWithHttpInfo($rule_id, $delivery_status = null, $author_username = null, $page = 1, $page_size = 20, $sort = 'desc', string $contentType = self::contentTypes['twitterListDeliveryLogsForAFilterRule'][0])
+    public function twitterListDeliveryLogsForAFilterRuleAsyncWithHttpInfo($rule_id, string $contentType = self::contentTypes['twitterListDeliveryLogsForAFilterRule'][0])
     {
-        $returnType = '\ScrapeBadger\Model\FilterRuleDeliveryLogListResponse';
-        $request = $this->twitterListDeliveryLogsForAFilterRuleRequest($rule_id, $delivery_status, $author_username, $page, $page_size, $sort, $contentType);
+        $returnType = '';
+        $request = $this->twitterListDeliveryLogsForAFilterRuleRequest($rule_id, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
             ->then(
                 function ($response) use ($returnType) {
-                    if ($returnType === '\SplFileObject') {
-                        $content = $response->getBody(); //stream goes to serializer
-                    } else {
-                        $content = (string) $response->getBody();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
+                    return [null, $response->getStatusCode(), $response->getHeaders()];
                 },
                 function ($exception) {
                     $response = $exception->getResponse();
@@ -14155,17 +14029,13 @@ class TwitterApi
      * Create request for operation 'twitterListDeliveryLogsForAFilterRule'
      *
      * @param  string $rule_id (required)
-     * @param  string $delivery_status (optional)
-     * @param  string $author_username (optional)
-     * @param  int $page (optional, default to 1)
-     * @param  int $page_size (optional, default to 20)
-     * @param  string $sort (optional, default to 'desc')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterListDeliveryLogsForAFilterRule'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @deprecated
      */
-    public function twitterListDeliveryLogsForAFilterRuleRequest($rule_id, $delivery_status = null, $author_username = null, $page = 1, $page_size = 20, $sort = 'desc', string $contentType = self::contentTypes['twitterListDeliveryLogsForAFilterRule'][0])
+    public function twitterListDeliveryLogsForAFilterRuleRequest($rule_id, string $contentType = self::contentTypes['twitterListDeliveryLogsForAFilterRule'][0])
     {
 
         // verify the required parameter 'rule_id' is set
@@ -14176,20 +14046,6 @@ class TwitterApi
         }
 
 
-
-        if ($page !== null && $page < 1) {
-            throw new \InvalidArgumentException('invalid value for "$page" when calling TwitterApi.twitterListDeliveryLogsForAFilterRule, must be bigger than or equal to 1.');
-        }
-        
-        if ($page_size !== null && $page_size > 100) {
-            throw new \InvalidArgumentException('invalid value for "$page_size" when calling TwitterApi.twitterListDeliveryLogsForAFilterRule, must be smaller than or equal to 100.');
-        }
-        if ($page_size !== null && $page_size < 1) {
-            throw new \InvalidArgumentException('invalid value for "$page_size" when calling TwitterApi.twitterListDeliveryLogsForAFilterRule, must be bigger than or equal to 1.');
-        }
-        
-
-
         $resourcePath = '/v1/twitter/stream/filter-rules/{rule_id}/logs';
         $formParams = [];
         $queryParams = [];
@@ -14197,51 +14053,6 @@ class TwitterApi
         $httpBody = '';
         $multipart = false;
 
-        // query params
-        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $delivery_status,
-            'delivery_status', // param base name
-            'string', // openApiType
-            'form', // style
-            true, // explode
-            false // required
-        ) ?? []);
-        // query params
-        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $author_username,
-            'author_username', // param base name
-            'string', // openApiType
-            'form', // style
-            true, // explode
-            false // required
-        ) ?? []);
-        // query params
-        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $page,
-            'page', // param base name
-            'integer', // openApiType
-            'form', // style
-            true, // explode
-            false // required
-        ) ?? []);
-        // query params
-        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $page_size,
-            'page_size', // param base name
-            'integer', // openApiType
-            'form', // style
-            true, // explode
-            false // required
-        ) ?? []);
-        // query params
-        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $sort,
-            'sort', // param base name
-            'string', // openApiType
-            'form', // style
-            true, // explode
-            false // required
-        ) ?? []);
 
 
         // path params
@@ -15081,22 +14892,16 @@ class TwitterApi
      *
      * List tweet delivery logs
      *
-     * @param  string $monitor_id monitor_id (optional)
-     * @param  string $author_username author_username (optional)
-     * @param  string $delivery_status delivery_status (optional)
-     * @param  int $page page (optional, default to 1)
-     * @param  int $page_size page_size (optional, default to 20)
-     * @param  string $sort sort (optional, default to 'desc')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterListTweetDeliveryLogs'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \ScrapeBadger\Model\TweetDeliveryLogListResponse|\ScrapeBadger\Model\HTTPValidationError
+     * @return void
+     * @deprecated
      */
-    public function twitterListTweetDeliveryLogs($monitor_id = null, $author_username = null, $delivery_status = null, $page = 1, $page_size = 20, $sort = 'desc', string $contentType = self::contentTypes['twitterListTweetDeliveryLogs'][0])
+    public function twitterListTweetDeliveryLogs(string $contentType = self::contentTypes['twitterListTweetDeliveryLogs'][0])
     {
-        list($response) = $this->twitterListTweetDeliveryLogsWithHttpInfo($monitor_id, $author_username, $delivery_status, $page, $page_size, $sort, $contentType);
-        return $response;
+        $this->twitterListTweetDeliveryLogsWithHttpInfo($contentType);
     }
 
     /**
@@ -15104,21 +14909,16 @@ class TwitterApi
      *
      * List tweet delivery logs
      *
-     * @param  string $monitor_id (optional)
-     * @param  string $author_username (optional)
-     * @param  string $delivery_status (optional)
-     * @param  int $page (optional, default to 1)
-     * @param  int $page_size (optional, default to 20)
-     * @param  string $sort (optional, default to 'desc')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterListTweetDeliveryLogs'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \ScrapeBadger\Model\TweetDeliveryLogListResponse|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of null, HTTP status code, HTTP response headers (array of strings)
+     * @deprecated
      */
-    public function twitterListTweetDeliveryLogsWithHttpInfo($monitor_id = null, $author_username = null, $delivery_status = null, $page = 1, $page_size = 20, $sort = 'desc', string $contentType = self::contentTypes['twitterListTweetDeliveryLogs'][0])
+    public function twitterListTweetDeliveryLogsWithHttpInfo(string $contentType = self::contentTypes['twitterListTweetDeliveryLogs'][0])
     {
-        $request = $this->twitterListTweetDeliveryLogsRequest($monitor_id, $author_username, $delivery_status, $page, $page_size, $sort, $contentType);
+        $request = $this->twitterListTweetDeliveryLogsRequest($contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -15143,118 +14943,14 @@ class TwitterApi
             $statusCode = $response->getStatusCode();
 
 
-            switch($statusCode) {
-                case 200:
-                    if ('\ScrapeBadger\Model\TweetDeliveryLogListResponse' === '\SplFileObject') {
-                        $content = $response->getBody(); //stream goes to serializer
-                    } else {
-                        $content = (string) $response->getBody();
-                        if ('\ScrapeBadger\Model\TweetDeliveryLogListResponse' !== 'string') {
-                            try {
-                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
-                            } catch (\JsonException $exception) {
-                                throw new ApiException(
-                                    sprintf(
-                                        'Error JSON decoding server response (%s)',
-                                        $request->getUri()
-                                    ),
-                                    $statusCode,
-                                    $response->getHeaders(),
-                                    $content
-                                );
-                            }
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\TweetDeliveryLogListResponse', []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                case 422:
-                    if ('\ScrapeBadger\Model\HTTPValidationError' === '\SplFileObject') {
-                        $content = $response->getBody(); //stream goes to serializer
-                    } else {
-                        $content = (string) $response->getBody();
-                        if ('\ScrapeBadger\Model\HTTPValidationError' !== 'string') {
-                            try {
-                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
-                            } catch (\JsonException $exception) {
-                                throw new ApiException(
-                                    sprintf(
-                                        'Error JSON decoding server response (%s)',
-                                        $request->getUri()
-                                    ),
-                                    $statusCode,
-                                    $response->getHeaders(),
-                                    $content
-                                );
-                            }
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\HTTPValidationError', []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-            }
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        (string) $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    (string) $response->getBody()
-                );
-            }
-
-            $returnType = '\ScrapeBadger\Model\TweetDeliveryLogListResponse';
-            if ($returnType === '\SplFileObject') {
-                $content = $response->getBody(); //stream goes to serializer
-            } else {
-                $content = (string) $response->getBody();
-                if ($returnType !== 'string') {
-                    try {
-                        $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
-                    } catch (\JsonException $exception) {
-                        throw new ApiException(
-                            sprintf(
-                                'Error JSON decoding server response (%s)',
-                                $request->getUri()
-                            ),
-                            $statusCode,
-                            $response->getHeaders(),
-                            $content
-                        );
-                    }
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
+            return [null, $statusCode, $response->getHeaders()];
 
         } catch (ApiException $e) {
             switch ($e->getCode()) {
-                case 200:
+                case 410:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        '\ScrapeBadger\Model\TweetDeliveryLogListResponse',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                case 422:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\ScrapeBadger\Model\HTTPValidationError',
+                        'mixed',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -15269,20 +14965,15 @@ class TwitterApi
      *
      * List tweet delivery logs
      *
-     * @param  string $monitor_id (optional)
-     * @param  string $author_username (optional)
-     * @param  string $delivery_status (optional)
-     * @param  int $page (optional, default to 1)
-     * @param  int $page_size (optional, default to 20)
-     * @param  string $sort (optional, default to 'desc')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterListTweetDeliveryLogs'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
+     * @deprecated
      */
-    public function twitterListTweetDeliveryLogsAsync($monitor_id = null, $author_username = null, $delivery_status = null, $page = 1, $page_size = 20, $sort = 'desc', string $contentType = self::contentTypes['twitterListTweetDeliveryLogs'][0])
+    public function twitterListTweetDeliveryLogsAsync(string $contentType = self::contentTypes['twitterListTweetDeliveryLogs'][0])
     {
-        return $this->twitterListTweetDeliveryLogsAsyncWithHttpInfo($monitor_id, $author_username, $delivery_status, $page, $page_size, $sort, $contentType)
+        return $this->twitterListTweetDeliveryLogsAsyncWithHttpInfo($contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -15295,40 +14986,22 @@ class TwitterApi
      *
      * List tweet delivery logs
      *
-     * @param  string $monitor_id (optional)
-     * @param  string $author_username (optional)
-     * @param  string $delivery_status (optional)
-     * @param  int $page (optional, default to 1)
-     * @param  int $page_size (optional, default to 20)
-     * @param  string $sort (optional, default to 'desc')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterListTweetDeliveryLogs'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
+     * @deprecated
      */
-    public function twitterListTweetDeliveryLogsAsyncWithHttpInfo($monitor_id = null, $author_username = null, $delivery_status = null, $page = 1, $page_size = 20, $sort = 'desc', string $contentType = self::contentTypes['twitterListTweetDeliveryLogs'][0])
+    public function twitterListTweetDeliveryLogsAsyncWithHttpInfo(string $contentType = self::contentTypes['twitterListTweetDeliveryLogs'][0])
     {
-        $returnType = '\ScrapeBadger\Model\TweetDeliveryLogListResponse';
-        $request = $this->twitterListTweetDeliveryLogsRequest($monitor_id, $author_username, $delivery_status, $page, $page_size, $sort, $contentType);
+        $returnType = '';
+        $request = $this->twitterListTweetDeliveryLogsRequest($contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
             ->then(
                 function ($response) use ($returnType) {
-                    if ($returnType === '\SplFileObject') {
-                        $content = $response->getBody(); //stream goes to serializer
-                    } else {
-                        $content = (string) $response->getBody();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
+                    return [null, $response->getStatusCode(), $response->getHeaders()];
                 },
                 function ($exception) {
                     $response = $exception->getResponse();
@@ -15350,34 +15023,14 @@ class TwitterApi
     /**
      * Create request for operation 'twitterListTweetDeliveryLogs'
      *
-     * @param  string $monitor_id (optional)
-     * @param  string $author_username (optional)
-     * @param  string $delivery_status (optional)
-     * @param  int $page (optional, default to 1)
-     * @param  int $page_size (optional, default to 20)
-     * @param  string $sort (optional, default to 'desc')
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterListTweetDeliveryLogs'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @deprecated
      */
-    public function twitterListTweetDeliveryLogsRequest($monitor_id = null, $author_username = null, $delivery_status = null, $page = 1, $page_size = 20, $sort = 'desc', string $contentType = self::contentTypes['twitterListTweetDeliveryLogs'][0])
+    public function twitterListTweetDeliveryLogsRequest(string $contentType = self::contentTypes['twitterListTweetDeliveryLogs'][0])
     {
-
-
-
-
-        if ($page !== null && $page < 1) {
-            throw new \InvalidArgumentException('invalid value for "$page" when calling TwitterApi.twitterListTweetDeliveryLogs, must be bigger than or equal to 1.');
-        }
-        
-        if ($page_size !== null && $page_size > 100) {
-            throw new \InvalidArgumentException('invalid value for "$page_size" when calling TwitterApi.twitterListTweetDeliveryLogs, must be smaller than or equal to 100.');
-        }
-        if ($page_size !== null && $page_size < 1) {
-            throw new \InvalidArgumentException('invalid value for "$page_size" when calling TwitterApi.twitterListTweetDeliveryLogs, must be bigger than or equal to 1.');
-        }
-        
 
 
         $resourcePath = '/v1/twitter/stream/logs';
@@ -15387,60 +15040,6 @@ class TwitterApi
         $httpBody = '';
         $multipart = false;
 
-        // query params
-        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $monitor_id,
-            'monitor_id', // param base name
-            'string', // openApiType
-            'form', // style
-            true, // explode
-            false // required
-        ) ?? []);
-        // query params
-        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $author_username,
-            'author_username', // param base name
-            'string', // openApiType
-            'form', // style
-            true, // explode
-            false // required
-        ) ?? []);
-        // query params
-        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $delivery_status,
-            'delivery_status', // param base name
-            'string', // openApiType
-            'form', // style
-            true, // explode
-            false // required
-        ) ?? []);
-        // query params
-        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $page,
-            'page', // param base name
-            'integer', // openApiType
-            'form', // style
-            true, // explode
-            false // required
-        ) ?? []);
-        // query params
-        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $page_size,
-            'page_size', // param base name
-            'integer', // openApiType
-            'form', // style
-            true, // explode
-            false // required
-        ) ?? []);
-        // query params
-        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $sort,
-            'sort', // param base name
-            'string', // openApiType
-            'form', // style
-            true, // explode
-            false // required
-        ) ?? []);
 
 
 

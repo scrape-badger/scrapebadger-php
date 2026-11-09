@@ -104,8 +104,6 @@ docs/Model/FamilyFriendly.md
 docs/Model/Faq.md
 docs/Model/FeedbackRequest.md
 docs/Model/FilterRuleCreate.md
-docs/Model/FilterRuleDeliveryLogListResponse.md
-docs/Model/FilterRuleDeliveryLogResponse.md
 docs/Model/FilterRuleListResponse.md
 docs/Model/FilterRuleResponse.md
 docs/Model/FilterRuleUpdate.md
@@ -201,8 +199,6 @@ docs/Model/StreamMonitorUpdate.md
 docs/Model/SubscriptionInfo.md
 docs/Model/Subtype.md
 docs/Model/Thumbnail.md
-docs/Model/TweetDeliveryLogListResponse.md
-docs/Model/TweetDeliveryLogResponse.md
 docs/Model/Type.md
 docs/Model/Url.md
 docs/Model/UserItemsResponse.md
@@ -345,8 +341,6 @@ lib/Model/FamilyFriendly.php
 lib/Model/Faq.php
 lib/Model/FeedbackRequest.php
 lib/Model/FilterRuleCreate.php
-lib/Model/FilterRuleDeliveryLogListResponse.php
-lib/Model/FilterRuleDeliveryLogResponse.php
 lib/Model/FilterRuleListResponse.php
 lib/Model/FilterRuleResponse.php
 lib/Model/FilterRuleUpdate.php
@@ -443,8 +437,6 @@ lib/Model/StreamMonitorUpdate.php
 lib/Model/SubscriptionInfo.php
 lib/Model/Subtype.php
 lib/Model/Thumbnail.php
-lib/Model/TweetDeliveryLogListResponse.php
-lib/Model/TweetDeliveryLogResponse.php
 lib/Model/Type.php
 lib/Model/Url.php
 lib/Model/UserItemsResponse.php
@@ -585,8 +577,6 @@ test/Model/FamilyFriendlyTest.php
 test/Model/FaqTest.php
 test/Model/FeedbackRequestTest.php
 test/Model/FilterRuleCreateTest.php
-test/Model/FilterRuleDeliveryLogListResponseTest.php
-test/Model/FilterRuleDeliveryLogResponseTest.php
 test/Model/FilterRuleListResponseTest.php
 test/Model/FilterRuleResponseTest.php
 test/Model/FilterRuleUpdateTest.php
@@ -682,8 +672,6 @@ test/Model/StreamMonitorUpdateTest.php
 test/Model/SubscriptionInfoTest.php
 test/Model/SubtypeTest.php
 test/Model/ThumbnailTest.php
-test/Model/TweetDeliveryLogListResponseTest.php
-test/Model/TweetDeliveryLogResponseTest.php
 test/Model/TypeTest.php
 test/Model/UrlTest.php
 test/Model/UserItemsResponseTest.php

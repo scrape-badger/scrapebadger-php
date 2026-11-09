@@ -4,18 +4,18 @@ All URIs are relative to https://scrapebadger.com, except if the operation defin
 
 | Method | HTTP request | Description |
 | ------------- | ------------- | ------------- |
-| [**resultsReReadAResult()**](ResultsApi.md#resultsReReadAResult) | **GET** /v1/results/{result_id} | Re-read a result |
+| [**resultsReReadAResultRemoved()**](ResultsApi.md#resultsReReadAResultRemoved) | **GET** /v1/results/{result_id} | Re-read a result (removed) |
 
 
-## `resultsReReadAResult()`
+## `resultsReReadAResultRemoved()`
 
 ```php
-resultsReReadAResult($result_id): mixed
+resultsReReadAResultRemoved($result_id): mixed
 ```
 
-Re-read a result
+Re-read a result (removed)
 
-Replay a billed result (X-Result-ID) for free for ~15 minutes, optionally trimmed with jq / fields / max_items / summary. Never re-run a paid call just to reshape it.
+Removed (SCR-396): ScrapeBadger no longer stores results, so there is nothing to re-read. Always 410. Narrow a call with _jq / _fields / _max_items instead.
 
 ### Example
 
@@ -39,10 +39,10 @@ $apiInstance = new ScrapeBadger\Api\ResultsApi(
 $result_id = 'result_id_example'; // string
 
 try {
-    $result = $apiInstance->resultsReReadAResult($result_id);
+    $result = $apiInstance->resultsReReadAResultRemoved($result_id);
     print_r($result);
 } catch (Exception $e) {
-    echo 'Exception when calling ResultsApi->resultsReReadAResult: ', $e->getMessage(), PHP_EOL;
+    echo 'Exception when calling ResultsApi->resultsReReadAResultRemoved: ', $e->getMessage(), PHP_EOL;
 }
 ```
 

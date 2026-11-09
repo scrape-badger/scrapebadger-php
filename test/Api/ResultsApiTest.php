@@ -72,12 +72,12 @@ class ResultsApiTest extends TestCase
     }
 
     /**
-     * Test case for resultsReReadAResult
+     * Test case for resultsReReadAResultRemoved
      *
-     * Re-read a result.
+     * Re-read a result (removed).
      *
      */
-    public function testResultsReReadAResult()
+    public function testResultsReReadAResultRemoved()
     {
         // TODO: implement
         self::markTestIncomplete('Not implemented');

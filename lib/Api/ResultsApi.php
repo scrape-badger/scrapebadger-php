@@ -71,7 +71,7 @@ class ResultsApi
 
     /** @var string[] $contentTypes **/
     public const contentTypes = [
-        'resultsReReadAResult' => [
+        'resultsReReadAResultRemoved' => [
             'application/json',
         ],
     ];
@@ -123,38 +123,38 @@ class ResultsApi
     }
 
     /**
-     * Operation resultsReReadAResult
+     * Operation resultsReReadAResultRemoved
      *
-     * Re-read a result
+     * Re-read a result (removed)
      *
      * @param  string $result_id result_id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['resultsReReadAResult'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['resultsReReadAResultRemoved'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return mixed|\ScrapeBadger\Model\HTTPValidationError
      */
-    public function resultsReReadAResult($result_id, string $contentType = self::contentTypes['resultsReReadAResult'][0])
+    public function resultsReReadAResultRemoved($result_id, string $contentType = self::contentTypes['resultsReReadAResultRemoved'][0])
     {
-        list($response) = $this->resultsReReadAResultWithHttpInfo($result_id, $contentType);
+        list($response) = $this->resultsReReadAResultRemovedWithHttpInfo($result_id, $contentType);
         return $response;
     }
 
     /**
-     * Operation resultsReReadAResultWithHttpInfo
+     * Operation resultsReReadAResultRemovedWithHttpInfo
      *
-     * Re-read a result
+     * Re-read a result (removed)
      *
      * @param  string $result_id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['resultsReReadAResult'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['resultsReReadAResultRemoved'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
-    public function resultsReReadAResultWithHttpInfo($result_id, string $contentType = self::contentTypes['resultsReReadAResult'][0])
+    public function resultsReReadAResultRemovedWithHttpInfo($result_id, string $contentType = self::contentTypes['resultsReReadAResultRemoved'][0])
     {
-        $request = $this->resultsReReadAResultRequest($result_id, $contentType);
+        $request = $this->resultsReReadAResultRemovedRequest($result_id, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -301,19 +301,19 @@ class ResultsApi
     }
 
     /**
-     * Operation resultsReReadAResultAsync
+     * Operation resultsReReadAResultRemovedAsync
      *
-     * Re-read a result
+     * Re-read a result (removed)
      *
      * @param  string $result_id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['resultsReReadAResult'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['resultsReReadAResultRemoved'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function resultsReReadAResultAsync($result_id, string $contentType = self::contentTypes['resultsReReadAResult'][0])
+    public function resultsReReadAResultRemovedAsync($result_id, string $contentType = self::contentTypes['resultsReReadAResultRemoved'][0])
     {
-        return $this->resultsReReadAResultAsyncWithHttpInfo($result_id, $contentType)
+        return $this->resultsReReadAResultRemovedAsyncWithHttpInfo($result_id, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -322,20 +322,20 @@ class ResultsApi
     }
 
     /**
-     * Operation resultsReReadAResultAsyncWithHttpInfo
+     * Operation resultsReReadAResultRemovedAsyncWithHttpInfo
      *
-     * Re-read a result
+     * Re-read a result (removed)
      *
      * @param  string $result_id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['resultsReReadAResult'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['resultsReReadAResultRemoved'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function resultsReReadAResultAsyncWithHttpInfo($result_id, string $contentType = self::contentTypes['resultsReReadAResult'][0])
+    public function resultsReReadAResultRemovedAsyncWithHttpInfo($result_id, string $contentType = self::contentTypes['resultsReReadAResultRemoved'][0])
     {
         $returnType = 'mixed';
-        $request = $this->resultsReReadAResultRequest($result_id, $contentType);
+        $request = $this->resultsReReadAResultRemovedRequest($result_id, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -374,21 +374,21 @@ class ResultsApi
     }
 
     /**
-     * Create request for operation 'resultsReReadAResult'
+     * Create request for operation 'resultsReReadAResultRemoved'
      *
      * @param  string $result_id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['resultsReReadAResult'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['resultsReReadAResultRemoved'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function resultsReReadAResultRequest($result_id, string $contentType = self::contentTypes['resultsReReadAResult'][0])
+    public function resultsReReadAResultRemovedRequest($result_id, string $contentType = self::contentTypes['resultsReReadAResultRemoved'][0])
     {
 
         // verify the required parameter 'result_id' is set
         if ($result_id === null || (is_array($result_id) && count($result_id) === 0)) {
             throw new \InvalidArgumentException(
-                'Missing the required parameter $result_id when calling resultsReReadAResult'
+                'Missing the required parameter $result_id when calling resultsReReadAResultRemoved'
             );
         }
 

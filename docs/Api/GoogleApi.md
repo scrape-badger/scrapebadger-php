@@ -1015,7 +1015,7 @@ $radius = 3.4; // float | Location accuracy in meters; requires lat/lon or a nam
 $color_scheme = 'color_scheme_example'; // string | Google color scheme.
 $tbm = 'tbm_example'; // string | Google search type. Use output=html for verticals; dedicated APIs provide parsed vertical results.
 $udm = 'udm_example'; // string | Google result filter: web or 14 for web, 18 for forums. Other verticals require output=html.
-$no_cache = false; // bool | Bypass result caches and request a fresh Google fetch.
+$no_cache = false; // bool | Ignored: responses are never cached.
 $as_dt = 'as_dt_example'; // string | Site restriction mode: i includes, e excludes as_sitesearch.
 $as_epq = 'as_epq_example'; // string | Exact phrase.
 $as_eq = 'as_eq_example'; // string | Words to exclude.
@@ -1073,7 +1073,7 @@ try {
 | **color_scheme** | **string**| Google color scheme. | [optional] |
 | **tbm** | **string**| Google search type. Use output&#x3D;html for verticals; dedicated APIs provide parsed vertical results. | [optional] |
 | **udm** | **string**| Google result filter: web or 14 for web, 18 for forums. Other verticals require output&#x3D;html. | [optional] |
-| **no_cache** | **bool**| Bypass result caches and request a fresh Google fetch. | [optional] [default to false] |
+| **no_cache** | **bool**| Ignored: responses are never cached. | [optional] [default to false] |
 | **as_dt** | **string**| Site restriction mode: i includes, e excludes as_sitesearch. | [optional] |
 | **as_epq** | **string**| Exact phrase. | [optional] |
 | **as_eq** | **string**| Words to exclude. | [optional] |
@@ -1433,7 +1433,7 @@ $radius = 3.4; // float | Location accuracy in meters; requires lat/lon or a nam
 $color_scheme = 'color_scheme_example'; // string | Google color scheme.
 $tbm = 'tbm_example'; // string | Google search type. Use output=html for verticals; dedicated APIs provide parsed vertical results.
 $udm = 'udm_example'; // string | Google result filter: web or 14 for web, 18 for forums. Other verticals require output=html.
-$no_cache = false; // bool | Bypass result caches and request a fresh Google fetch.
+$no_cache = false; // bool | Ignored: responses are never cached.
 $as_dt = 'as_dt_example'; // string | Site restriction mode: i includes, e excludes as_sitesearch.
 $as_epq = 'as_epq_example'; // string | Exact phrase.
 $as_eq = 'as_eq_example'; // string | Words to exclude.
@@ -1494,7 +1494,7 @@ try {
 | **color_scheme** | **string**| Google color scheme. | [optional] |
 | **tbm** | **string**| Google search type. Use output&#x3D;html for verticals; dedicated APIs provide parsed vertical results. | [optional] |
 | **udm** | **string**| Google result filter: web or 14 for web, 18 for forums. Other verticals require output&#x3D;html. | [optional] |
-| **no_cache** | **bool**| Bypass result caches and request a fresh Google fetch. | [optional] [default to false] |
+| **no_cache** | **bool**| Ignored: responses are never cached. | [optional] [default to false] |
 | **as_dt** | **string**| Site restriction mode: i includes, e excludes as_sitesearch. | [optional] |
 | **as_epq** | **string**| Exact phrase. | [optional] |
 | **as_eq** | **string**| Words to exclude. | [optional] |

@@ -3286,18 +3286,22 @@ class GoogleApi
      * Google AI Mode search
      *
      * @param  string $q Search query for AI-generated response (required)
-     * @param  string $gl Country code (optional, default to 'us')
+     * @param  string $gl Google country (market) code. It shapes the answer; it does not pick the exit IP&#39;s country. Defaults to the &#x60;location&#x60;&#39;s country when &#x60;location&#x60; is set. (optional, default to 'us')
      * @param  string $hl Language code (optional, default to 'en')
      * @param  bool $include_html Include the raw &#x60;answer_html&#x60; (full answer body HTML) in the response for maximum parity. It can be 100s of KB — set false when you only need the structured &#x60;text_blocks&#x60; + &#x60;markdown&#x60;. (optional, default to true)
+     * @param  string $location Answer as if the user were here: a Google canonical location name (e.g. &#x60;Wonju-si,Gangwon-do,South Korea&#x60;), a Google criteria ID, or an unambiguous short name within &#x60;gl&#x60;. Use only one of location, uule, or lat/lon. (optional)
+     * @param  string $uule A Google UULE value in its &#x60;w+&#x60; (canonical name) or &#x60;j+&#x60; (coordinates) form. (optional)
+     * @param  float $lat Latitude of the user&#39;s location (with lon). (optional)
+     * @param  float $lon Longitude of the user&#39;s location (with lat). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googleGoogleAiModeSearch'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return mixed|\ScrapeBadger\Model\HTTPValidationError
      */
-    public function googleGoogleAiModeSearch($q, $gl = 'us', $hl = 'en', $include_html = true, string $contentType = self::contentTypes['googleGoogleAiModeSearch'][0])
+    public function googleGoogleAiModeSearch($q, $gl = 'us', $hl = 'en', $include_html = true, $location = null, $uule = null, $lat = null, $lon = null, string $contentType = self::contentTypes['googleGoogleAiModeSearch'][0])
     {
-        list($response) = $this->googleGoogleAiModeSearchWithHttpInfo($q, $gl, $hl, $include_html, $contentType);
+        list($response) = $this->googleGoogleAiModeSearchWithHttpInfo($q, $gl, $hl, $include_html, $location, $uule, $lat, $lon, $contentType);
         return $response;
     }
 
@@ -3307,18 +3311,22 @@ class GoogleApi
      * Google AI Mode search
      *
      * @param  string $q Search query for AI-generated response (required)
-     * @param  string $gl Country code (optional, default to 'us')
+     * @param  string $gl Google country (market) code. It shapes the answer; it does not pick the exit IP&#39;s country. Defaults to the &#x60;location&#x60;&#39;s country when &#x60;location&#x60; is set. (optional, default to 'us')
      * @param  string $hl Language code (optional, default to 'en')
      * @param  bool $include_html Include the raw &#x60;answer_html&#x60; (full answer body HTML) in the response for maximum parity. It can be 100s of KB — set false when you only need the structured &#x60;text_blocks&#x60; + &#x60;markdown&#x60;. (optional, default to true)
+     * @param  string $location Answer as if the user were here: a Google canonical location name (e.g. &#x60;Wonju-si,Gangwon-do,South Korea&#x60;), a Google criteria ID, or an unambiguous short name within &#x60;gl&#x60;. Use only one of location, uule, or lat/lon. (optional)
+     * @param  string $uule A Google UULE value in its &#x60;w+&#x60; (canonical name) or &#x60;j+&#x60; (coordinates) form. (optional)
+     * @param  float $lat Latitude of the user&#39;s location (with lon). (optional)
+     * @param  float $lon Longitude of the user&#39;s location (with lat). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googleGoogleAiModeSearch'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
      */
-    public function googleGoogleAiModeSearchWithHttpInfo($q, $gl = 'us', $hl = 'en', $include_html = true, string $contentType = self::contentTypes['googleGoogleAiModeSearch'][0])
+    public function googleGoogleAiModeSearchWithHttpInfo($q, $gl = 'us', $hl = 'en', $include_html = true, $location = null, $uule = null, $lat = null, $lon = null, string $contentType = self::contentTypes['googleGoogleAiModeSearch'][0])
     {
-        $request = $this->googleGoogleAiModeSearchRequest($q, $gl, $hl, $include_html, $contentType);
+        $request = $this->googleGoogleAiModeSearchRequest($q, $gl, $hl, $include_html, $location, $uule, $lat, $lon, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -3470,17 +3478,21 @@ class GoogleApi
      * Google AI Mode search
      *
      * @param  string $q Search query for AI-generated response (required)
-     * @param  string $gl Country code (optional, default to 'us')
+     * @param  string $gl Google country (market) code. It shapes the answer; it does not pick the exit IP&#39;s country. Defaults to the &#x60;location&#x60;&#39;s country when &#x60;location&#x60; is set. (optional, default to 'us')
      * @param  string $hl Language code (optional, default to 'en')
      * @param  bool $include_html Include the raw &#x60;answer_html&#x60; (full answer body HTML) in the response for maximum parity. It can be 100s of KB — set false when you only need the structured &#x60;text_blocks&#x60; + &#x60;markdown&#x60;. (optional, default to true)
+     * @param  string $location Answer as if the user were here: a Google canonical location name (e.g. &#x60;Wonju-si,Gangwon-do,South Korea&#x60;), a Google criteria ID, or an unambiguous short name within &#x60;gl&#x60;. Use only one of location, uule, or lat/lon. (optional)
+     * @param  string $uule A Google UULE value in its &#x60;w+&#x60; (canonical name) or &#x60;j+&#x60; (coordinates) form. (optional)
+     * @param  float $lat Latitude of the user&#39;s location (with lon). (optional)
+     * @param  float $lon Longitude of the user&#39;s location (with lat). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googleGoogleAiModeSearch'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function googleGoogleAiModeSearchAsync($q, $gl = 'us', $hl = 'en', $include_html = true, string $contentType = self::contentTypes['googleGoogleAiModeSearch'][0])
+    public function googleGoogleAiModeSearchAsync($q, $gl = 'us', $hl = 'en', $include_html = true, $location = null, $uule = null, $lat = null, $lon = null, string $contentType = self::contentTypes['googleGoogleAiModeSearch'][0])
     {
-        return $this->googleGoogleAiModeSearchAsyncWithHttpInfo($q, $gl, $hl, $include_html, $contentType)
+        return $this->googleGoogleAiModeSearchAsyncWithHttpInfo($q, $gl, $hl, $include_html, $location, $uule, $lat, $lon, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -3494,18 +3506,22 @@ class GoogleApi
      * Google AI Mode search
      *
      * @param  string $q Search query for AI-generated response (required)
-     * @param  string $gl Country code (optional, default to 'us')
+     * @param  string $gl Google country (market) code. It shapes the answer; it does not pick the exit IP&#39;s country. Defaults to the &#x60;location&#x60;&#39;s country when &#x60;location&#x60; is set. (optional, default to 'us')
      * @param  string $hl Language code (optional, default to 'en')
      * @param  bool $include_html Include the raw &#x60;answer_html&#x60; (full answer body HTML) in the response for maximum parity. It can be 100s of KB — set false when you only need the structured &#x60;text_blocks&#x60; + &#x60;markdown&#x60;. (optional, default to true)
+     * @param  string $location Answer as if the user were here: a Google canonical location name (e.g. &#x60;Wonju-si,Gangwon-do,South Korea&#x60;), a Google criteria ID, or an unambiguous short name within &#x60;gl&#x60;. Use only one of location, uule, or lat/lon. (optional)
+     * @param  string $uule A Google UULE value in its &#x60;w+&#x60; (canonical name) or &#x60;j+&#x60; (coordinates) form. (optional)
+     * @param  float $lat Latitude of the user&#39;s location (with lon). (optional)
+     * @param  float $lon Longitude of the user&#39;s location (with lat). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googleGoogleAiModeSearch'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function googleGoogleAiModeSearchAsyncWithHttpInfo($q, $gl = 'us', $hl = 'en', $include_html = true, string $contentType = self::contentTypes['googleGoogleAiModeSearch'][0])
+    public function googleGoogleAiModeSearchAsyncWithHttpInfo($q, $gl = 'us', $hl = 'en', $include_html = true, $location = null, $uule = null, $lat = null, $lon = null, string $contentType = self::contentTypes['googleGoogleAiModeSearch'][0])
     {
         $returnType = 'mixed';
-        $request = $this->googleGoogleAiModeSearchRequest($q, $gl, $hl, $include_html, $contentType);
+        $request = $this->googleGoogleAiModeSearchRequest($q, $gl, $hl, $include_html, $location, $uule, $lat, $lon, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -3547,15 +3563,19 @@ class GoogleApi
      * Create request for operation 'googleGoogleAiModeSearch'
      *
      * @param  string $q Search query for AI-generated response (required)
-     * @param  string $gl Country code (optional, default to 'us')
+     * @param  string $gl Google country (market) code. It shapes the answer; it does not pick the exit IP&#39;s country. Defaults to the &#x60;location&#x60;&#39;s country when &#x60;location&#x60; is set. (optional, default to 'us')
      * @param  string $hl Language code (optional, default to 'en')
      * @param  bool $include_html Include the raw &#x60;answer_html&#x60; (full answer body HTML) in the response for maximum parity. It can be 100s of KB — set false when you only need the structured &#x60;text_blocks&#x60; + &#x60;markdown&#x60;. (optional, default to true)
+     * @param  string $location Answer as if the user were here: a Google canonical location name (e.g. &#x60;Wonju-si,Gangwon-do,South Korea&#x60;), a Google criteria ID, or an unambiguous short name within &#x60;gl&#x60;. Use only one of location, uule, or lat/lon. (optional)
+     * @param  string $uule A Google UULE value in its &#x60;w+&#x60; (canonical name) or &#x60;j+&#x60; (coordinates) form. (optional)
+     * @param  float $lat Latitude of the user&#39;s location (with lon). (optional)
+     * @param  float $lon Longitude of the user&#39;s location (with lat). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['googleGoogleAiModeSearch'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function googleGoogleAiModeSearchRequest($q, $gl = 'us', $hl = 'en', $include_html = true, string $contentType = self::contentTypes['googleGoogleAiModeSearch'][0])
+    public function googleGoogleAiModeSearchRequest($q, $gl = 'us', $hl = 'en', $include_html = true, $location = null, $uule = null, $lat = null, $lon = null, string $contentType = self::contentTypes['googleGoogleAiModeSearch'][0])
     {
 
         // verify the required parameter 'q' is set
@@ -3568,6 +3588,22 @@ class GoogleApi
 
 
 
+
+
+        if ($lat !== null && $lat > 90) {
+            throw new \InvalidArgumentException('invalid value for "$lat" when calling GoogleApi.googleGoogleAiModeSearch, must be smaller than or equal to 90.');
+        }
+        if ($lat !== null && $lat < -90) {
+            throw new \InvalidArgumentException('invalid value for "$lat" when calling GoogleApi.googleGoogleAiModeSearch, must be bigger than or equal to -90.');
+        }
+        
+        if ($lon !== null && $lon > 180) {
+            throw new \InvalidArgumentException('invalid value for "$lon" when calling GoogleApi.googleGoogleAiModeSearch, must be smaller than or equal to 180.');
+        }
+        if ($lon !== null && $lon < -180) {
+            throw new \InvalidArgumentException('invalid value for "$lon" when calling GoogleApi.googleGoogleAiModeSearch, must be bigger than or equal to -180.');
+        }
+        
 
         $resourcePath = '/v1/google/ai-mode/search';
         $formParams = [];
@@ -3608,6 +3644,42 @@ class GoogleApi
             $include_html,
             'include_html', // param base name
             'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $location,
+            'location', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $uule,
+            'uule', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $lat,
+            'lat', // param base name
+            'number', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $lon,
+            'lon', // param base name
+            'number', // openApiType
             'form', // style
             true, // explode
             false // required

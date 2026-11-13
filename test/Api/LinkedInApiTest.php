@@ -132,6 +132,18 @@ class LinkedInApiTest extends TestCase
     }
 
     /**
+     * Test case for linkedinGetFullProfileThroughTheAuthenticatedProjection
+     *
+     * Get full profile through the authenticated projection.
+     *
+     */
+    public function testLinkedinGetFullProfileThroughTheAuthenticatedProjection()
+    {
+        // TODO: implement
+        self::markTestIncomplete('Not implemented');
+    }
+
+    /**
      * Test case for linkedinGetJobDetail
      *
      * Get job detail.

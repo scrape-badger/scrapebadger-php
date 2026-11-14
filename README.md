@@ -528,6 +528,11 @@ Class | Method | HTTP request | Description
 *RedfinApi* | [**redfinSearchProperties**](docs/Api/RedfinApi.md#redfinsearchproperties) | **GET** /v1/redfin/search | Search properties
 *RequestsApi* | [**requestsPollAnAsyncRequest**](docs/Api/RequestsApi.md#requestspollanasyncrequest) | **GET** /v1/requests/{request_id} | Poll an async request
 *ResultsApi* | [**resultsReReadAResultRemoved**](docs/Api/ResultsApi.md#resultsrereadaresultremoved) | **GET** /v1/results/{result_id} | Re-read a result (removed)
+*RufusApi* | [**rufusAmazonRufusScraperHealthCheck**](docs/Api/RufusApi.md#rufusamazonrufusscraperhealthcheck) | **GET** /v1/rufus/health | Amazon Rufus scraper health check
+*RufusApi* | [**rufusAmazonRufusScraperHealthCheckHead**](docs/Api/RufusApi.md#rufusamazonrufusscraperhealthcheckhead) | **HEAD** /v1/rufus/health | Amazon Rufus scraper health check
+*RufusApi* | [**rufusAskAmazonRufusAQuestion**](docs/Api/RufusApi.md#rufusaskamazonrufusaquestion) | **GET** /v1/rufus/ask | Ask Amazon Rufus a question
+*RufusApi* | [**rufusAskAmazonRufusAQuestionPost**](docs/Api/RufusApi.md#rufusaskamazonrufusaquestionpost) | **POST** /v1/rufus/ask | Ask Amazon Rufus a question (POST)
+*RufusApi* | [**rufusListAmazonRufusModels**](docs/Api/RufusApi.md#rufuslistamazonrufusmodels) | **GET** /v1/rufus/models | List Amazon Rufus models
 *TargetApi* | [**targetBrowseACategory**](docs/Api/TargetApi.md#targetbrowseacategory) | **GET** /v1/target/category | Browse a category
 *TargetApi* | [**targetFindNearbyStores**](docs/Api/TargetApi.md#targetfindnearbystores) | **GET** /v1/target/stores | Find nearby stores
 *TargetApi* | [**targetGetCategories**](docs/Api/TargetApi.md#targetgetcategories) | **GET** /v1/target/categories | Get categories
@@ -871,6 +876,7 @@ Class | Method | HTTP request | Description
 - [Ratings](docs/Model/Ratings.md)
 - [Recipe](docs/Model/Recipe.md)
 - [Review](docs/Model/Review.md)
+- [RufusAskRequest](docs/Model/RufusAskRequest.md)
 - [ScreenshotRequest](docs/Model/ScreenshotRequest.md)
 - [Searchterm](docs/Model/Searchterm.md)
 - [SiteName](docs/Model/SiteName.md)

@@ -47,6 +47,7 @@ docs/Api/RedditApi.md
 docs/Api/RedfinApi.md
 docs/Api/RequestsApi.md
 docs/Api/ResultsApi.md
+docs/Api/RufusApi.md
 docs/Api/TargetApi.md
 docs/Api/TikTokApi.md
 docs/Api/TwitterApi.md
@@ -185,6 +186,7 @@ docs/Model/Rating.md
 docs/Model/Ratings.md
 docs/Model/Recipe.md
 docs/Model/Review.md
+docs/Model/RufusAskRequest.md
 docs/Model/ScreenshotRequest.md
 docs/Model/Searchterm.md
 docs/Model/SiteName.md
@@ -283,6 +285,7 @@ lib/Api/RedditApi.php
 lib/Api/RedfinApi.php
 lib/Api/RequestsApi.php
 lib/Api/ResultsApi.php
+lib/Api/RufusApi.php
 lib/Api/TargetApi.php
 lib/Api/TikTokApi.php
 lib/Api/TwitterApi.php
@@ -425,6 +428,7 @@ lib/Model/Rating.php
 lib/Model/Ratings.php
 lib/Model/Recipe.php
 lib/Model/Review.php
+lib/Model/RufusAskRequest.php
 lib/Model/ScreenshotRequest.php
 lib/Model/Searchterm.php
 lib/Model/SiteName.php
@@ -524,6 +528,7 @@ test/Api/RedditApiTest.php
 test/Api/RedfinApiTest.php
 test/Api/RequestsApiTest.php
 test/Api/ResultsApiTest.php
+test/Api/RufusApiTest.php
 test/Api/TargetApiTest.php
 test/Api/TikTokApiTest.php
 test/Api/TwitterApiTest.php
@@ -662,6 +667,7 @@ test/Model/RatingTest.php
 test/Model/RatingsTest.php
 test/Model/RecipeTest.php
 test/Model/ReviewTest.php
+test/Model/RufusAskRequestTest.php
 test/Model/ScreenshotRequestTest.php
 test/Model/SearchtermTest.php
 test/Model/SiteNameTest.php

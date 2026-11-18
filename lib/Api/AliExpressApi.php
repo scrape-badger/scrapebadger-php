@@ -148,15 +148,22 @@ class AliExpressApi
      *
      * Get category navigation
      *
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetCategoryNavigation'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed
+     * @return mixed|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function aliexpressGetCategoryNavigation(string $contentType = self::contentTypes['aliexpressGetCategoryNavigation'][0])
+    public function aliexpressGetCategoryNavigation($prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetCategoryNavigation'][0])
     {
-        list($response) = $this->aliexpressGetCategoryNavigationWithHttpInfo($contentType);
+        list($response) = $this->aliexpressGetCategoryNavigationWithHttpInfo($prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -165,15 +172,22 @@ class AliExpressApi
      *
      * Get category navigation
      *
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetCategoryNavigation'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function aliexpressGetCategoryNavigationWithHttpInfo(string $contentType = self::contentTypes['aliexpressGetCategoryNavigation'][0])
+    public function aliexpressGetCategoryNavigationWithHttpInfo($prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetCategoryNavigation'][0])
     {
-        $request = $this->aliexpressGetCategoryNavigationRequest($contentType);
+        $request = $this->aliexpressGetCategoryNavigationRequest($prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -223,6 +237,33 @@ class AliExpressApi
 
                     return [
                         ObjectSerializer::deserialize($content, 'mixed', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
@@ -279,6 +320,14 @@ class AliExpressApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -289,14 +338,21 @@ class AliExpressApi
      *
      * Get category navigation
      *
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetCategoryNavigation'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function aliexpressGetCategoryNavigationAsync(string $contentType = self::contentTypes['aliexpressGetCategoryNavigation'][0])
+    public function aliexpressGetCategoryNavigationAsync($prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetCategoryNavigation'][0])
     {
-        return $this->aliexpressGetCategoryNavigationAsyncWithHttpInfo($contentType)
+        return $this->aliexpressGetCategoryNavigationAsyncWithHttpInfo($prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -309,15 +365,22 @@ class AliExpressApi
      *
      * Get category navigation
      *
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetCategoryNavigation'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function aliexpressGetCategoryNavigationAsyncWithHttpInfo(string $contentType = self::contentTypes['aliexpressGetCategoryNavigation'][0])
+    public function aliexpressGetCategoryNavigationAsyncWithHttpInfo($prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetCategoryNavigation'][0])
     {
         $returnType = 'mixed';
-        $request = $this->aliexpressGetCategoryNavigationRequest($contentType);
+        $request = $this->aliexpressGetCategoryNavigationRequest($prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -358,14 +421,43 @@ class AliExpressApi
     /**
      * Create request for operation 'aliexpressGetCategoryNavigation'
      *
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetCategoryNavigation'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function aliexpressGetCategoryNavigationRequest(string $contentType = self::contentTypes['aliexpressGetCategoryNavigation'][0])
+    public function aliexpressGetCategoryNavigationRequest($prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetCategoryNavigation'][0])
     {
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling AliExpressApi.aliexpressGetCategoryNavigation, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling AliExpressApi.aliexpressGetCategoryNavigation, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling AliExpressApi.aliexpressGetCategoryNavigation, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling AliExpressApi.aliexpressGetCategoryNavigation, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling AliExpressApi.aliexpressGetCategoryNavigation, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/aliexpress/categories';
         $formParams = [];
@@ -374,7 +466,55 @@ class AliExpressApi
         $httpBody = '';
         $multipart = false;
 
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
 
 
@@ -445,15 +585,22 @@ class AliExpressApi
      * @param  string $country country (optional, default to 'US')
      * @param  string $currency currency (optional, default to 'USD')
      * @param  string $language language (optional, default to 'en_US')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetProductDetail'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function aliexpressGetProductDetail($product_id, $country = 'US', $currency = 'USD', $language = 'en_US', string $contentType = self::contentTypes['aliexpressGetProductDetail'][0])
+    public function aliexpressGetProductDetail($product_id, $country = 'US', $currency = 'USD', $language = 'en_US', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetProductDetail'][0])
     {
-        list($response) = $this->aliexpressGetProductDetailWithHttpInfo($product_id, $country, $currency, $language, $contentType);
+        list($response) = $this->aliexpressGetProductDetailWithHttpInfo($product_id, $country, $currency, $language, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -466,15 +613,22 @@ class AliExpressApi
      * @param  string $country (optional, default to 'US')
      * @param  string $currency (optional, default to 'USD')
      * @param  string $language (optional, default to 'en_US')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetProductDetail'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function aliexpressGetProductDetailWithHttpInfo($product_id, $country = 'US', $currency = 'USD', $language = 'en_US', string $contentType = self::contentTypes['aliexpressGetProductDetail'][0])
+    public function aliexpressGetProductDetailWithHttpInfo($product_id, $country = 'US', $currency = 'USD', $language = 'en_US', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetProductDetail'][0])
     {
-        $request = $this->aliexpressGetProductDetailRequest($product_id, $country, $currency, $language, $contentType);
+        $request = $this->aliexpressGetProductDetailRequest($product_id, $country, $currency, $language, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -554,6 +708,33 @@ class AliExpressApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -615,6 +796,14 @@ class AliExpressApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -629,14 +818,21 @@ class AliExpressApi
      * @param  string $country (optional, default to 'US')
      * @param  string $currency (optional, default to 'USD')
      * @param  string $language (optional, default to 'en_US')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetProductDetail'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function aliexpressGetProductDetailAsync($product_id, $country = 'US', $currency = 'USD', $language = 'en_US', string $contentType = self::contentTypes['aliexpressGetProductDetail'][0])
+    public function aliexpressGetProductDetailAsync($product_id, $country = 'US', $currency = 'USD', $language = 'en_US', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetProductDetail'][0])
     {
-        return $this->aliexpressGetProductDetailAsyncWithHttpInfo($product_id, $country, $currency, $language, $contentType)
+        return $this->aliexpressGetProductDetailAsyncWithHttpInfo($product_id, $country, $currency, $language, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -653,15 +849,22 @@ class AliExpressApi
      * @param  string $country (optional, default to 'US')
      * @param  string $currency (optional, default to 'USD')
      * @param  string $language (optional, default to 'en_US')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetProductDetail'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function aliexpressGetProductDetailAsyncWithHttpInfo($product_id, $country = 'US', $currency = 'USD', $language = 'en_US', string $contentType = self::contentTypes['aliexpressGetProductDetail'][0])
+    public function aliexpressGetProductDetailAsyncWithHttpInfo($product_id, $country = 'US', $currency = 'USD', $language = 'en_US', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetProductDetail'][0])
     {
         $returnType = 'mixed';
-        $request = $this->aliexpressGetProductDetailRequest($product_id, $country, $currency, $language, $contentType);
+        $request = $this->aliexpressGetProductDetailRequest($product_id, $country, $currency, $language, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -706,12 +909,19 @@ class AliExpressApi
      * @param  string $country (optional, default to 'US')
      * @param  string $currency (optional, default to 'USD')
      * @param  string $language (optional, default to 'en_US')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetProductDetail'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function aliexpressGetProductDetailRequest($product_id, $country = 'US', $currency = 'USD', $language = 'en_US', string $contentType = self::contentTypes['aliexpressGetProductDetail'][0])
+    public function aliexpressGetProductDetailRequest($product_id, $country = 'US', $currency = 'USD', $language = 'en_US', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetProductDetail'][0])
     {
 
         // verify the required parameter 'product_id' is set
@@ -731,6 +941,28 @@ class AliExpressApi
         
         if ($language !== null && !preg_match("/^[a-z]{2}_[A-Z]{2}$/", $language)) {
             throw new \InvalidArgumentException("invalid value for \"language\" when calling AliExpressApi.aliexpressGetProductDetail, must conform to the pattern /^[a-z]{2}_[A-Z]{2}$/.");
+        }
+        
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling AliExpressApi.aliexpressGetProductDetail, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling AliExpressApi.aliexpressGetProductDetail, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling AliExpressApi.aliexpressGetProductDetail, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling AliExpressApi.aliexpressGetProductDetail, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling AliExpressApi.aliexpressGetProductDetail, must be bigger than or equal to 1.');
         }
         
 
@@ -768,7 +1000,55 @@ class AliExpressApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($product_id !== null) {
@@ -847,15 +1127,22 @@ class AliExpressApi
      * @param  int $page page (optional, default to 1)
      * @param  int $page_size page_size (optional, default to 10)
      * @param  string $sort sort (optional, default to 'complex_default')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetProductReviews'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function aliexpressGetProductReviews($product_id, $page = 1, $page_size = 10, $sort = 'complex_default', string $contentType = self::contentTypes['aliexpressGetProductReviews'][0])
+    public function aliexpressGetProductReviews($product_id, $page = 1, $page_size = 10, $sort = 'complex_default', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetProductReviews'][0])
     {
-        list($response) = $this->aliexpressGetProductReviewsWithHttpInfo($product_id, $page, $page_size, $sort, $contentType);
+        list($response) = $this->aliexpressGetProductReviewsWithHttpInfo($product_id, $page, $page_size, $sort, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -868,15 +1155,22 @@ class AliExpressApi
      * @param  int $page (optional, default to 1)
      * @param  int $page_size (optional, default to 10)
      * @param  string $sort (optional, default to 'complex_default')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetProductReviews'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function aliexpressGetProductReviewsWithHttpInfo($product_id, $page = 1, $page_size = 10, $sort = 'complex_default', string $contentType = self::contentTypes['aliexpressGetProductReviews'][0])
+    public function aliexpressGetProductReviewsWithHttpInfo($product_id, $page = 1, $page_size = 10, $sort = 'complex_default', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetProductReviews'][0])
     {
-        $request = $this->aliexpressGetProductReviewsRequest($product_id, $page, $page_size, $sort, $contentType);
+        $request = $this->aliexpressGetProductReviewsRequest($product_id, $page, $page_size, $sort, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -956,6 +1250,33 @@ class AliExpressApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -1017,6 +1338,14 @@ class AliExpressApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -1031,14 +1360,21 @@ class AliExpressApi
      * @param  int $page (optional, default to 1)
      * @param  int $page_size (optional, default to 10)
      * @param  string $sort (optional, default to 'complex_default')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetProductReviews'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function aliexpressGetProductReviewsAsync($product_id, $page = 1, $page_size = 10, $sort = 'complex_default', string $contentType = self::contentTypes['aliexpressGetProductReviews'][0])
+    public function aliexpressGetProductReviewsAsync($product_id, $page = 1, $page_size = 10, $sort = 'complex_default', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetProductReviews'][0])
     {
-        return $this->aliexpressGetProductReviewsAsyncWithHttpInfo($product_id, $page, $page_size, $sort, $contentType)
+        return $this->aliexpressGetProductReviewsAsyncWithHttpInfo($product_id, $page, $page_size, $sort, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -1055,15 +1391,22 @@ class AliExpressApi
      * @param  int $page (optional, default to 1)
      * @param  int $page_size (optional, default to 10)
      * @param  string $sort (optional, default to 'complex_default')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetProductReviews'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function aliexpressGetProductReviewsAsyncWithHttpInfo($product_id, $page = 1, $page_size = 10, $sort = 'complex_default', string $contentType = self::contentTypes['aliexpressGetProductReviews'][0])
+    public function aliexpressGetProductReviewsAsyncWithHttpInfo($product_id, $page = 1, $page_size = 10, $sort = 'complex_default', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetProductReviews'][0])
     {
         $returnType = 'mixed';
-        $request = $this->aliexpressGetProductReviewsRequest($product_id, $page, $page_size, $sort, $contentType);
+        $request = $this->aliexpressGetProductReviewsRequest($product_id, $page, $page_size, $sort, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -1108,12 +1451,19 @@ class AliExpressApi
      * @param  int $page (optional, default to 1)
      * @param  int $page_size (optional, default to 10)
      * @param  string $sort (optional, default to 'complex_default')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetProductReviews'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function aliexpressGetProductReviewsRequest($product_id, $page = 1, $page_size = 10, $sort = 'complex_default', string $contentType = self::contentTypes['aliexpressGetProductReviews'][0])
+    public function aliexpressGetProductReviewsRequest($product_id, $page = 1, $page_size = 10, $sort = 'complex_default', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetProductReviews'][0])
     {
 
         // verify the required parameter 'product_id' is set
@@ -1138,6 +1488,28 @@ class AliExpressApi
         }
         
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling AliExpressApi.aliexpressGetProductReviews, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling AliExpressApi.aliexpressGetProductReviews, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling AliExpressApi.aliexpressGetProductReviews, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling AliExpressApi.aliexpressGetProductReviews, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling AliExpressApi.aliexpressGetProductReviews, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/aliexpress/products/{product_id}/reviews';
         $formParams = [];
@@ -1173,7 +1545,55 @@ class AliExpressApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($product_id !== null) {
@@ -1251,15 +1671,22 @@ class AliExpressApi
      * @param  string $query query (required)
      * @param  string $country country (optional, default to 'US')
      * @param  string $language language (optional, default to 'en')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetSearchSuggestions'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function aliexpressGetSearchSuggestions($query, $country = 'US', $language = 'en', string $contentType = self::contentTypes['aliexpressGetSearchSuggestions'][0])
+    public function aliexpressGetSearchSuggestions($query, $country = 'US', $language = 'en', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetSearchSuggestions'][0])
     {
-        list($response) = $this->aliexpressGetSearchSuggestionsWithHttpInfo($query, $country, $language, $contentType);
+        list($response) = $this->aliexpressGetSearchSuggestionsWithHttpInfo($query, $country, $language, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -1271,15 +1698,22 @@ class AliExpressApi
      * @param  string $query (required)
      * @param  string $country (optional, default to 'US')
      * @param  string $language (optional, default to 'en')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetSearchSuggestions'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function aliexpressGetSearchSuggestionsWithHttpInfo($query, $country = 'US', $language = 'en', string $contentType = self::contentTypes['aliexpressGetSearchSuggestions'][0])
+    public function aliexpressGetSearchSuggestionsWithHttpInfo($query, $country = 'US', $language = 'en', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetSearchSuggestions'][0])
     {
-        $request = $this->aliexpressGetSearchSuggestionsRequest($query, $country, $language, $contentType);
+        $request = $this->aliexpressGetSearchSuggestionsRequest($query, $country, $language, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -1359,6 +1793,33 @@ class AliExpressApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -1420,6 +1881,14 @@ class AliExpressApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -1433,14 +1902,21 @@ class AliExpressApi
      * @param  string $query (required)
      * @param  string $country (optional, default to 'US')
      * @param  string $language (optional, default to 'en')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetSearchSuggestions'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function aliexpressGetSearchSuggestionsAsync($query, $country = 'US', $language = 'en', string $contentType = self::contentTypes['aliexpressGetSearchSuggestions'][0])
+    public function aliexpressGetSearchSuggestionsAsync($query, $country = 'US', $language = 'en', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetSearchSuggestions'][0])
     {
-        return $this->aliexpressGetSearchSuggestionsAsyncWithHttpInfo($query, $country, $language, $contentType)
+        return $this->aliexpressGetSearchSuggestionsAsyncWithHttpInfo($query, $country, $language, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -1456,15 +1932,22 @@ class AliExpressApi
      * @param  string $query (required)
      * @param  string $country (optional, default to 'US')
      * @param  string $language (optional, default to 'en')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetSearchSuggestions'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function aliexpressGetSearchSuggestionsAsyncWithHttpInfo($query, $country = 'US', $language = 'en', string $contentType = self::contentTypes['aliexpressGetSearchSuggestions'][0])
+    public function aliexpressGetSearchSuggestionsAsyncWithHttpInfo($query, $country = 'US', $language = 'en', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetSearchSuggestions'][0])
     {
         $returnType = 'mixed';
-        $request = $this->aliexpressGetSearchSuggestionsRequest($query, $country, $language, $contentType);
+        $request = $this->aliexpressGetSearchSuggestionsRequest($query, $country, $language, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -1508,12 +1991,19 @@ class AliExpressApi
      * @param  string $query (required)
      * @param  string $country (optional, default to 'US')
      * @param  string $language (optional, default to 'en')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetSearchSuggestions'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function aliexpressGetSearchSuggestionsRequest($query, $country = 'US', $language = 'en', string $contentType = self::contentTypes['aliexpressGetSearchSuggestions'][0])
+    public function aliexpressGetSearchSuggestionsRequest($query, $country = 'US', $language = 'en', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetSearchSuggestions'][0])
     {
 
         // verify the required parameter 'query' is set
@@ -1535,6 +2025,28 @@ class AliExpressApi
         
         if ($language !== null && !preg_match("/^[a-z]{2}$/", $language)) {
             throw new \InvalidArgumentException("invalid value for \"language\" when calling AliExpressApi.aliexpressGetSearchSuggestions, must conform to the pattern /^[a-z]{2}$/.");
+        }
+        
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling AliExpressApi.aliexpressGetSearchSuggestions, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling AliExpressApi.aliexpressGetSearchSuggestions, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling AliExpressApi.aliexpressGetSearchSuggestions, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling AliExpressApi.aliexpressGetSearchSuggestions, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling AliExpressApi.aliexpressGetSearchSuggestions, must be bigger than or equal to 1.');
         }
         
 
@@ -1572,7 +2084,55 @@ class AliExpressApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
 
 
@@ -1641,15 +2201,22 @@ class AliExpressApi
      *
      * @param  string $store_id store_id (required)
      * @param  string $country country (optional, default to 'US')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetStoreProductCategories'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function aliexpressGetStoreProductCategories($store_id, $country = 'US', string $contentType = self::contentTypes['aliexpressGetStoreProductCategories'][0])
+    public function aliexpressGetStoreProductCategories($store_id, $country = 'US', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetStoreProductCategories'][0])
     {
-        list($response) = $this->aliexpressGetStoreProductCategoriesWithHttpInfo($store_id, $country, $contentType);
+        list($response) = $this->aliexpressGetStoreProductCategoriesWithHttpInfo($store_id, $country, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -1660,15 +2227,22 @@ class AliExpressApi
      *
      * @param  string $store_id (required)
      * @param  string $country (optional, default to 'US')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetStoreProductCategories'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function aliexpressGetStoreProductCategoriesWithHttpInfo($store_id, $country = 'US', string $contentType = self::contentTypes['aliexpressGetStoreProductCategories'][0])
+    public function aliexpressGetStoreProductCategoriesWithHttpInfo($store_id, $country = 'US', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetStoreProductCategories'][0])
     {
-        $request = $this->aliexpressGetStoreProductCategoriesRequest($store_id, $country, $contentType);
+        $request = $this->aliexpressGetStoreProductCategoriesRequest($store_id, $country, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -1748,6 +2322,33 @@ class AliExpressApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -1809,6 +2410,14 @@ class AliExpressApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -1821,14 +2430,21 @@ class AliExpressApi
      *
      * @param  string $store_id (required)
      * @param  string $country (optional, default to 'US')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetStoreProductCategories'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function aliexpressGetStoreProductCategoriesAsync($store_id, $country = 'US', string $contentType = self::contentTypes['aliexpressGetStoreProductCategories'][0])
+    public function aliexpressGetStoreProductCategoriesAsync($store_id, $country = 'US', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetStoreProductCategories'][0])
     {
-        return $this->aliexpressGetStoreProductCategoriesAsyncWithHttpInfo($store_id, $country, $contentType)
+        return $this->aliexpressGetStoreProductCategoriesAsyncWithHttpInfo($store_id, $country, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -1843,15 +2459,22 @@ class AliExpressApi
      *
      * @param  string $store_id (required)
      * @param  string $country (optional, default to 'US')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetStoreProductCategories'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function aliexpressGetStoreProductCategoriesAsyncWithHttpInfo($store_id, $country = 'US', string $contentType = self::contentTypes['aliexpressGetStoreProductCategories'][0])
+    public function aliexpressGetStoreProductCategoriesAsyncWithHttpInfo($store_id, $country = 'US', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetStoreProductCategories'][0])
     {
         $returnType = 'mixed';
-        $request = $this->aliexpressGetStoreProductCategoriesRequest($store_id, $country, $contentType);
+        $request = $this->aliexpressGetStoreProductCategoriesRequest($store_id, $country, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -1894,12 +2517,19 @@ class AliExpressApi
      *
      * @param  string $store_id (required)
      * @param  string $country (optional, default to 'US')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetStoreProductCategories'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function aliexpressGetStoreProductCategoriesRequest($store_id, $country = 'US', string $contentType = self::contentTypes['aliexpressGetStoreProductCategories'][0])
+    public function aliexpressGetStoreProductCategoriesRequest($store_id, $country = 'US', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetStoreProductCategories'][0])
     {
 
         // verify the required parameter 'store_id' is set
@@ -1911,6 +2541,28 @@ class AliExpressApi
 
         if ($country !== null && !preg_match("/^[A-Z]{2}$/", $country)) {
             throw new \InvalidArgumentException("invalid value for \"country\" when calling AliExpressApi.aliexpressGetStoreProductCategories, must conform to the pattern /^[A-Z]{2}$/.");
+        }
+        
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling AliExpressApi.aliexpressGetStoreProductCategories, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling AliExpressApi.aliexpressGetStoreProductCategories, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling AliExpressApi.aliexpressGetStoreProductCategories, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling AliExpressApi.aliexpressGetStoreProductCategories, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling AliExpressApi.aliexpressGetStoreProductCategories, must be bigger than or equal to 1.');
         }
         
 
@@ -1930,7 +2582,55 @@ class AliExpressApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($store_id !== null) {
@@ -2013,15 +2713,22 @@ class AliExpressApi
      * @param  string $language language (optional, default to 'en')
      * @param  string $query query (optional, default to '')
      * @param  string $sort sort (optional, default to 'bestmatch_sort')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetStoreProducts'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function aliexpressGetStoreProducts($store_id, $page = 1, $page_size = 24, $country = 'US', $currency = 'USD', $language = 'en', $query = '', $sort = 'bestmatch_sort', string $contentType = self::contentTypes['aliexpressGetStoreProducts'][0])
+    public function aliexpressGetStoreProducts($store_id, $page = 1, $page_size = 24, $country = 'US', $currency = 'USD', $language = 'en', $query = '', $sort = 'bestmatch_sort', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetStoreProducts'][0])
     {
-        list($response) = $this->aliexpressGetStoreProductsWithHttpInfo($store_id, $page, $page_size, $country, $currency, $language, $query, $sort, $contentType);
+        list($response) = $this->aliexpressGetStoreProductsWithHttpInfo($store_id, $page, $page_size, $country, $currency, $language, $query, $sort, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -2038,15 +2745,22 @@ class AliExpressApi
      * @param  string $language (optional, default to 'en')
      * @param  string $query (optional, default to '')
      * @param  string $sort (optional, default to 'bestmatch_sort')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetStoreProducts'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function aliexpressGetStoreProductsWithHttpInfo($store_id, $page = 1, $page_size = 24, $country = 'US', $currency = 'USD', $language = 'en', $query = '', $sort = 'bestmatch_sort', string $contentType = self::contentTypes['aliexpressGetStoreProducts'][0])
+    public function aliexpressGetStoreProductsWithHttpInfo($store_id, $page = 1, $page_size = 24, $country = 'US', $currency = 'USD', $language = 'en', $query = '', $sort = 'bestmatch_sort', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetStoreProducts'][0])
     {
-        $request = $this->aliexpressGetStoreProductsRequest($store_id, $page, $page_size, $country, $currency, $language, $query, $sort, $contentType);
+        $request = $this->aliexpressGetStoreProductsRequest($store_id, $page, $page_size, $country, $currency, $language, $query, $sort, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -2126,6 +2840,33 @@ class AliExpressApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -2187,6 +2928,14 @@ class AliExpressApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -2205,14 +2954,21 @@ class AliExpressApi
      * @param  string $language (optional, default to 'en')
      * @param  string $query (optional, default to '')
      * @param  string $sort (optional, default to 'bestmatch_sort')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetStoreProducts'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function aliexpressGetStoreProductsAsync($store_id, $page = 1, $page_size = 24, $country = 'US', $currency = 'USD', $language = 'en', $query = '', $sort = 'bestmatch_sort', string $contentType = self::contentTypes['aliexpressGetStoreProducts'][0])
+    public function aliexpressGetStoreProductsAsync($store_id, $page = 1, $page_size = 24, $country = 'US', $currency = 'USD', $language = 'en', $query = '', $sort = 'bestmatch_sort', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetStoreProducts'][0])
     {
-        return $this->aliexpressGetStoreProductsAsyncWithHttpInfo($store_id, $page, $page_size, $country, $currency, $language, $query, $sort, $contentType)
+        return $this->aliexpressGetStoreProductsAsyncWithHttpInfo($store_id, $page, $page_size, $country, $currency, $language, $query, $sort, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -2233,15 +2989,22 @@ class AliExpressApi
      * @param  string $language (optional, default to 'en')
      * @param  string $query (optional, default to '')
      * @param  string $sort (optional, default to 'bestmatch_sort')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetStoreProducts'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function aliexpressGetStoreProductsAsyncWithHttpInfo($store_id, $page = 1, $page_size = 24, $country = 'US', $currency = 'USD', $language = 'en', $query = '', $sort = 'bestmatch_sort', string $contentType = self::contentTypes['aliexpressGetStoreProducts'][0])
+    public function aliexpressGetStoreProductsAsyncWithHttpInfo($store_id, $page = 1, $page_size = 24, $country = 'US', $currency = 'USD', $language = 'en', $query = '', $sort = 'bestmatch_sort', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetStoreProducts'][0])
     {
         $returnType = 'mixed';
-        $request = $this->aliexpressGetStoreProductsRequest($store_id, $page, $page_size, $country, $currency, $language, $query, $sort, $contentType);
+        $request = $this->aliexpressGetStoreProductsRequest($store_id, $page, $page_size, $country, $currency, $language, $query, $sort, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -2290,12 +3053,19 @@ class AliExpressApi
      * @param  string $language (optional, default to 'en')
      * @param  string $query (optional, default to '')
      * @param  string $sort (optional, default to 'bestmatch_sort')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetStoreProducts'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function aliexpressGetStoreProductsRequest($store_id, $page = 1, $page_size = 24, $country = 'US', $currency = 'USD', $language = 'en', $query = '', $sort = 'bestmatch_sort', string $contentType = self::contentTypes['aliexpressGetStoreProducts'][0])
+    public function aliexpressGetStoreProductsRequest($store_id, $page = 1, $page_size = 24, $country = 'US', $currency = 'USD', $language = 'en', $query = '', $sort = 'bestmatch_sort', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetStoreProducts'][0])
     {
 
         // verify the required parameter 'store_id' is set
@@ -2336,6 +3106,28 @@ class AliExpressApi
         }
         
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling AliExpressApi.aliexpressGetStoreProducts, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling AliExpressApi.aliexpressGetStoreProducts, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling AliExpressApi.aliexpressGetStoreProducts, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling AliExpressApi.aliexpressGetStoreProducts, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling AliExpressApi.aliexpressGetStoreProducts, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/aliexpress/stores/{store_id}/products';
         $formParams = [];
@@ -2407,7 +3199,55 @@ class AliExpressApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($store_id !== null) {
@@ -2486,15 +3326,22 @@ class AliExpressApi
      * @param  string $country country (optional, default to 'US')
      * @param  string $currency currency (optional, default to 'USD')
      * @param  string $language language (optional, default to 'en')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetStoreProfile'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function aliexpressGetStoreProfile($store_id, $country = 'US', $currency = 'USD', $language = 'en', string $contentType = self::contentTypes['aliexpressGetStoreProfile'][0])
+    public function aliexpressGetStoreProfile($store_id, $country = 'US', $currency = 'USD', $language = 'en', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetStoreProfile'][0])
     {
-        list($response) = $this->aliexpressGetStoreProfileWithHttpInfo($store_id, $country, $currency, $language, $contentType);
+        list($response) = $this->aliexpressGetStoreProfileWithHttpInfo($store_id, $country, $currency, $language, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -2507,15 +3354,22 @@ class AliExpressApi
      * @param  string $country (optional, default to 'US')
      * @param  string $currency (optional, default to 'USD')
      * @param  string $language (optional, default to 'en')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetStoreProfile'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function aliexpressGetStoreProfileWithHttpInfo($store_id, $country = 'US', $currency = 'USD', $language = 'en', string $contentType = self::contentTypes['aliexpressGetStoreProfile'][0])
+    public function aliexpressGetStoreProfileWithHttpInfo($store_id, $country = 'US', $currency = 'USD', $language = 'en', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetStoreProfile'][0])
     {
-        $request = $this->aliexpressGetStoreProfileRequest($store_id, $country, $currency, $language, $contentType);
+        $request = $this->aliexpressGetStoreProfileRequest($store_id, $country, $currency, $language, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -2595,6 +3449,33 @@ class AliExpressApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -2656,6 +3537,14 @@ class AliExpressApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -2670,14 +3559,21 @@ class AliExpressApi
      * @param  string $country (optional, default to 'US')
      * @param  string $currency (optional, default to 'USD')
      * @param  string $language (optional, default to 'en')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetStoreProfile'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function aliexpressGetStoreProfileAsync($store_id, $country = 'US', $currency = 'USD', $language = 'en', string $contentType = self::contentTypes['aliexpressGetStoreProfile'][0])
+    public function aliexpressGetStoreProfileAsync($store_id, $country = 'US', $currency = 'USD', $language = 'en', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetStoreProfile'][0])
     {
-        return $this->aliexpressGetStoreProfileAsyncWithHttpInfo($store_id, $country, $currency, $language, $contentType)
+        return $this->aliexpressGetStoreProfileAsyncWithHttpInfo($store_id, $country, $currency, $language, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -2694,15 +3590,22 @@ class AliExpressApi
      * @param  string $country (optional, default to 'US')
      * @param  string $currency (optional, default to 'USD')
      * @param  string $language (optional, default to 'en')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetStoreProfile'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function aliexpressGetStoreProfileAsyncWithHttpInfo($store_id, $country = 'US', $currency = 'USD', $language = 'en', string $contentType = self::contentTypes['aliexpressGetStoreProfile'][0])
+    public function aliexpressGetStoreProfileAsyncWithHttpInfo($store_id, $country = 'US', $currency = 'USD', $language = 'en', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetStoreProfile'][0])
     {
         $returnType = 'mixed';
-        $request = $this->aliexpressGetStoreProfileRequest($store_id, $country, $currency, $language, $contentType);
+        $request = $this->aliexpressGetStoreProfileRequest($store_id, $country, $currency, $language, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -2747,12 +3650,19 @@ class AliExpressApi
      * @param  string $country (optional, default to 'US')
      * @param  string $currency (optional, default to 'USD')
      * @param  string $language (optional, default to 'en')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressGetStoreProfile'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function aliexpressGetStoreProfileRequest($store_id, $country = 'US', $currency = 'USD', $language = 'en', string $contentType = self::contentTypes['aliexpressGetStoreProfile'][0])
+    public function aliexpressGetStoreProfileRequest($store_id, $country = 'US', $currency = 'USD', $language = 'en', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressGetStoreProfile'][0])
     {
 
         // verify the required parameter 'store_id' is set
@@ -2772,6 +3682,28 @@ class AliExpressApi
         
         if ($language !== null && !preg_match("/^[a-z]{2}$/", $language)) {
             throw new \InvalidArgumentException("invalid value for \"language\" when calling AliExpressApi.aliexpressGetStoreProfile, must conform to the pattern /^[a-z]{2}$/.");
+        }
+        
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling AliExpressApi.aliexpressGetStoreProfile, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling AliExpressApi.aliexpressGetStoreProfile, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling AliExpressApi.aliexpressGetStoreProfile, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling AliExpressApi.aliexpressGetStoreProfile, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling AliExpressApi.aliexpressGetStoreProfile, must be bigger than or equal to 1.');
         }
         
 
@@ -2809,7 +3741,55 @@ class AliExpressApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($store_id !== null) {
@@ -2892,15 +3872,22 @@ class AliExpressApi
      * @param  string $sort sort (optional, default to 'default')
      * @param  float $min_price min_price (optional)
      * @param  float $max_price max_price (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressSearchProducts'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function aliexpressSearchProducts($query, $page = 1, $country = 'US', $currency = 'USD', $language = 'en', $sort = 'default', $min_price = null, $max_price = null, string $contentType = self::contentTypes['aliexpressSearchProducts'][0])
+    public function aliexpressSearchProducts($query, $page = 1, $country = 'US', $currency = 'USD', $language = 'en', $sort = 'default', $min_price = null, $max_price = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressSearchProducts'][0])
     {
-        list($response) = $this->aliexpressSearchProductsWithHttpInfo($query, $page, $country, $currency, $language, $sort, $min_price, $max_price, $contentType);
+        list($response) = $this->aliexpressSearchProductsWithHttpInfo($query, $page, $country, $currency, $language, $sort, $min_price, $max_price, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -2917,15 +3904,22 @@ class AliExpressApi
      * @param  string $sort (optional, default to 'default')
      * @param  float $min_price (optional)
      * @param  float $max_price (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressSearchProducts'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function aliexpressSearchProductsWithHttpInfo($query, $page = 1, $country = 'US', $currency = 'USD', $language = 'en', $sort = 'default', $min_price = null, $max_price = null, string $contentType = self::contentTypes['aliexpressSearchProducts'][0])
+    public function aliexpressSearchProductsWithHttpInfo($query, $page = 1, $country = 'US', $currency = 'USD', $language = 'en', $sort = 'default', $min_price = null, $max_price = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressSearchProducts'][0])
     {
-        $request = $this->aliexpressSearchProductsRequest($query, $page, $country, $currency, $language, $sort, $min_price, $max_price, $contentType);
+        $request = $this->aliexpressSearchProductsRequest($query, $page, $country, $currency, $language, $sort, $min_price, $max_price, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -3005,6 +3999,33 @@ class AliExpressApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -3066,6 +4087,14 @@ class AliExpressApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -3084,14 +4113,21 @@ class AliExpressApi
      * @param  string $sort (optional, default to 'default')
      * @param  float $min_price (optional)
      * @param  float $max_price (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressSearchProducts'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function aliexpressSearchProductsAsync($query, $page = 1, $country = 'US', $currency = 'USD', $language = 'en', $sort = 'default', $min_price = null, $max_price = null, string $contentType = self::contentTypes['aliexpressSearchProducts'][0])
+    public function aliexpressSearchProductsAsync($query, $page = 1, $country = 'US', $currency = 'USD', $language = 'en', $sort = 'default', $min_price = null, $max_price = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressSearchProducts'][0])
     {
-        return $this->aliexpressSearchProductsAsyncWithHttpInfo($query, $page, $country, $currency, $language, $sort, $min_price, $max_price, $contentType)
+        return $this->aliexpressSearchProductsAsyncWithHttpInfo($query, $page, $country, $currency, $language, $sort, $min_price, $max_price, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -3112,15 +4148,22 @@ class AliExpressApi
      * @param  string $sort (optional, default to 'default')
      * @param  float $min_price (optional)
      * @param  float $max_price (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressSearchProducts'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function aliexpressSearchProductsAsyncWithHttpInfo($query, $page = 1, $country = 'US', $currency = 'USD', $language = 'en', $sort = 'default', $min_price = null, $max_price = null, string $contentType = self::contentTypes['aliexpressSearchProducts'][0])
+    public function aliexpressSearchProductsAsyncWithHttpInfo($query, $page = 1, $country = 'US', $currency = 'USD', $language = 'en', $sort = 'default', $min_price = null, $max_price = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressSearchProducts'][0])
     {
         $returnType = 'mixed';
-        $request = $this->aliexpressSearchProductsRequest($query, $page, $country, $currency, $language, $sort, $min_price, $max_price, $contentType);
+        $request = $this->aliexpressSearchProductsRequest($query, $page, $country, $currency, $language, $sort, $min_price, $max_price, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -3169,12 +4212,19 @@ class AliExpressApi
      * @param  string $sort (optional, default to 'default')
      * @param  float $min_price (optional)
      * @param  float $max_price (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['aliexpressSearchProducts'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function aliexpressSearchProductsRequest($query, $page = 1, $country = 'US', $currency = 'USD', $language = 'en', $sort = 'default', $min_price = null, $max_price = null, string $contentType = self::contentTypes['aliexpressSearchProducts'][0])
+    public function aliexpressSearchProductsRequest($query, $page = 1, $country = 'US', $currency = 'USD', $language = 'en', $sort = 'default', $min_price = null, $max_price = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['aliexpressSearchProducts'][0])
     {
 
         // verify the required parameter 'query' is set
@@ -3216,6 +4266,28 @@ class AliExpressApi
         
         if ($max_price !== null && $max_price < 0) {
             throw new \InvalidArgumentException('invalid value for "$max_price" when calling AliExpressApi.aliexpressSearchProducts, must be bigger than or equal to 0.');
+        }
+        
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling AliExpressApi.aliexpressSearchProducts, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling AliExpressApi.aliexpressSearchProducts, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling AliExpressApi.aliexpressSearchProducts, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling AliExpressApi.aliexpressSearchProducts, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling AliExpressApi.aliexpressSearchProducts, must be bigger than or equal to 1.');
         }
         
 
@@ -3298,7 +4370,55 @@ class AliExpressApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
 
 

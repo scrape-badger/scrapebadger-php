@@ -156,15 +156,22 @@ class BestBuyApi
      *
      * @param  string $category_id category_id (required)
      * @param  int $page page (optional, default to 1)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyBrowseACategory'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function bestbuyBrowseACategory($category_id, $page = 1, string $contentType = self::contentTypes['bestbuyBrowseACategory'][0])
+    public function bestbuyBrowseACategory($category_id, $page = 1, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyBrowseACategory'][0])
     {
-        list($response) = $this->bestbuyBrowseACategoryWithHttpInfo($category_id, $page, $contentType);
+        list($response) = $this->bestbuyBrowseACategoryWithHttpInfo($category_id, $page, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -175,15 +182,22 @@ class BestBuyApi
      *
      * @param  string $category_id (required)
      * @param  int $page (optional, default to 1)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyBrowseACategory'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function bestbuyBrowseACategoryWithHttpInfo($category_id, $page = 1, string $contentType = self::contentTypes['bestbuyBrowseACategory'][0])
+    public function bestbuyBrowseACategoryWithHttpInfo($category_id, $page = 1, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyBrowseACategory'][0])
     {
-        $request = $this->bestbuyBrowseACategoryRequest($category_id, $page, $contentType);
+        $request = $this->bestbuyBrowseACategoryRequest($category_id, $page, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -263,6 +277,33 @@ class BestBuyApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -324,6 +365,14 @@ class BestBuyApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -336,14 +385,21 @@ class BestBuyApi
      *
      * @param  string $category_id (required)
      * @param  int $page (optional, default to 1)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyBrowseACategory'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function bestbuyBrowseACategoryAsync($category_id, $page = 1, string $contentType = self::contentTypes['bestbuyBrowseACategory'][0])
+    public function bestbuyBrowseACategoryAsync($category_id, $page = 1, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyBrowseACategory'][0])
     {
-        return $this->bestbuyBrowseACategoryAsyncWithHttpInfo($category_id, $page, $contentType)
+        return $this->bestbuyBrowseACategoryAsyncWithHttpInfo($category_id, $page, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -358,15 +414,22 @@ class BestBuyApi
      *
      * @param  string $category_id (required)
      * @param  int $page (optional, default to 1)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyBrowseACategory'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function bestbuyBrowseACategoryAsyncWithHttpInfo($category_id, $page = 1, string $contentType = self::contentTypes['bestbuyBrowseACategory'][0])
+    public function bestbuyBrowseACategoryAsyncWithHttpInfo($category_id, $page = 1, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyBrowseACategory'][0])
     {
         $returnType = 'mixed';
-        $request = $this->bestbuyBrowseACategoryRequest($category_id, $page, $contentType);
+        $request = $this->bestbuyBrowseACategoryRequest($category_id, $page, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -409,12 +472,19 @@ class BestBuyApi
      *
      * @param  string $category_id (required)
      * @param  int $page (optional, default to 1)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyBrowseACategory'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function bestbuyBrowseACategoryRequest($category_id, $page = 1, string $contentType = self::contentTypes['bestbuyBrowseACategory'][0])
+    public function bestbuyBrowseACategoryRequest($category_id, $page = 1, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyBrowseACategory'][0])
     {
 
         // verify the required parameter 'category_id' is set
@@ -432,6 +502,28 @@ class BestBuyApi
         }
         if ($page !== null && $page < 1) {
             throw new \InvalidArgumentException('invalid value for "$page" when calling BestBuyApi.bestbuyBrowseACategory, must be bigger than or equal to 1.');
+        }
+        
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling BestBuyApi.bestbuyBrowseACategory, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling BestBuyApi.bestbuyBrowseACategory, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling BestBuyApi.bestbuyBrowseACategory, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling BestBuyApi.bestbuyBrowseACategory, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling BestBuyApi.bestbuyBrowseACategory, must be bigger than or equal to 1.');
         }
         
 
@@ -460,7 +552,55 @@ class BestBuyApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
 
 
@@ -528,15 +668,22 @@ class BestBuyApi
      * Get categories
      *
      * @param  string $query query (optional, default to 'laptop')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetCategories'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function bestbuyGetCategories($query = 'laptop', string $contentType = self::contentTypes['bestbuyGetCategories'][0])
+    public function bestbuyGetCategories($query = 'laptop', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetCategories'][0])
     {
-        list($response) = $this->bestbuyGetCategoriesWithHttpInfo($query, $contentType);
+        list($response) = $this->bestbuyGetCategoriesWithHttpInfo($query, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -546,15 +693,22 @@ class BestBuyApi
      * Get categories
      *
      * @param  string $query (optional, default to 'laptop')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetCategories'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function bestbuyGetCategoriesWithHttpInfo($query = 'laptop', string $contentType = self::contentTypes['bestbuyGetCategories'][0])
+    public function bestbuyGetCategoriesWithHttpInfo($query = 'laptop', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetCategories'][0])
     {
-        $request = $this->bestbuyGetCategoriesRequest($query, $contentType);
+        $request = $this->bestbuyGetCategoriesRequest($query, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -634,6 +788,33 @@ class BestBuyApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -695,6 +876,14 @@ class BestBuyApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -706,14 +895,21 @@ class BestBuyApi
      * Get categories
      *
      * @param  string $query (optional, default to 'laptop')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetCategories'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function bestbuyGetCategoriesAsync($query = 'laptop', string $contentType = self::contentTypes['bestbuyGetCategories'][0])
+    public function bestbuyGetCategoriesAsync($query = 'laptop', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetCategories'][0])
     {
-        return $this->bestbuyGetCategoriesAsyncWithHttpInfo($query, $contentType)
+        return $this->bestbuyGetCategoriesAsyncWithHttpInfo($query, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -727,15 +923,22 @@ class BestBuyApi
      * Get categories
      *
      * @param  string $query (optional, default to 'laptop')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetCategories'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function bestbuyGetCategoriesAsyncWithHttpInfo($query = 'laptop', string $contentType = self::contentTypes['bestbuyGetCategories'][0])
+    public function bestbuyGetCategoriesAsyncWithHttpInfo($query = 'laptop', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetCategories'][0])
     {
         $returnType = 'mixed';
-        $request = $this->bestbuyGetCategoriesRequest($query, $contentType);
+        $request = $this->bestbuyGetCategoriesRequest($query, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -777,16 +980,45 @@ class BestBuyApi
      * Create request for operation 'bestbuyGetCategories'
      *
      * @param  string $query (optional, default to 'laptop')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetCategories'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function bestbuyGetCategoriesRequest($query = 'laptop', string $contentType = self::contentTypes['bestbuyGetCategories'][0])
+    public function bestbuyGetCategoriesRequest($query = 'laptop', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetCategories'][0])
     {
 
         if ($query !== null && strlen($query) < 1) {
             throw new \InvalidArgumentException('invalid length for "$query" when calling BestBuyApi.bestbuyGetCategories, must be bigger than or equal to 1.');
+        }
+        
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling BestBuyApi.bestbuyGetCategories, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling BestBuyApi.bestbuyGetCategories, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling BestBuyApi.bestbuyGetCategories, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling BestBuyApi.bestbuyGetCategories, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling BestBuyApi.bestbuyGetCategories, must be bigger than or equal to 1.');
         }
         
 
@@ -806,7 +1038,55 @@ class BestBuyApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
 
 
@@ -874,15 +1154,22 @@ class BestBuyApi
      * Get laptop and computer deals
      *
      * @param  int $page page (optional, default to 1)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetLaptopAndComputerDeals'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function bestbuyGetLaptopAndComputerDeals($page = 1, string $contentType = self::contentTypes['bestbuyGetLaptopAndComputerDeals'][0])
+    public function bestbuyGetLaptopAndComputerDeals($page = 1, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetLaptopAndComputerDeals'][0])
     {
-        list($response) = $this->bestbuyGetLaptopAndComputerDealsWithHttpInfo($page, $contentType);
+        list($response) = $this->bestbuyGetLaptopAndComputerDealsWithHttpInfo($page, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -892,15 +1179,22 @@ class BestBuyApi
      * Get laptop and computer deals
      *
      * @param  int $page (optional, default to 1)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetLaptopAndComputerDeals'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function bestbuyGetLaptopAndComputerDealsWithHttpInfo($page = 1, string $contentType = self::contentTypes['bestbuyGetLaptopAndComputerDeals'][0])
+    public function bestbuyGetLaptopAndComputerDealsWithHttpInfo($page = 1, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetLaptopAndComputerDeals'][0])
     {
-        $request = $this->bestbuyGetLaptopAndComputerDealsRequest($page, $contentType);
+        $request = $this->bestbuyGetLaptopAndComputerDealsRequest($page, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -980,6 +1274,33 @@ class BestBuyApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -1041,6 +1362,14 @@ class BestBuyApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -1052,14 +1381,21 @@ class BestBuyApi
      * Get laptop and computer deals
      *
      * @param  int $page (optional, default to 1)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetLaptopAndComputerDeals'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function bestbuyGetLaptopAndComputerDealsAsync($page = 1, string $contentType = self::contentTypes['bestbuyGetLaptopAndComputerDeals'][0])
+    public function bestbuyGetLaptopAndComputerDealsAsync($page = 1, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetLaptopAndComputerDeals'][0])
     {
-        return $this->bestbuyGetLaptopAndComputerDealsAsyncWithHttpInfo($page, $contentType)
+        return $this->bestbuyGetLaptopAndComputerDealsAsyncWithHttpInfo($page, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -1073,15 +1409,22 @@ class BestBuyApi
      * Get laptop and computer deals
      *
      * @param  int $page (optional, default to 1)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetLaptopAndComputerDeals'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function bestbuyGetLaptopAndComputerDealsAsyncWithHttpInfo($page = 1, string $contentType = self::contentTypes['bestbuyGetLaptopAndComputerDeals'][0])
+    public function bestbuyGetLaptopAndComputerDealsAsyncWithHttpInfo($page = 1, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetLaptopAndComputerDeals'][0])
     {
         $returnType = 'mixed';
-        $request = $this->bestbuyGetLaptopAndComputerDealsRequest($page, $contentType);
+        $request = $this->bestbuyGetLaptopAndComputerDealsRequest($page, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -1123,12 +1466,19 @@ class BestBuyApi
      * Create request for operation 'bestbuyGetLaptopAndComputerDeals'
      *
      * @param  int $page (optional, default to 1)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetLaptopAndComputerDeals'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function bestbuyGetLaptopAndComputerDealsRequest($page = 1, string $contentType = self::contentTypes['bestbuyGetLaptopAndComputerDeals'][0])
+    public function bestbuyGetLaptopAndComputerDealsRequest($page = 1, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetLaptopAndComputerDeals'][0])
     {
 
         if ($page !== null && $page > 100) {
@@ -1136,6 +1486,28 @@ class BestBuyApi
         }
         if ($page !== null && $page < 1) {
             throw new \InvalidArgumentException('invalid value for "$page" when calling BestBuyApi.bestbuyGetLaptopAndComputerDeals, must be bigger than or equal to 1.');
+        }
+        
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling BestBuyApi.bestbuyGetLaptopAndComputerDeals, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling BestBuyApi.bestbuyGetLaptopAndComputerDeals, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling BestBuyApi.bestbuyGetLaptopAndComputerDeals, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling BestBuyApi.bestbuyGetLaptopAndComputerDeals, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling BestBuyApi.bestbuyGetLaptopAndComputerDeals, must be bigger than or equal to 1.');
         }
         
 
@@ -1155,7 +1527,55 @@ class BestBuyApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
 
 
@@ -1225,15 +1645,22 @@ class BestBuyApi
      * @param  string $sku sku (required)
      * @param  string $zip_code zip_code (required)
      * @param  string $store_id store_id (optional, default to '7')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetProductAvailability'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function bestbuyGetProductAvailability($sku, $zip_code, $store_id = '7', string $contentType = self::contentTypes['bestbuyGetProductAvailability'][0])
+    public function bestbuyGetProductAvailability($sku, $zip_code, $store_id = '7', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetProductAvailability'][0])
     {
-        list($response) = $this->bestbuyGetProductAvailabilityWithHttpInfo($sku, $zip_code, $store_id, $contentType);
+        list($response) = $this->bestbuyGetProductAvailabilityWithHttpInfo($sku, $zip_code, $store_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -1245,15 +1672,22 @@ class BestBuyApi
      * @param  string $sku (required)
      * @param  string $zip_code (required)
      * @param  string $store_id (optional, default to '7')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetProductAvailability'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function bestbuyGetProductAvailabilityWithHttpInfo($sku, $zip_code, $store_id = '7', string $contentType = self::contentTypes['bestbuyGetProductAvailability'][0])
+    public function bestbuyGetProductAvailabilityWithHttpInfo($sku, $zip_code, $store_id = '7', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetProductAvailability'][0])
     {
-        $request = $this->bestbuyGetProductAvailabilityRequest($sku, $zip_code, $store_id, $contentType);
+        $request = $this->bestbuyGetProductAvailabilityRequest($sku, $zip_code, $store_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -1333,6 +1767,33 @@ class BestBuyApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -1394,6 +1855,14 @@ class BestBuyApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -1407,14 +1876,21 @@ class BestBuyApi
      * @param  string $sku (required)
      * @param  string $zip_code (required)
      * @param  string $store_id (optional, default to '7')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetProductAvailability'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function bestbuyGetProductAvailabilityAsync($sku, $zip_code, $store_id = '7', string $contentType = self::contentTypes['bestbuyGetProductAvailability'][0])
+    public function bestbuyGetProductAvailabilityAsync($sku, $zip_code, $store_id = '7', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetProductAvailability'][0])
     {
-        return $this->bestbuyGetProductAvailabilityAsyncWithHttpInfo($sku, $zip_code, $store_id, $contentType)
+        return $this->bestbuyGetProductAvailabilityAsyncWithHttpInfo($sku, $zip_code, $store_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -1430,15 +1906,22 @@ class BestBuyApi
      * @param  string $sku (required)
      * @param  string $zip_code (required)
      * @param  string $store_id (optional, default to '7')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetProductAvailability'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function bestbuyGetProductAvailabilityAsyncWithHttpInfo($sku, $zip_code, $store_id = '7', string $contentType = self::contentTypes['bestbuyGetProductAvailability'][0])
+    public function bestbuyGetProductAvailabilityAsyncWithHttpInfo($sku, $zip_code, $store_id = '7', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetProductAvailability'][0])
     {
         $returnType = 'mixed';
-        $request = $this->bestbuyGetProductAvailabilityRequest($sku, $zip_code, $store_id, $contentType);
+        $request = $this->bestbuyGetProductAvailabilityRequest($sku, $zip_code, $store_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -1482,12 +1965,19 @@ class BestBuyApi
      * @param  string $sku (required)
      * @param  string $zip_code (required)
      * @param  string $store_id (optional, default to '7')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetProductAvailability'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function bestbuyGetProductAvailabilityRequest($sku, $zip_code, $store_id = '7', string $contentType = self::contentTypes['bestbuyGetProductAvailability'][0])
+    public function bestbuyGetProductAvailabilityRequest($sku, $zip_code, $store_id = '7', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetProductAvailability'][0])
     {
 
         // verify the required parameter 'sku' is set
@@ -1509,6 +1999,28 @@ class BestBuyApi
         
         if ($store_id !== null && !preg_match("/^\\d+$/", $store_id)) {
             throw new \InvalidArgumentException("invalid value for \"store_id\" when calling BestBuyApi.bestbuyGetProductAvailability, must conform to the pattern /^\\d+$/.");
+        }
+        
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling BestBuyApi.bestbuyGetProductAvailability, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling BestBuyApi.bestbuyGetProductAvailability, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling BestBuyApi.bestbuyGetProductAvailability, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling BestBuyApi.bestbuyGetProductAvailability, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling BestBuyApi.bestbuyGetProductAvailability, must be bigger than or equal to 1.');
         }
         
 
@@ -1537,7 +2049,55 @@ class BestBuyApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($sku !== null) {
@@ -1613,15 +2173,22 @@ class BestBuyApi
      * Get product detail
      *
      * @param  string $sku sku (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetProductDetail'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function bestbuyGetProductDetail($sku, string $contentType = self::contentTypes['bestbuyGetProductDetail'][0])
+    public function bestbuyGetProductDetail($sku, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetProductDetail'][0])
     {
-        list($response) = $this->bestbuyGetProductDetailWithHttpInfo($sku, $contentType);
+        list($response) = $this->bestbuyGetProductDetailWithHttpInfo($sku, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -1631,15 +2198,22 @@ class BestBuyApi
      * Get product detail
      *
      * @param  string $sku (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetProductDetail'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function bestbuyGetProductDetailWithHttpInfo($sku, string $contentType = self::contentTypes['bestbuyGetProductDetail'][0])
+    public function bestbuyGetProductDetailWithHttpInfo($sku, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetProductDetail'][0])
     {
-        $request = $this->bestbuyGetProductDetailRequest($sku, $contentType);
+        $request = $this->bestbuyGetProductDetailRequest($sku, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -1719,6 +2293,33 @@ class BestBuyApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -1780,6 +2381,14 @@ class BestBuyApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -1791,14 +2400,21 @@ class BestBuyApi
      * Get product detail
      *
      * @param  string $sku (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetProductDetail'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function bestbuyGetProductDetailAsync($sku, string $contentType = self::contentTypes['bestbuyGetProductDetail'][0])
+    public function bestbuyGetProductDetailAsync($sku, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetProductDetail'][0])
     {
-        return $this->bestbuyGetProductDetailAsyncWithHttpInfo($sku, $contentType)
+        return $this->bestbuyGetProductDetailAsyncWithHttpInfo($sku, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -1812,15 +2428,22 @@ class BestBuyApi
      * Get product detail
      *
      * @param  string $sku (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetProductDetail'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function bestbuyGetProductDetailAsyncWithHttpInfo($sku, string $contentType = self::contentTypes['bestbuyGetProductDetail'][0])
+    public function bestbuyGetProductDetailAsyncWithHttpInfo($sku, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetProductDetail'][0])
     {
         $returnType = 'mixed';
-        $request = $this->bestbuyGetProductDetailRequest($sku, $contentType);
+        $request = $this->bestbuyGetProductDetailRequest($sku, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -1862,12 +2485,19 @@ class BestBuyApi
      * Create request for operation 'bestbuyGetProductDetail'
      *
      * @param  string $sku (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetProductDetail'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function bestbuyGetProductDetailRequest($sku, string $contentType = self::contentTypes['bestbuyGetProductDetail'][0])
+    public function bestbuyGetProductDetailRequest($sku, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetProductDetail'][0])
     {
 
         // verify the required parameter 'sku' is set
@@ -1878,6 +2508,28 @@ class BestBuyApi
         }
 
 
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling BestBuyApi.bestbuyGetProductDetail, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling BestBuyApi.bestbuyGetProductDetail, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling BestBuyApi.bestbuyGetProductDetail, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling BestBuyApi.bestbuyGetProductDetail, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling BestBuyApi.bestbuyGetProductDetail, must be bigger than or equal to 1.');
+        }
+        
+
         $resourcePath = '/v1/bestbuy/products/{sku}';
         $formParams = [];
         $queryParams = [];
@@ -1885,7 +2537,55 @@ class BestBuyApi
         $httpBody = '';
         $multipart = false;
 
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($sku !== null) {
@@ -1964,15 +2664,22 @@ class BestBuyApi
      * @param  int $page page (optional, default to 1)
      * @param  int $page_size page_size (optional, default to 10)
      * @param  string $query query (optional, default to '')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetProductQuestions'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function bestbuyGetProductQuestions($sku, $page = 1, $page_size = 10, $query = '', string $contentType = self::contentTypes['bestbuyGetProductQuestions'][0])
+    public function bestbuyGetProductQuestions($sku, $page = 1, $page_size = 10, $query = '', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetProductQuestions'][0])
     {
-        list($response) = $this->bestbuyGetProductQuestionsWithHttpInfo($sku, $page, $page_size, $query, $contentType);
+        list($response) = $this->bestbuyGetProductQuestionsWithHttpInfo($sku, $page, $page_size, $query, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -1985,15 +2692,22 @@ class BestBuyApi
      * @param  int $page (optional, default to 1)
      * @param  int $page_size (optional, default to 10)
      * @param  string $query (optional, default to '')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetProductQuestions'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function bestbuyGetProductQuestionsWithHttpInfo($sku, $page = 1, $page_size = 10, $query = '', string $contentType = self::contentTypes['bestbuyGetProductQuestions'][0])
+    public function bestbuyGetProductQuestionsWithHttpInfo($sku, $page = 1, $page_size = 10, $query = '', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetProductQuestions'][0])
     {
-        $request = $this->bestbuyGetProductQuestionsRequest($sku, $page, $page_size, $query, $contentType);
+        $request = $this->bestbuyGetProductQuestionsRequest($sku, $page, $page_size, $query, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -2073,6 +2787,33 @@ class BestBuyApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -2134,6 +2875,14 @@ class BestBuyApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -2148,14 +2897,21 @@ class BestBuyApi
      * @param  int $page (optional, default to 1)
      * @param  int $page_size (optional, default to 10)
      * @param  string $query (optional, default to '')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetProductQuestions'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function bestbuyGetProductQuestionsAsync($sku, $page = 1, $page_size = 10, $query = '', string $contentType = self::contentTypes['bestbuyGetProductQuestions'][0])
+    public function bestbuyGetProductQuestionsAsync($sku, $page = 1, $page_size = 10, $query = '', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetProductQuestions'][0])
     {
-        return $this->bestbuyGetProductQuestionsAsyncWithHttpInfo($sku, $page, $page_size, $query, $contentType)
+        return $this->bestbuyGetProductQuestionsAsyncWithHttpInfo($sku, $page, $page_size, $query, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -2172,15 +2928,22 @@ class BestBuyApi
      * @param  int $page (optional, default to 1)
      * @param  int $page_size (optional, default to 10)
      * @param  string $query (optional, default to '')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetProductQuestions'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function bestbuyGetProductQuestionsAsyncWithHttpInfo($sku, $page = 1, $page_size = 10, $query = '', string $contentType = self::contentTypes['bestbuyGetProductQuestions'][0])
+    public function bestbuyGetProductQuestionsAsyncWithHttpInfo($sku, $page = 1, $page_size = 10, $query = '', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetProductQuestions'][0])
     {
         $returnType = 'mixed';
-        $request = $this->bestbuyGetProductQuestionsRequest($sku, $page, $page_size, $query, $contentType);
+        $request = $this->bestbuyGetProductQuestionsRequest($sku, $page, $page_size, $query, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -2225,12 +2988,19 @@ class BestBuyApi
      * @param  int $page (optional, default to 1)
      * @param  int $page_size (optional, default to 10)
      * @param  string $query (optional, default to '')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetProductQuestions'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function bestbuyGetProductQuestionsRequest($sku, $page = 1, $page_size = 10, $query = '', string $contentType = self::contentTypes['bestbuyGetProductQuestions'][0])
+    public function bestbuyGetProductQuestionsRequest($sku, $page = 1, $page_size = 10, $query = '', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetProductQuestions'][0])
     {
 
         // verify the required parameter 'sku' is set
@@ -2255,6 +3025,28 @@ class BestBuyApi
         }
         
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling BestBuyApi.bestbuyGetProductQuestions, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling BestBuyApi.bestbuyGetProductQuestions, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling BestBuyApi.bestbuyGetProductQuestions, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling BestBuyApi.bestbuyGetProductQuestions, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling BestBuyApi.bestbuyGetProductQuestions, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/bestbuy/products/{sku}/questions';
         $formParams = [];
@@ -2290,7 +3082,55 @@ class BestBuyApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($sku !== null) {
@@ -2369,15 +3209,22 @@ class BestBuyApi
      * @param  int $page page (optional, default to 1)
      * @param  int $page_size page_size (optional, default to 10)
      * @param  string $sort sort (optional, default to 'MOST_RECENT')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetProductReviews'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function bestbuyGetProductReviews($sku, $page = 1, $page_size = 10, $sort = 'MOST_RECENT', string $contentType = self::contentTypes['bestbuyGetProductReviews'][0])
+    public function bestbuyGetProductReviews($sku, $page = 1, $page_size = 10, $sort = 'MOST_RECENT', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetProductReviews'][0])
     {
-        list($response) = $this->bestbuyGetProductReviewsWithHttpInfo($sku, $page, $page_size, $sort, $contentType);
+        list($response) = $this->bestbuyGetProductReviewsWithHttpInfo($sku, $page, $page_size, $sort, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -2390,15 +3237,22 @@ class BestBuyApi
      * @param  int $page (optional, default to 1)
      * @param  int $page_size (optional, default to 10)
      * @param  string $sort (optional, default to 'MOST_RECENT')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetProductReviews'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function bestbuyGetProductReviewsWithHttpInfo($sku, $page = 1, $page_size = 10, $sort = 'MOST_RECENT', string $contentType = self::contentTypes['bestbuyGetProductReviews'][0])
+    public function bestbuyGetProductReviewsWithHttpInfo($sku, $page = 1, $page_size = 10, $sort = 'MOST_RECENT', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetProductReviews'][0])
     {
-        $request = $this->bestbuyGetProductReviewsRequest($sku, $page, $page_size, $sort, $contentType);
+        $request = $this->bestbuyGetProductReviewsRequest($sku, $page, $page_size, $sort, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -2478,6 +3332,33 @@ class BestBuyApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -2539,6 +3420,14 @@ class BestBuyApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -2553,14 +3442,21 @@ class BestBuyApi
      * @param  int $page (optional, default to 1)
      * @param  int $page_size (optional, default to 10)
      * @param  string $sort (optional, default to 'MOST_RECENT')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetProductReviews'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function bestbuyGetProductReviewsAsync($sku, $page = 1, $page_size = 10, $sort = 'MOST_RECENT', string $contentType = self::contentTypes['bestbuyGetProductReviews'][0])
+    public function bestbuyGetProductReviewsAsync($sku, $page = 1, $page_size = 10, $sort = 'MOST_RECENT', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetProductReviews'][0])
     {
-        return $this->bestbuyGetProductReviewsAsyncWithHttpInfo($sku, $page, $page_size, $sort, $contentType)
+        return $this->bestbuyGetProductReviewsAsyncWithHttpInfo($sku, $page, $page_size, $sort, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -2577,15 +3473,22 @@ class BestBuyApi
      * @param  int $page (optional, default to 1)
      * @param  int $page_size (optional, default to 10)
      * @param  string $sort (optional, default to 'MOST_RECENT')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetProductReviews'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function bestbuyGetProductReviewsAsyncWithHttpInfo($sku, $page = 1, $page_size = 10, $sort = 'MOST_RECENT', string $contentType = self::contentTypes['bestbuyGetProductReviews'][0])
+    public function bestbuyGetProductReviewsAsyncWithHttpInfo($sku, $page = 1, $page_size = 10, $sort = 'MOST_RECENT', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetProductReviews'][0])
     {
         $returnType = 'mixed';
-        $request = $this->bestbuyGetProductReviewsRequest($sku, $page, $page_size, $sort, $contentType);
+        $request = $this->bestbuyGetProductReviewsRequest($sku, $page, $page_size, $sort, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -2630,12 +3533,19 @@ class BestBuyApi
      * @param  int $page (optional, default to 1)
      * @param  int $page_size (optional, default to 10)
      * @param  string $sort (optional, default to 'MOST_RECENT')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetProductReviews'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function bestbuyGetProductReviewsRequest($sku, $page = 1, $page_size = 10, $sort = 'MOST_RECENT', string $contentType = self::contentTypes['bestbuyGetProductReviews'][0])
+    public function bestbuyGetProductReviewsRequest($sku, $page = 1, $page_size = 10, $sort = 'MOST_RECENT', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetProductReviews'][0])
     {
 
         // verify the required parameter 'sku' is set
@@ -2660,6 +3570,28 @@ class BestBuyApi
         }
         
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling BestBuyApi.bestbuyGetProductReviews, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling BestBuyApi.bestbuyGetProductReviews, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling BestBuyApi.bestbuyGetProductReviews, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling BestBuyApi.bestbuyGetProductReviews, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling BestBuyApi.bestbuyGetProductReviews, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/bestbuy/products/{sku}/reviews';
         $formParams = [];
@@ -2695,7 +3627,55 @@ class BestBuyApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($sku !== null) {
@@ -2771,15 +3751,22 @@ class BestBuyApi
      * Get search suggestions
      *
      * @param  string $query query (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetSearchSuggestions'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function bestbuyGetSearchSuggestions($query, string $contentType = self::contentTypes['bestbuyGetSearchSuggestions'][0])
+    public function bestbuyGetSearchSuggestions($query, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetSearchSuggestions'][0])
     {
-        list($response) = $this->bestbuyGetSearchSuggestionsWithHttpInfo($query, $contentType);
+        list($response) = $this->bestbuyGetSearchSuggestionsWithHttpInfo($query, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -2789,15 +3776,22 @@ class BestBuyApi
      * Get search suggestions
      *
      * @param  string $query (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetSearchSuggestions'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function bestbuyGetSearchSuggestionsWithHttpInfo($query, string $contentType = self::contentTypes['bestbuyGetSearchSuggestions'][0])
+    public function bestbuyGetSearchSuggestionsWithHttpInfo($query, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetSearchSuggestions'][0])
     {
-        $request = $this->bestbuyGetSearchSuggestionsRequest($query, $contentType);
+        $request = $this->bestbuyGetSearchSuggestionsRequest($query, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -2877,6 +3871,33 @@ class BestBuyApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -2938,6 +3959,14 @@ class BestBuyApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -2949,14 +3978,21 @@ class BestBuyApi
      * Get search suggestions
      *
      * @param  string $query (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetSearchSuggestions'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function bestbuyGetSearchSuggestionsAsync($query, string $contentType = self::contentTypes['bestbuyGetSearchSuggestions'][0])
+    public function bestbuyGetSearchSuggestionsAsync($query, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetSearchSuggestions'][0])
     {
-        return $this->bestbuyGetSearchSuggestionsAsyncWithHttpInfo($query, $contentType)
+        return $this->bestbuyGetSearchSuggestionsAsyncWithHttpInfo($query, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -2970,15 +4006,22 @@ class BestBuyApi
      * Get search suggestions
      *
      * @param  string $query (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetSearchSuggestions'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function bestbuyGetSearchSuggestionsAsyncWithHttpInfo($query, string $contentType = self::contentTypes['bestbuyGetSearchSuggestions'][0])
+    public function bestbuyGetSearchSuggestionsAsyncWithHttpInfo($query, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetSearchSuggestions'][0])
     {
         $returnType = 'mixed';
-        $request = $this->bestbuyGetSearchSuggestionsRequest($query, $contentType);
+        $request = $this->bestbuyGetSearchSuggestionsRequest($query, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -3020,12 +4063,19 @@ class BestBuyApi
      * Create request for operation 'bestbuyGetSearchSuggestions'
      *
      * @param  string $query (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyGetSearchSuggestions'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function bestbuyGetSearchSuggestionsRequest($query, string $contentType = self::contentTypes['bestbuyGetSearchSuggestions'][0])
+    public function bestbuyGetSearchSuggestionsRequest($query, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyGetSearchSuggestions'][0])
     {
 
         // verify the required parameter 'query' is set
@@ -3036,6 +4086,28 @@ class BestBuyApi
         }
         if (strlen($query) < 1) {
             throw new \InvalidArgumentException('invalid length for "$query" when calling BestBuyApi.bestbuyGetSearchSuggestions, must be bigger than or equal to 1.');
+        }
+        
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling BestBuyApi.bestbuyGetSearchSuggestions, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling BestBuyApi.bestbuyGetSearchSuggestions, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling BestBuyApi.bestbuyGetSearchSuggestions, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling BestBuyApi.bestbuyGetSearchSuggestions, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling BestBuyApi.bestbuyGetSearchSuggestions, must be bigger than or equal to 1.');
         }
         
 
@@ -3055,7 +4127,55 @@ class BestBuyApi
             true, // explode
             true // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
 
 
@@ -3122,15 +4242,22 @@ class BestBuyApi
      *
      * List supported markets
      *
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyListSupportedMarkets'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed
+     * @return mixed|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function bestbuyListSupportedMarkets(string $contentType = self::contentTypes['bestbuyListSupportedMarkets'][0])
+    public function bestbuyListSupportedMarkets($prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyListSupportedMarkets'][0])
     {
-        list($response) = $this->bestbuyListSupportedMarketsWithHttpInfo($contentType);
+        list($response) = $this->bestbuyListSupportedMarketsWithHttpInfo($prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -3139,15 +4266,22 @@ class BestBuyApi
      *
      * List supported markets
      *
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyListSupportedMarkets'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function bestbuyListSupportedMarketsWithHttpInfo(string $contentType = self::contentTypes['bestbuyListSupportedMarkets'][0])
+    public function bestbuyListSupportedMarketsWithHttpInfo($prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyListSupportedMarkets'][0])
     {
-        $request = $this->bestbuyListSupportedMarketsRequest($contentType);
+        $request = $this->bestbuyListSupportedMarketsRequest($prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -3197,6 +4331,33 @@ class BestBuyApi
 
                     return [
                         ObjectSerializer::deserialize($content, 'mixed', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
@@ -3253,6 +4414,14 @@ class BestBuyApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -3263,14 +4432,21 @@ class BestBuyApi
      *
      * List supported markets
      *
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyListSupportedMarkets'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function bestbuyListSupportedMarketsAsync(string $contentType = self::contentTypes['bestbuyListSupportedMarkets'][0])
+    public function bestbuyListSupportedMarketsAsync($prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyListSupportedMarkets'][0])
     {
-        return $this->bestbuyListSupportedMarketsAsyncWithHttpInfo($contentType)
+        return $this->bestbuyListSupportedMarketsAsyncWithHttpInfo($prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -3283,15 +4459,22 @@ class BestBuyApi
      *
      * List supported markets
      *
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyListSupportedMarkets'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function bestbuyListSupportedMarketsAsyncWithHttpInfo(string $contentType = self::contentTypes['bestbuyListSupportedMarkets'][0])
+    public function bestbuyListSupportedMarketsAsyncWithHttpInfo($prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyListSupportedMarkets'][0])
     {
         $returnType = 'mixed';
-        $request = $this->bestbuyListSupportedMarketsRequest($contentType);
+        $request = $this->bestbuyListSupportedMarketsRequest($prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -3332,14 +4515,43 @@ class BestBuyApi
     /**
      * Create request for operation 'bestbuyListSupportedMarkets'
      *
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuyListSupportedMarkets'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function bestbuyListSupportedMarketsRequest(string $contentType = self::contentTypes['bestbuyListSupportedMarkets'][0])
+    public function bestbuyListSupportedMarketsRequest($prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuyListSupportedMarkets'][0])
     {
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling BestBuyApi.bestbuyListSupportedMarkets, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling BestBuyApi.bestbuyListSupportedMarkets, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling BestBuyApi.bestbuyListSupportedMarkets, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling BestBuyApi.bestbuyListSupportedMarkets, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling BestBuyApi.bestbuyListSupportedMarkets, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/bestbuy/markets';
         $formParams = [];
@@ -3348,7 +4560,55 @@ class BestBuyApi
         $httpBody = '';
         $multipart = false;
 
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
 
 
@@ -3418,15 +4678,22 @@ class BestBuyApi
      * @param  string $query query (required)
      * @param  int $page page (optional, default to 1)
      * @param  string $sort sort (optional, default to 'best_match')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuySearchProducts'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function bestbuySearchProducts($query, $page = 1, $sort = 'best_match', string $contentType = self::contentTypes['bestbuySearchProducts'][0])
+    public function bestbuySearchProducts($query, $page = 1, $sort = 'best_match', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuySearchProducts'][0])
     {
-        list($response) = $this->bestbuySearchProductsWithHttpInfo($query, $page, $sort, $contentType);
+        list($response) = $this->bestbuySearchProductsWithHttpInfo($query, $page, $sort, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -3438,15 +4705,22 @@ class BestBuyApi
      * @param  string $query (required)
      * @param  int $page (optional, default to 1)
      * @param  string $sort (optional, default to 'best_match')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuySearchProducts'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function bestbuySearchProductsWithHttpInfo($query, $page = 1, $sort = 'best_match', string $contentType = self::contentTypes['bestbuySearchProducts'][0])
+    public function bestbuySearchProductsWithHttpInfo($query, $page = 1, $sort = 'best_match', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuySearchProducts'][0])
     {
-        $request = $this->bestbuySearchProductsRequest($query, $page, $sort, $contentType);
+        $request = $this->bestbuySearchProductsRequest($query, $page, $sort, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -3526,6 +4800,33 @@ class BestBuyApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -3587,6 +4888,14 @@ class BestBuyApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -3600,14 +4909,21 @@ class BestBuyApi
      * @param  string $query (required)
      * @param  int $page (optional, default to 1)
      * @param  string $sort (optional, default to 'best_match')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuySearchProducts'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function bestbuySearchProductsAsync($query, $page = 1, $sort = 'best_match', string $contentType = self::contentTypes['bestbuySearchProducts'][0])
+    public function bestbuySearchProductsAsync($query, $page = 1, $sort = 'best_match', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuySearchProducts'][0])
     {
-        return $this->bestbuySearchProductsAsyncWithHttpInfo($query, $page, $sort, $contentType)
+        return $this->bestbuySearchProductsAsyncWithHttpInfo($query, $page, $sort, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -3623,15 +4939,22 @@ class BestBuyApi
      * @param  string $query (required)
      * @param  int $page (optional, default to 1)
      * @param  string $sort (optional, default to 'best_match')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuySearchProducts'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function bestbuySearchProductsAsyncWithHttpInfo($query, $page = 1, $sort = 'best_match', string $contentType = self::contentTypes['bestbuySearchProducts'][0])
+    public function bestbuySearchProductsAsyncWithHttpInfo($query, $page = 1, $sort = 'best_match', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuySearchProducts'][0])
     {
         $returnType = 'mixed';
-        $request = $this->bestbuySearchProductsRequest($query, $page, $sort, $contentType);
+        $request = $this->bestbuySearchProductsRequest($query, $page, $sort, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -3675,12 +4998,19 @@ class BestBuyApi
      * @param  string $query (required)
      * @param  int $page (optional, default to 1)
      * @param  string $sort (optional, default to 'best_match')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['bestbuySearchProducts'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function bestbuySearchProductsRequest($query, $page = 1, $sort = 'best_match', string $contentType = self::contentTypes['bestbuySearchProducts'][0])
+    public function bestbuySearchProductsRequest($query, $page = 1, $sort = 'best_match', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['bestbuySearchProducts'][0])
     {
 
         // verify the required parameter 'query' is set
@@ -3701,6 +5031,28 @@ class BestBuyApi
         }
         
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling BestBuyApi.bestbuySearchProducts, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling BestBuyApi.bestbuySearchProducts, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling BestBuyApi.bestbuySearchProducts, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling BestBuyApi.bestbuySearchProducts, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling BestBuyApi.bestbuySearchProducts, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/bestbuy/search';
         $formParams = [];
@@ -3736,7 +5088,55 @@ class BestBuyApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
 
 

@@ -173,15 +173,22 @@ class EBayApi
      * @param  string $sort_by best_match|ending_soonest|newly_listed|price_low_to_high|price_high_to_low (optional, default to 'best_match')
      * @param  float $min_price min_price (optional)
      * @param  float $max_price max_price (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayBrowseACategory'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function ebayBrowseACategory($category_id, $domain = 'com', $page = 1, $per_page = null, $sort_by = 'best_match', $min_price = null, $max_price = null, string $contentType = self::contentTypes['ebayBrowseACategory'][0])
+    public function ebayBrowseACategory($category_id, $domain = 'com', $page = 1, $per_page = null, $sort_by = 'best_match', $min_price = null, $max_price = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayBrowseACategory'][0])
     {
-        list($response) = $this->ebayBrowseACategoryWithHttpInfo($category_id, $domain, $page, $per_page, $sort_by, $min_price, $max_price, $contentType);
+        list($response) = $this->ebayBrowseACategoryWithHttpInfo($category_id, $domain, $page, $per_page, $sort_by, $min_price, $max_price, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -197,15 +204,22 @@ class EBayApi
      * @param  string $sort_by best_match|ending_soonest|newly_listed|price_low_to_high|price_high_to_low (optional, default to 'best_match')
      * @param  float $min_price (optional)
      * @param  float $max_price (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayBrowseACategory'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function ebayBrowseACategoryWithHttpInfo($category_id, $domain = 'com', $page = 1, $per_page = null, $sort_by = 'best_match', $min_price = null, $max_price = null, string $contentType = self::contentTypes['ebayBrowseACategory'][0])
+    public function ebayBrowseACategoryWithHttpInfo($category_id, $domain = 'com', $page = 1, $per_page = null, $sort_by = 'best_match', $min_price = null, $max_price = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayBrowseACategory'][0])
     {
-        $request = $this->ebayBrowseACategoryRequest($category_id, $domain, $page, $per_page, $sort_by, $min_price, $max_price, $contentType);
+        $request = $this->ebayBrowseACategoryRequest($category_id, $domain, $page, $per_page, $sort_by, $min_price, $max_price, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -285,6 +299,33 @@ class EBayApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -346,6 +387,14 @@ class EBayApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -363,14 +412,21 @@ class EBayApi
      * @param  string $sort_by best_match|ending_soonest|newly_listed|price_low_to_high|price_high_to_low (optional, default to 'best_match')
      * @param  float $min_price (optional)
      * @param  float $max_price (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayBrowseACategory'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function ebayBrowseACategoryAsync($category_id, $domain = 'com', $page = 1, $per_page = null, $sort_by = 'best_match', $min_price = null, $max_price = null, string $contentType = self::contentTypes['ebayBrowseACategory'][0])
+    public function ebayBrowseACategoryAsync($category_id, $domain = 'com', $page = 1, $per_page = null, $sort_by = 'best_match', $min_price = null, $max_price = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayBrowseACategory'][0])
     {
-        return $this->ebayBrowseACategoryAsyncWithHttpInfo($category_id, $domain, $page, $per_page, $sort_by, $min_price, $max_price, $contentType)
+        return $this->ebayBrowseACategoryAsyncWithHttpInfo($category_id, $domain, $page, $per_page, $sort_by, $min_price, $max_price, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -390,15 +446,22 @@ class EBayApi
      * @param  string $sort_by best_match|ending_soonest|newly_listed|price_low_to_high|price_high_to_low (optional, default to 'best_match')
      * @param  float $min_price (optional)
      * @param  float $max_price (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayBrowseACategory'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function ebayBrowseACategoryAsyncWithHttpInfo($category_id, $domain = 'com', $page = 1, $per_page = null, $sort_by = 'best_match', $min_price = null, $max_price = null, string $contentType = self::contentTypes['ebayBrowseACategory'][0])
+    public function ebayBrowseACategoryAsyncWithHttpInfo($category_id, $domain = 'com', $page = 1, $per_page = null, $sort_by = 'best_match', $min_price = null, $max_price = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayBrowseACategory'][0])
     {
         $returnType = 'mixed';
-        $request = $this->ebayBrowseACategoryRequest($category_id, $domain, $page, $per_page, $sort_by, $min_price, $max_price, $contentType);
+        $request = $this->ebayBrowseACategoryRequest($category_id, $domain, $page, $per_page, $sort_by, $min_price, $max_price, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -446,12 +509,19 @@ class EBayApi
      * @param  string $sort_by best_match|ending_soonest|newly_listed|price_low_to_high|price_high_to_low (optional, default to 'best_match')
      * @param  float $min_price (optional)
      * @param  float $max_price (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayBrowseACategory'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function ebayBrowseACategoryRequest($category_id, $domain = 'com', $page = 1, $per_page = null, $sort_by = 'best_match', $min_price = null, $max_price = null, string $contentType = self::contentTypes['ebayBrowseACategory'][0])
+    public function ebayBrowseACategoryRequest($category_id, $domain = 'com', $page = 1, $per_page = null, $sort_by = 'best_match', $min_price = null, $max_price = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayBrowseACategory'][0])
     {
 
         // verify the required parameter 'category_id' is set
@@ -483,6 +553,28 @@ class EBayApi
         
         if ($max_price !== null && $max_price < 0) {
             throw new \InvalidArgumentException('invalid value for "$max_price" when calling EBayApi.ebayBrowseACategory, must be bigger than or equal to 0.');
+        }
+        
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling EBayApi.ebayBrowseACategory, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling EBayApi.ebayBrowseACategory, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling EBayApi.ebayBrowseACategory, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling EBayApi.ebayBrowseACategory, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling EBayApi.ebayBrowseACategory, must be bigger than or equal to 1.');
         }
         
 
@@ -547,7 +639,55 @@ class EBayApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($category_id !== null) {
@@ -634,15 +774,22 @@ class EBayApi
      * @param  float $max_price max_price (optional)
      * @param  string $location domestic|worldwide (optional)
      * @param  string $language english|japanese|chinese|korean (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayCompletedSoldListings'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function ebayCompletedSoldListings($query = null, $seller = null, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, $location = null, $language = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
+    public function ebayCompletedSoldListings($query = null, $seller = null, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, $location = null, $language = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
     {
-        list($response) = $this->ebayCompletedSoldListingsWithHttpInfo($query, $seller, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $location, $language, $contentType);
+        list($response) = $this->ebayCompletedSoldListingsWithHttpInfo($query, $seller, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $location, $language, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -663,15 +810,22 @@ class EBayApi
      * @param  float $max_price (optional)
      * @param  string $location domestic|worldwide (optional)
      * @param  string $language english|japanese|chinese|korean (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayCompletedSoldListings'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function ebayCompletedSoldListingsWithHttpInfo($query = null, $seller = null, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, $location = null, $language = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
+    public function ebayCompletedSoldListingsWithHttpInfo($query = null, $seller = null, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, $location = null, $language = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
     {
-        $request = $this->ebayCompletedSoldListingsRequest($query, $seller, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $location, $language, $contentType);
+        $request = $this->ebayCompletedSoldListingsRequest($query, $seller, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $location, $language, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -751,6 +905,33 @@ class EBayApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -812,6 +993,14 @@ class EBayApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -834,14 +1023,21 @@ class EBayApi
      * @param  float $max_price (optional)
      * @param  string $location domestic|worldwide (optional)
      * @param  string $language english|japanese|chinese|korean (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayCompletedSoldListings'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function ebayCompletedSoldListingsAsync($query = null, $seller = null, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, $location = null, $language = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
+    public function ebayCompletedSoldListingsAsync($query = null, $seller = null, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, $location = null, $language = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
     {
-        return $this->ebayCompletedSoldListingsAsyncWithHttpInfo($query, $seller, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $location, $language, $contentType)
+        return $this->ebayCompletedSoldListingsAsyncWithHttpInfo($query, $seller, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $location, $language, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -866,15 +1062,22 @@ class EBayApi
      * @param  float $max_price (optional)
      * @param  string $location domestic|worldwide (optional)
      * @param  string $language english|japanese|chinese|korean (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayCompletedSoldListings'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function ebayCompletedSoldListingsAsyncWithHttpInfo($query = null, $seller = null, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, $location = null, $language = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
+    public function ebayCompletedSoldListingsAsyncWithHttpInfo($query = null, $seller = null, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, $location = null, $language = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
     {
         $returnType = 'mixed';
-        $request = $this->ebayCompletedSoldListingsRequest($query, $seller, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $location, $language, $contentType);
+        $request = $this->ebayCompletedSoldListingsRequest($query, $seller, $domain, $category_id, $page, $per_page, $sort_by, $condition, $min_price, $max_price, $location, $language, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -927,12 +1130,19 @@ class EBayApi
      * @param  float $max_price (optional)
      * @param  string $location domestic|worldwide (optional)
      * @param  string $language english|japanese|chinese|korean (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayCompletedSoldListings'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function ebayCompletedSoldListingsRequest($query = null, $seller = null, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, $location = null, $language = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
+    public function ebayCompletedSoldListingsRequest($query = null, $seller = null, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $min_price = null, $max_price = null, $location = null, $language = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayCompletedSoldListings'][0])
     {
 
 
@@ -965,6 +1175,28 @@ class EBayApi
         
 
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling EBayApi.ebayCompletedSoldListings, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling EBayApi.ebayCompletedSoldListings, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling EBayApi.ebayCompletedSoldListings, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling EBayApi.ebayCompletedSoldListings, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling EBayApi.ebayCompletedSoldListings, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/ebay/completed';
         $formParams = [];
@@ -1081,7 +1313,55 @@ class EBayApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
 
 
@@ -1736,15 +2016,22 @@ class EBayApi
      *
      * @param  string $item_id item_id (required)
      * @param  string $domain domain (optional, default to 'com')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayGetItemDetail'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function ebayGetItemDetail($item_id, $domain = 'com', string $contentType = self::contentTypes['ebayGetItemDetail'][0])
+    public function ebayGetItemDetail($item_id, $domain = 'com', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayGetItemDetail'][0])
     {
-        list($response) = $this->ebayGetItemDetailWithHttpInfo($item_id, $domain, $contentType);
+        list($response) = $this->ebayGetItemDetailWithHttpInfo($item_id, $domain, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -1755,15 +2042,22 @@ class EBayApi
      *
      * @param  string $item_id (required)
      * @param  string $domain (optional, default to 'com')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayGetItemDetail'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function ebayGetItemDetailWithHttpInfo($item_id, $domain = 'com', string $contentType = self::contentTypes['ebayGetItemDetail'][0])
+    public function ebayGetItemDetailWithHttpInfo($item_id, $domain = 'com', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayGetItemDetail'][0])
     {
-        $request = $this->ebayGetItemDetailRequest($item_id, $domain, $contentType);
+        $request = $this->ebayGetItemDetailRequest($item_id, $domain, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -1843,6 +2137,33 @@ class EBayApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -1904,6 +2225,14 @@ class EBayApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -1916,14 +2245,21 @@ class EBayApi
      *
      * @param  string $item_id (required)
      * @param  string $domain (optional, default to 'com')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayGetItemDetail'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function ebayGetItemDetailAsync($item_id, $domain = 'com', string $contentType = self::contentTypes['ebayGetItemDetail'][0])
+    public function ebayGetItemDetailAsync($item_id, $domain = 'com', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayGetItemDetail'][0])
     {
-        return $this->ebayGetItemDetailAsyncWithHttpInfo($item_id, $domain, $contentType)
+        return $this->ebayGetItemDetailAsyncWithHttpInfo($item_id, $domain, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -1938,15 +2274,22 @@ class EBayApi
      *
      * @param  string $item_id (required)
      * @param  string $domain (optional, default to 'com')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayGetItemDetail'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function ebayGetItemDetailAsyncWithHttpInfo($item_id, $domain = 'com', string $contentType = self::contentTypes['ebayGetItemDetail'][0])
+    public function ebayGetItemDetailAsyncWithHttpInfo($item_id, $domain = 'com', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayGetItemDetail'][0])
     {
         $returnType = 'mixed';
-        $request = $this->ebayGetItemDetailRequest($item_id, $domain, $contentType);
+        $request = $this->ebayGetItemDetailRequest($item_id, $domain, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -1989,12 +2332,19 @@ class EBayApi
      *
      * @param  string $item_id (required)
      * @param  string $domain (optional, default to 'com')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayGetItemDetail'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function ebayGetItemDetailRequest($item_id, $domain = 'com', string $contentType = self::contentTypes['ebayGetItemDetail'][0])
+    public function ebayGetItemDetailRequest($item_id, $domain = 'com', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayGetItemDetail'][0])
     {
 
         // verify the required parameter 'item_id' is set
@@ -2005,6 +2355,28 @@ class EBayApi
         }
 
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling EBayApi.ebayGetItemDetail, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling EBayApi.ebayGetItemDetail, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling EBayApi.ebayGetItemDetail, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling EBayApi.ebayGetItemDetail, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling EBayApi.ebayGetItemDetail, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/ebay/items/{item_id}';
         $formParams = [];
@@ -2022,7 +2394,55 @@ class EBayApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($item_id !== null) {
@@ -2100,15 +2520,22 @@ class EBayApi
      * @param  string $item_id item_id (required)
      * @param  string $domain domain (optional, default to 'com')
      * @param  int $page page (optional, default to 1)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayGetItemReviews'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function ebayGetItemReviews($item_id, $domain = 'com', $page = 1, string $contentType = self::contentTypes['ebayGetItemReviews'][0])
+    public function ebayGetItemReviews($item_id, $domain = 'com', $page = 1, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayGetItemReviews'][0])
     {
-        list($response) = $this->ebayGetItemReviewsWithHttpInfo($item_id, $domain, $page, $contentType);
+        list($response) = $this->ebayGetItemReviewsWithHttpInfo($item_id, $domain, $page, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -2120,15 +2547,22 @@ class EBayApi
      * @param  string $item_id (required)
      * @param  string $domain (optional, default to 'com')
      * @param  int $page (optional, default to 1)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayGetItemReviews'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function ebayGetItemReviewsWithHttpInfo($item_id, $domain = 'com', $page = 1, string $contentType = self::contentTypes['ebayGetItemReviews'][0])
+    public function ebayGetItemReviewsWithHttpInfo($item_id, $domain = 'com', $page = 1, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayGetItemReviews'][0])
     {
-        $request = $this->ebayGetItemReviewsRequest($item_id, $domain, $page, $contentType);
+        $request = $this->ebayGetItemReviewsRequest($item_id, $domain, $page, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -2208,6 +2642,33 @@ class EBayApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -2269,6 +2730,14 @@ class EBayApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -2282,14 +2751,21 @@ class EBayApi
      * @param  string $item_id (required)
      * @param  string $domain (optional, default to 'com')
      * @param  int $page (optional, default to 1)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayGetItemReviews'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function ebayGetItemReviewsAsync($item_id, $domain = 'com', $page = 1, string $contentType = self::contentTypes['ebayGetItemReviews'][0])
+    public function ebayGetItemReviewsAsync($item_id, $domain = 'com', $page = 1, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayGetItemReviews'][0])
     {
-        return $this->ebayGetItemReviewsAsyncWithHttpInfo($item_id, $domain, $page, $contentType)
+        return $this->ebayGetItemReviewsAsyncWithHttpInfo($item_id, $domain, $page, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -2305,15 +2781,22 @@ class EBayApi
      * @param  string $item_id (required)
      * @param  string $domain (optional, default to 'com')
      * @param  int $page (optional, default to 1)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayGetItemReviews'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function ebayGetItemReviewsAsyncWithHttpInfo($item_id, $domain = 'com', $page = 1, string $contentType = self::contentTypes['ebayGetItemReviews'][0])
+    public function ebayGetItemReviewsAsyncWithHttpInfo($item_id, $domain = 'com', $page = 1, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayGetItemReviews'][0])
     {
         $returnType = 'mixed';
-        $request = $this->ebayGetItemReviewsRequest($item_id, $domain, $page, $contentType);
+        $request = $this->ebayGetItemReviewsRequest($item_id, $domain, $page, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -2357,12 +2840,19 @@ class EBayApi
      * @param  string $item_id (required)
      * @param  string $domain (optional, default to 'com')
      * @param  int $page (optional, default to 1)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayGetItemReviews'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function ebayGetItemReviewsRequest($item_id, $domain = 'com', $page = 1, string $contentType = self::contentTypes['ebayGetItemReviews'][0])
+    public function ebayGetItemReviewsRequest($item_id, $domain = 'com', $page = 1, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayGetItemReviews'][0])
     {
 
         // verify the required parameter 'item_id' is set
@@ -2378,6 +2868,28 @@ class EBayApi
         }
         if ($page !== null && $page < 1) {
             throw new \InvalidArgumentException('invalid value for "$page" when calling EBayApi.ebayGetItemReviews, must be bigger than or equal to 1.');
+        }
+        
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling EBayApi.ebayGetItemReviews, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling EBayApi.ebayGetItemReviews, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling EBayApi.ebayGetItemReviews, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling EBayApi.ebayGetItemReviews, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling EBayApi.ebayGetItemReviews, must be bigger than or equal to 1.');
         }
         
 
@@ -2406,7 +2918,55 @@ class EBayApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($item_id !== null) {
@@ -2484,15 +3044,22 @@ class EBayApi
      * @param  string $username username (required)
      * @param  string $domain domain (optional, default to 'com')
      * @param  int $page page (optional, default to 1)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayGetSellerFeedback'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function ebayGetSellerFeedback($username, $domain = 'com', $page = 1, string $contentType = self::contentTypes['ebayGetSellerFeedback'][0])
+    public function ebayGetSellerFeedback($username, $domain = 'com', $page = 1, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayGetSellerFeedback'][0])
     {
-        list($response) = $this->ebayGetSellerFeedbackWithHttpInfo($username, $domain, $page, $contentType);
+        list($response) = $this->ebayGetSellerFeedbackWithHttpInfo($username, $domain, $page, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -2504,15 +3071,22 @@ class EBayApi
      * @param  string $username (required)
      * @param  string $domain (optional, default to 'com')
      * @param  int $page (optional, default to 1)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayGetSellerFeedback'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function ebayGetSellerFeedbackWithHttpInfo($username, $domain = 'com', $page = 1, string $contentType = self::contentTypes['ebayGetSellerFeedback'][0])
+    public function ebayGetSellerFeedbackWithHttpInfo($username, $domain = 'com', $page = 1, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayGetSellerFeedback'][0])
     {
-        $request = $this->ebayGetSellerFeedbackRequest($username, $domain, $page, $contentType);
+        $request = $this->ebayGetSellerFeedbackRequest($username, $domain, $page, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -2592,6 +3166,33 @@ class EBayApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -2653,6 +3254,14 @@ class EBayApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -2666,14 +3275,21 @@ class EBayApi
      * @param  string $username (required)
      * @param  string $domain (optional, default to 'com')
      * @param  int $page (optional, default to 1)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayGetSellerFeedback'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function ebayGetSellerFeedbackAsync($username, $domain = 'com', $page = 1, string $contentType = self::contentTypes['ebayGetSellerFeedback'][0])
+    public function ebayGetSellerFeedbackAsync($username, $domain = 'com', $page = 1, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayGetSellerFeedback'][0])
     {
-        return $this->ebayGetSellerFeedbackAsyncWithHttpInfo($username, $domain, $page, $contentType)
+        return $this->ebayGetSellerFeedbackAsyncWithHttpInfo($username, $domain, $page, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -2689,15 +3305,22 @@ class EBayApi
      * @param  string $username (required)
      * @param  string $domain (optional, default to 'com')
      * @param  int $page (optional, default to 1)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayGetSellerFeedback'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function ebayGetSellerFeedbackAsyncWithHttpInfo($username, $domain = 'com', $page = 1, string $contentType = self::contentTypes['ebayGetSellerFeedback'][0])
+    public function ebayGetSellerFeedbackAsyncWithHttpInfo($username, $domain = 'com', $page = 1, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayGetSellerFeedback'][0])
     {
         $returnType = 'mixed';
-        $request = $this->ebayGetSellerFeedbackRequest($username, $domain, $page, $contentType);
+        $request = $this->ebayGetSellerFeedbackRequest($username, $domain, $page, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -2741,12 +3364,19 @@ class EBayApi
      * @param  string $username (required)
      * @param  string $domain (optional, default to 'com')
      * @param  int $page (optional, default to 1)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayGetSellerFeedback'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function ebayGetSellerFeedbackRequest($username, $domain = 'com', $page = 1, string $contentType = self::contentTypes['ebayGetSellerFeedback'][0])
+    public function ebayGetSellerFeedbackRequest($username, $domain = 'com', $page = 1, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayGetSellerFeedback'][0])
     {
 
         // verify the required parameter 'username' is set
@@ -2762,6 +3392,28 @@ class EBayApi
         }
         if ($page !== null && $page < 1) {
             throw new \InvalidArgumentException('invalid value for "$page" when calling EBayApi.ebayGetSellerFeedback, must be bigger than or equal to 1.');
+        }
+        
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling EBayApi.ebayGetSellerFeedback, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling EBayApi.ebayGetSellerFeedback, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling EBayApi.ebayGetSellerFeedback, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling EBayApi.ebayGetSellerFeedback, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling EBayApi.ebayGetSellerFeedback, must be bigger than or equal to 1.');
         }
         
 
@@ -2790,7 +3442,55 @@ class EBayApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($username !== null) {
@@ -2870,15 +3570,22 @@ class EBayApi
      * @param  string $query query (optional)
      * @param  int $page page (optional, default to 1)
      * @param  int $per_page per_page (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayGetSellerListings'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function ebayGetSellerListings($username, $domain = 'com', $query = null, $page = 1, $per_page = null, string $contentType = self::contentTypes['ebayGetSellerListings'][0])
+    public function ebayGetSellerListings($username, $domain = 'com', $query = null, $page = 1, $per_page = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayGetSellerListings'][0])
     {
-        list($response) = $this->ebayGetSellerListingsWithHttpInfo($username, $domain, $query, $page, $per_page, $contentType);
+        list($response) = $this->ebayGetSellerListingsWithHttpInfo($username, $domain, $query, $page, $per_page, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -2892,15 +3599,22 @@ class EBayApi
      * @param  string $query (optional)
      * @param  int $page (optional, default to 1)
      * @param  int $per_page (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayGetSellerListings'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function ebayGetSellerListingsWithHttpInfo($username, $domain = 'com', $query = null, $page = 1, $per_page = null, string $contentType = self::contentTypes['ebayGetSellerListings'][0])
+    public function ebayGetSellerListingsWithHttpInfo($username, $domain = 'com', $query = null, $page = 1, $per_page = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayGetSellerListings'][0])
     {
-        $request = $this->ebayGetSellerListingsRequest($username, $domain, $query, $page, $per_page, $contentType);
+        $request = $this->ebayGetSellerListingsRequest($username, $domain, $query, $page, $per_page, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -2980,6 +3694,33 @@ class EBayApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -3041,6 +3782,14 @@ class EBayApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -3056,14 +3805,21 @@ class EBayApi
      * @param  string $query (optional)
      * @param  int $page (optional, default to 1)
      * @param  int $per_page (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayGetSellerListings'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function ebayGetSellerListingsAsync($username, $domain = 'com', $query = null, $page = 1, $per_page = null, string $contentType = self::contentTypes['ebayGetSellerListings'][0])
+    public function ebayGetSellerListingsAsync($username, $domain = 'com', $query = null, $page = 1, $per_page = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayGetSellerListings'][0])
     {
-        return $this->ebayGetSellerListingsAsyncWithHttpInfo($username, $domain, $query, $page, $per_page, $contentType)
+        return $this->ebayGetSellerListingsAsyncWithHttpInfo($username, $domain, $query, $page, $per_page, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -3081,15 +3837,22 @@ class EBayApi
      * @param  string $query (optional)
      * @param  int $page (optional, default to 1)
      * @param  int $per_page (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayGetSellerListings'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function ebayGetSellerListingsAsyncWithHttpInfo($username, $domain = 'com', $query = null, $page = 1, $per_page = null, string $contentType = self::contentTypes['ebayGetSellerListings'][0])
+    public function ebayGetSellerListingsAsyncWithHttpInfo($username, $domain = 'com', $query = null, $page = 1, $per_page = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayGetSellerListings'][0])
     {
         $returnType = 'mixed';
-        $request = $this->ebayGetSellerListingsRequest($username, $domain, $query, $page, $per_page, $contentType);
+        $request = $this->ebayGetSellerListingsRequest($username, $domain, $query, $page, $per_page, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -3135,12 +3898,19 @@ class EBayApi
      * @param  string $query (optional)
      * @param  int $page (optional, default to 1)
      * @param  int $per_page (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayGetSellerListings'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function ebayGetSellerListingsRequest($username, $domain = 'com', $query = null, $page = 1, $per_page = null, string $contentType = self::contentTypes['ebayGetSellerListings'][0])
+    public function ebayGetSellerListingsRequest($username, $domain = 'com', $query = null, $page = 1, $per_page = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayGetSellerListings'][0])
     {
 
         // verify the required parameter 'username' is set
@@ -3164,6 +3934,28 @@ class EBayApi
         }
         if ($per_page !== null && $per_page < 1) {
             throw new \InvalidArgumentException('invalid value for "$per_page" when calling EBayApi.ebayGetSellerListings, must be bigger than or equal to 1.');
+        }
+        
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling EBayApi.ebayGetSellerListings, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling EBayApi.ebayGetSellerListings, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling EBayApi.ebayGetSellerListings, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling EBayApi.ebayGetSellerListings, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling EBayApi.ebayGetSellerListings, must be bigger than or equal to 1.');
         }
         
 
@@ -3210,7 +4002,55 @@ class EBayApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($username !== null) {
@@ -3287,15 +4127,22 @@ class EBayApi
      *
      * @param  string $username username (required)
      * @param  string $domain domain (optional, default to 'com')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayGetSellerProfile'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function ebayGetSellerProfile($username, $domain = 'com', string $contentType = self::contentTypes['ebayGetSellerProfile'][0])
+    public function ebayGetSellerProfile($username, $domain = 'com', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayGetSellerProfile'][0])
     {
-        list($response) = $this->ebayGetSellerProfileWithHttpInfo($username, $domain, $contentType);
+        list($response) = $this->ebayGetSellerProfileWithHttpInfo($username, $domain, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -3306,15 +4153,22 @@ class EBayApi
      *
      * @param  string $username (required)
      * @param  string $domain (optional, default to 'com')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayGetSellerProfile'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function ebayGetSellerProfileWithHttpInfo($username, $domain = 'com', string $contentType = self::contentTypes['ebayGetSellerProfile'][0])
+    public function ebayGetSellerProfileWithHttpInfo($username, $domain = 'com', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayGetSellerProfile'][0])
     {
-        $request = $this->ebayGetSellerProfileRequest($username, $domain, $contentType);
+        $request = $this->ebayGetSellerProfileRequest($username, $domain, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -3394,6 +4248,33 @@ class EBayApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -3455,6 +4336,14 @@ class EBayApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -3467,14 +4356,21 @@ class EBayApi
      *
      * @param  string $username (required)
      * @param  string $domain (optional, default to 'com')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayGetSellerProfile'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function ebayGetSellerProfileAsync($username, $domain = 'com', string $contentType = self::contentTypes['ebayGetSellerProfile'][0])
+    public function ebayGetSellerProfileAsync($username, $domain = 'com', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayGetSellerProfile'][0])
     {
-        return $this->ebayGetSellerProfileAsyncWithHttpInfo($username, $domain, $contentType)
+        return $this->ebayGetSellerProfileAsyncWithHttpInfo($username, $domain, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -3489,15 +4385,22 @@ class EBayApi
      *
      * @param  string $username (required)
      * @param  string $domain (optional, default to 'com')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayGetSellerProfile'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function ebayGetSellerProfileAsyncWithHttpInfo($username, $domain = 'com', string $contentType = self::contentTypes['ebayGetSellerProfile'][0])
+    public function ebayGetSellerProfileAsyncWithHttpInfo($username, $domain = 'com', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayGetSellerProfile'][0])
     {
         $returnType = 'mixed';
-        $request = $this->ebayGetSellerProfileRequest($username, $domain, $contentType);
+        $request = $this->ebayGetSellerProfileRequest($username, $domain, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -3540,12 +4443,19 @@ class EBayApi
      *
      * @param  string $username (required)
      * @param  string $domain (optional, default to 'com')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayGetSellerProfile'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function ebayGetSellerProfileRequest($username, $domain = 'com', string $contentType = self::contentTypes['ebayGetSellerProfile'][0])
+    public function ebayGetSellerProfileRequest($username, $domain = 'com', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayGetSellerProfile'][0])
     {
 
         // verify the required parameter 'username' is set
@@ -3556,6 +4466,28 @@ class EBayApi
         }
 
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling EBayApi.ebayGetSellerProfile, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling EBayApi.ebayGetSellerProfile, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling EBayApi.ebayGetSellerProfile, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling EBayApi.ebayGetSellerProfile, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling EBayApi.ebayGetSellerProfile, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/ebay/sellers/{username}';
         $formParams = [];
@@ -3573,7 +4505,55 @@ class EBayApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($username !== null) {
@@ -3650,15 +4630,22 @@ class EBayApi
      *
      * @param  string $query Partial query prefix (required)
      * @param  string $domain domain (optional, default to 'com')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayKeywordSuggestions'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function ebayKeywordSuggestions($query, $domain = 'com', string $contentType = self::contentTypes['ebayKeywordSuggestions'][0])
+    public function ebayKeywordSuggestions($query, $domain = 'com', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayKeywordSuggestions'][0])
     {
-        list($response) = $this->ebayKeywordSuggestionsWithHttpInfo($query, $domain, $contentType);
+        list($response) = $this->ebayKeywordSuggestionsWithHttpInfo($query, $domain, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -3669,15 +4656,22 @@ class EBayApi
      *
      * @param  string $query Partial query prefix (required)
      * @param  string $domain (optional, default to 'com')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayKeywordSuggestions'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function ebayKeywordSuggestionsWithHttpInfo($query, $domain = 'com', string $contentType = self::contentTypes['ebayKeywordSuggestions'][0])
+    public function ebayKeywordSuggestionsWithHttpInfo($query, $domain = 'com', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayKeywordSuggestions'][0])
     {
-        $request = $this->ebayKeywordSuggestionsRequest($query, $domain, $contentType);
+        $request = $this->ebayKeywordSuggestionsRequest($query, $domain, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -3757,6 +4751,33 @@ class EBayApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -3818,6 +4839,14 @@ class EBayApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -3830,14 +4859,21 @@ class EBayApi
      *
      * @param  string $query Partial query prefix (required)
      * @param  string $domain (optional, default to 'com')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayKeywordSuggestions'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function ebayKeywordSuggestionsAsync($query, $domain = 'com', string $contentType = self::contentTypes['ebayKeywordSuggestions'][0])
+    public function ebayKeywordSuggestionsAsync($query, $domain = 'com', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayKeywordSuggestions'][0])
     {
-        return $this->ebayKeywordSuggestionsAsyncWithHttpInfo($query, $domain, $contentType)
+        return $this->ebayKeywordSuggestionsAsyncWithHttpInfo($query, $domain, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -3852,15 +4888,22 @@ class EBayApi
      *
      * @param  string $query Partial query prefix (required)
      * @param  string $domain (optional, default to 'com')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayKeywordSuggestions'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function ebayKeywordSuggestionsAsyncWithHttpInfo($query, $domain = 'com', string $contentType = self::contentTypes['ebayKeywordSuggestions'][0])
+    public function ebayKeywordSuggestionsAsyncWithHttpInfo($query, $domain = 'com', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayKeywordSuggestions'][0])
     {
         $returnType = 'mixed';
-        $request = $this->ebayKeywordSuggestionsRequest($query, $domain, $contentType);
+        $request = $this->ebayKeywordSuggestionsRequest($query, $domain, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -3903,12 +4946,19 @@ class EBayApi
      *
      * @param  string $query Partial query prefix (required)
      * @param  string $domain (optional, default to 'com')
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayKeywordSuggestions'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function ebayKeywordSuggestionsRequest($query, $domain = 'com', string $contentType = self::contentTypes['ebayKeywordSuggestions'][0])
+    public function ebayKeywordSuggestionsRequest($query, $domain = 'com', $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayKeywordSuggestions'][0])
     {
 
         // verify the required parameter 'query' is set
@@ -3919,6 +4969,28 @@ class EBayApi
         }
 
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling EBayApi.ebayKeywordSuggestions, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling EBayApi.ebayKeywordSuggestions, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling EBayApi.ebayKeywordSuggestions, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling EBayApi.ebayKeywordSuggestions, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling EBayApi.ebayKeywordSuggestions, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/ebay/autocomplete';
         $formParams = [];
@@ -3945,7 +5017,55 @@ class EBayApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
 
 
@@ -4012,15 +5132,22 @@ class EBayApi
      *
      * List categories
      *
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayListCategories'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed
+     * @return mixed|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function ebayListCategories(string $contentType = self::contentTypes['ebayListCategories'][0])
+    public function ebayListCategories($prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayListCategories'][0])
     {
-        list($response) = $this->ebayListCategoriesWithHttpInfo($contentType);
+        list($response) = $this->ebayListCategoriesWithHttpInfo($prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -4029,15 +5156,22 @@ class EBayApi
      *
      * List categories
      *
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayListCategories'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function ebayListCategoriesWithHttpInfo(string $contentType = self::contentTypes['ebayListCategories'][0])
+    public function ebayListCategoriesWithHttpInfo($prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayListCategories'][0])
     {
-        $request = $this->ebayListCategoriesRequest($contentType);
+        $request = $this->ebayListCategoriesRequest($prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -4087,6 +5221,33 @@ class EBayApi
 
                     return [
                         ObjectSerializer::deserialize($content, 'mixed', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
@@ -4143,6 +5304,14 @@ class EBayApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -4153,14 +5322,21 @@ class EBayApi
      *
      * List categories
      *
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayListCategories'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function ebayListCategoriesAsync(string $contentType = self::contentTypes['ebayListCategories'][0])
+    public function ebayListCategoriesAsync($prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayListCategories'][0])
     {
-        return $this->ebayListCategoriesAsyncWithHttpInfo($contentType)
+        return $this->ebayListCategoriesAsyncWithHttpInfo($prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -4173,15 +5349,22 @@ class EBayApi
      *
      * List categories
      *
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayListCategories'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function ebayListCategoriesAsyncWithHttpInfo(string $contentType = self::contentTypes['ebayListCategories'][0])
+    public function ebayListCategoriesAsyncWithHttpInfo($prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayListCategories'][0])
     {
         $returnType = 'mixed';
-        $request = $this->ebayListCategoriesRequest($contentType);
+        $request = $this->ebayListCategoriesRequest($prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -4222,14 +5405,43 @@ class EBayApi
     /**
      * Create request for operation 'ebayListCategories'
      *
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayListCategories'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function ebayListCategoriesRequest(string $contentType = self::contentTypes['ebayListCategories'][0])
+    public function ebayListCategoriesRequest($prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayListCategories'][0])
     {
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling EBayApi.ebayListCategories, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling EBayApi.ebayListCategories, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling EBayApi.ebayListCategories, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling EBayApi.ebayListCategories, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling EBayApi.ebayListCategories, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/ebay/categories';
         $formParams = [];
@@ -4238,7 +5450,55 @@ class EBayApi
         $httpBody = '';
         $multipart = false;
 
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
 
 
@@ -4305,15 +5565,22 @@ class EBayApi
      *
      * List markets
      *
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayListMarkets'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed
+     * @return mixed|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function ebayListMarkets(string $contentType = self::contentTypes['ebayListMarkets'][0])
+    public function ebayListMarkets($prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayListMarkets'][0])
     {
-        list($response) = $this->ebayListMarketsWithHttpInfo($contentType);
+        list($response) = $this->ebayListMarketsWithHttpInfo($prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -4322,15 +5589,22 @@ class EBayApi
      *
      * List markets
      *
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayListMarkets'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function ebayListMarketsWithHttpInfo(string $contentType = self::contentTypes['ebayListMarkets'][0])
+    public function ebayListMarketsWithHttpInfo($prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayListMarkets'][0])
     {
-        $request = $this->ebayListMarketsRequest($contentType);
+        $request = $this->ebayListMarketsRequest($prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -4380,6 +5654,33 @@ class EBayApi
 
                     return [
                         ObjectSerializer::deserialize($content, 'mixed', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
@@ -4436,6 +5737,14 @@ class EBayApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -4446,14 +5755,21 @@ class EBayApi
      *
      * List markets
      *
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayListMarkets'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function ebayListMarketsAsync(string $contentType = self::contentTypes['ebayListMarkets'][0])
+    public function ebayListMarketsAsync($prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayListMarkets'][0])
     {
-        return $this->ebayListMarketsAsyncWithHttpInfo($contentType)
+        return $this->ebayListMarketsAsyncWithHttpInfo($prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -4466,15 +5782,22 @@ class EBayApi
      *
      * List markets
      *
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayListMarkets'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function ebayListMarketsAsyncWithHttpInfo(string $contentType = self::contentTypes['ebayListMarkets'][0])
+    public function ebayListMarketsAsyncWithHttpInfo($prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayListMarkets'][0])
     {
         $returnType = 'mixed';
-        $request = $this->ebayListMarketsRequest($contentType);
+        $request = $this->ebayListMarketsRequest($prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -4515,14 +5838,43 @@ class EBayApi
     /**
      * Create request for operation 'ebayListMarkets'
      *
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebayListMarkets'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function ebayListMarketsRequest(string $contentType = self::contentTypes['ebayListMarkets'][0])
+    public function ebayListMarketsRequest($prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebayListMarkets'][0])
     {
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling EBayApi.ebayListMarkets, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling EBayApi.ebayListMarkets, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling EBayApi.ebayListMarkets, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling EBayApi.ebayListMarkets, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling EBayApi.ebayListMarkets, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/ebay/markets';
         $formParams = [];
@@ -4531,7 +5883,55 @@ class EBayApi
         $httpBody = '';
         $multipart = false;
 
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
 
 
@@ -4599,15 +5999,22 @@ class EBayApi
      * Search by image
      *
      * @param  array<string,mixed> $request_body request_body (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebaySearchByImage'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function ebaySearchByImage($request_body, string $contentType = self::contentTypes['ebaySearchByImage'][0])
+    public function ebaySearchByImage($request_body, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebaySearchByImage'][0])
     {
-        list($response) = $this->ebaySearchByImageWithHttpInfo($request_body, $contentType);
+        list($response) = $this->ebaySearchByImageWithHttpInfo($request_body, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -4617,15 +6024,22 @@ class EBayApi
      * Search by image
      *
      * @param  array<string,mixed> $request_body (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebaySearchByImage'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function ebaySearchByImageWithHttpInfo($request_body, string $contentType = self::contentTypes['ebaySearchByImage'][0])
+    public function ebaySearchByImageWithHttpInfo($request_body, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebaySearchByImage'][0])
     {
-        $request = $this->ebaySearchByImageRequest($request_body, $contentType);
+        $request = $this->ebaySearchByImageRequest($request_body, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -4705,6 +6119,33 @@ class EBayApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -4766,6 +6207,14 @@ class EBayApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -4777,14 +6226,21 @@ class EBayApi
      * Search by image
      *
      * @param  array<string,mixed> $request_body (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebaySearchByImage'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function ebaySearchByImageAsync($request_body, string $contentType = self::contentTypes['ebaySearchByImage'][0])
+    public function ebaySearchByImageAsync($request_body, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebaySearchByImage'][0])
     {
-        return $this->ebaySearchByImageAsyncWithHttpInfo($request_body, $contentType)
+        return $this->ebaySearchByImageAsyncWithHttpInfo($request_body, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -4798,15 +6254,22 @@ class EBayApi
      * Search by image
      *
      * @param  array<string,mixed> $request_body (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebaySearchByImage'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function ebaySearchByImageAsyncWithHttpInfo($request_body, string $contentType = self::contentTypes['ebaySearchByImage'][0])
+    public function ebaySearchByImageAsyncWithHttpInfo($request_body, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebaySearchByImage'][0])
     {
         $returnType = 'mixed';
-        $request = $this->ebaySearchByImageRequest($request_body, $contentType);
+        $request = $this->ebaySearchByImageRequest($request_body, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -4848,12 +6311,19 @@ class EBayApi
      * Create request for operation 'ebaySearchByImage'
      *
      * @param  array<string,mixed> $request_body (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebaySearchByImage'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function ebaySearchByImageRequest($request_body, string $contentType = self::contentTypes['ebaySearchByImage'][0])
+    public function ebaySearchByImageRequest($request_body, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebaySearchByImage'][0])
     {
 
         // verify the required parameter 'request_body' is set
@@ -4864,6 +6334,28 @@ class EBayApi
         }
 
 
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling EBayApi.ebaySearchByImage, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling EBayApi.ebaySearchByImage, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling EBayApi.ebaySearchByImage, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling EBayApi.ebaySearchByImage, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling EBayApi.ebaySearchByImage, must be bigger than or equal to 1.');
+        }
+        
+
         $resourcePath = '/v1/ebay/search/by-image';
         $formParams = [];
         $queryParams = [];
@@ -4871,7 +6363,55 @@ class EBayApi
         $httpBody = '';
         $multipart = false;
 
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
 
 
@@ -4958,15 +6498,22 @@ class EBayApi
      * @param  bool $free_shipping free_shipping (optional, default to false)
      * @param  string $location domestic|worldwide (optional)
      * @param  string $language english|japanese|chinese|korean (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebaySearchListings'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function ebaySearchListings($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $buying_format = null, $min_price = null, $max_price = null, $free_shipping = false, $location = null, $language = null, string $contentType = self::contentTypes['ebaySearchListings'][0])
+    public function ebaySearchListings($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $buying_format = null, $min_price = null, $max_price = null, $free_shipping = false, $location = null, $language = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebaySearchListings'][0])
     {
-        list($response) = $this->ebaySearchListingsWithHttpInfo($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $buying_format, $min_price, $max_price, $free_shipping, $location, $language, $contentType);
+        list($response) = $this->ebaySearchListingsWithHttpInfo($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $buying_format, $min_price, $max_price, $free_shipping, $location, $language, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -4988,15 +6535,22 @@ class EBayApi
      * @param  bool $free_shipping (optional, default to false)
      * @param  string $location domestic|worldwide (optional)
      * @param  string $language english|japanese|chinese|korean (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebaySearchListings'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function ebaySearchListingsWithHttpInfo($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $buying_format = null, $min_price = null, $max_price = null, $free_shipping = false, $location = null, $language = null, string $contentType = self::contentTypes['ebaySearchListings'][0])
+    public function ebaySearchListingsWithHttpInfo($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $buying_format = null, $min_price = null, $max_price = null, $free_shipping = false, $location = null, $language = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebaySearchListings'][0])
     {
-        $request = $this->ebaySearchListingsRequest($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $buying_format, $min_price, $max_price, $free_shipping, $location, $language, $contentType);
+        $request = $this->ebaySearchListingsRequest($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $buying_format, $min_price, $max_price, $free_shipping, $location, $language, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -5076,6 +6630,33 @@ class EBayApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -5137,6 +6718,14 @@ class EBayApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -5160,14 +6749,21 @@ class EBayApi
      * @param  bool $free_shipping (optional, default to false)
      * @param  string $location domestic|worldwide (optional)
      * @param  string $language english|japanese|chinese|korean (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebaySearchListings'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function ebaySearchListingsAsync($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $buying_format = null, $min_price = null, $max_price = null, $free_shipping = false, $location = null, $language = null, string $contentType = self::contentTypes['ebaySearchListings'][0])
+    public function ebaySearchListingsAsync($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $buying_format = null, $min_price = null, $max_price = null, $free_shipping = false, $location = null, $language = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebaySearchListings'][0])
     {
-        return $this->ebaySearchListingsAsyncWithHttpInfo($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $buying_format, $min_price, $max_price, $free_shipping, $location, $language, $contentType)
+        return $this->ebaySearchListingsAsyncWithHttpInfo($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $buying_format, $min_price, $max_price, $free_shipping, $location, $language, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -5193,15 +6789,22 @@ class EBayApi
      * @param  bool $free_shipping (optional, default to false)
      * @param  string $location domestic|worldwide (optional)
      * @param  string $language english|japanese|chinese|korean (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebaySearchListings'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function ebaySearchListingsAsyncWithHttpInfo($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $buying_format = null, $min_price = null, $max_price = null, $free_shipping = false, $location = null, $language = null, string $contentType = self::contentTypes['ebaySearchListings'][0])
+    public function ebaySearchListingsAsyncWithHttpInfo($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $buying_format = null, $min_price = null, $max_price = null, $free_shipping = false, $location = null, $language = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebaySearchListings'][0])
     {
         $returnType = 'mixed';
-        $request = $this->ebaySearchListingsRequest($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $buying_format, $min_price, $max_price, $free_shipping, $location, $language, $contentType);
+        $request = $this->ebaySearchListingsRequest($query, $domain, $category_id, $page, $per_page, $sort_by, $condition, $buying_format, $min_price, $max_price, $free_shipping, $location, $language, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -5255,12 +6858,19 @@ class EBayApi
      * @param  bool $free_shipping (optional, default to false)
      * @param  string $location domestic|worldwide (optional)
      * @param  string $language english|japanese|chinese|korean (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['ebaySearchListings'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function ebaySearchListingsRequest($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $buying_format = null, $min_price = null, $max_price = null, $free_shipping = false, $location = null, $language = null, string $contentType = self::contentTypes['ebaySearchListings'][0])
+    public function ebaySearchListingsRequest($query, $domain = 'com', $category_id = null, $page = 1, $per_page = null, $sort_by = 'best_match', $condition = null, $buying_format = null, $min_price = null, $max_price = null, $free_shipping = false, $location = null, $language = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['ebaySearchListings'][0])
     {
 
         // verify the required parameter 'query' is set
@@ -5300,6 +6910,28 @@ class EBayApi
 
 
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling EBayApi.ebaySearchListings, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling EBayApi.ebaySearchListings, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling EBayApi.ebaySearchListings, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling EBayApi.ebaySearchListings, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling EBayApi.ebaySearchListings, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/ebay/search';
         $formParams = [];
@@ -5425,7 +7057,55 @@ class EBayApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
 
 

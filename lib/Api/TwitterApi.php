@@ -293,15 +293,22 @@ class TwitterApi
      * @param  string $query_type query_type (optional)
      * @param  int $count count (optional)
      * @param  string $cursor cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterAdvancedTweetSearch'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function twitterAdvancedTweetSearch($query, $query_type = null, $count = null, $cursor = null, string $contentType = self::contentTypes['twitterAdvancedTweetSearch'][0])
+    public function twitterAdvancedTweetSearch($query, $query_type = null, $count = null, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterAdvancedTweetSearch'][0])
     {
-        list($response) = $this->twitterAdvancedTweetSearchWithHttpInfo($query, $query_type, $count, $cursor, $contentType);
+        list($response) = $this->twitterAdvancedTweetSearchWithHttpInfo($query, $query_type, $count, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -314,15 +321,22 @@ class TwitterApi
      * @param  string $query_type (optional)
      * @param  int $count (optional)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterAdvancedTweetSearch'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function twitterAdvancedTweetSearchWithHttpInfo($query, $query_type = null, $count = null, $cursor = null, string $contentType = self::contentTypes['twitterAdvancedTweetSearch'][0])
+    public function twitterAdvancedTweetSearchWithHttpInfo($query, $query_type = null, $count = null, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterAdvancedTweetSearch'][0])
     {
-        $request = $this->twitterAdvancedTweetSearchRequest($query, $query_type, $count, $cursor, $contentType);
+        $request = $this->twitterAdvancedTweetSearchRequest($query, $query_type, $count, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -402,6 +416,33 @@ class TwitterApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -463,6 +504,14 @@ class TwitterApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -477,14 +526,21 @@ class TwitterApi
      * @param  string $query_type (optional)
      * @param  int $count (optional)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterAdvancedTweetSearch'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterAdvancedTweetSearchAsync($query, $query_type = null, $count = null, $cursor = null, string $contentType = self::contentTypes['twitterAdvancedTweetSearch'][0])
+    public function twitterAdvancedTweetSearchAsync($query, $query_type = null, $count = null, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterAdvancedTweetSearch'][0])
     {
-        return $this->twitterAdvancedTweetSearchAsyncWithHttpInfo($query, $query_type, $count, $cursor, $contentType)
+        return $this->twitterAdvancedTweetSearchAsyncWithHttpInfo($query, $query_type, $count, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -501,15 +557,22 @@ class TwitterApi
      * @param  string $query_type (optional)
      * @param  int $count (optional)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterAdvancedTweetSearch'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterAdvancedTweetSearchAsyncWithHttpInfo($query, $query_type = null, $count = null, $cursor = null, string $contentType = self::contentTypes['twitterAdvancedTweetSearch'][0])
+    public function twitterAdvancedTweetSearchAsyncWithHttpInfo($query, $query_type = null, $count = null, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterAdvancedTweetSearch'][0])
     {
         $returnType = 'mixed';
-        $request = $this->twitterAdvancedTweetSearchRequest($query, $query_type, $count, $cursor, $contentType);
+        $request = $this->twitterAdvancedTweetSearchRequest($query, $query_type, $count, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -554,12 +617,19 @@ class TwitterApi
      * @param  string $query_type (optional)
      * @param  int $count (optional)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterAdvancedTweetSearch'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function twitterAdvancedTweetSearchRequest($query, $query_type = null, $count = null, $cursor = null, string $contentType = self::contentTypes['twitterAdvancedTweetSearch'][0])
+    public function twitterAdvancedTweetSearchRequest($query, $query_type = null, $count = null, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterAdvancedTweetSearch'][0])
     {
 
         // verify the required parameter 'query' is set
@@ -572,6 +642,28 @@ class TwitterApi
 
 
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterAdvancedTweetSearch, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterAdvancedTweetSearch, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling TwitterApi.twitterAdvancedTweetSearch, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterAdvancedTweetSearch, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterAdvancedTweetSearch, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/twitter/tweets/advanced_search';
         $formParams = [];
@@ -616,7 +708,55 @@ class TwitterApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
 
 
@@ -684,15 +824,22 @@ class TwitterApi
      * Batch get users by IDs
      *
      * @param  string $user_ids user_ids (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterBatchGetUsersByIds'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function twitterBatchGetUsersByIds($user_ids, string $contentType = self::contentTypes['twitterBatchGetUsersByIds'][0])
+    public function twitterBatchGetUsersByIds($user_ids, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterBatchGetUsersByIds'][0])
     {
-        list($response) = $this->twitterBatchGetUsersByIdsWithHttpInfo($user_ids, $contentType);
+        list($response) = $this->twitterBatchGetUsersByIdsWithHttpInfo($user_ids, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -702,15 +849,22 @@ class TwitterApi
      * Batch get users by IDs
      *
      * @param  string $user_ids (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterBatchGetUsersByIds'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function twitterBatchGetUsersByIdsWithHttpInfo($user_ids, string $contentType = self::contentTypes['twitterBatchGetUsersByIds'][0])
+    public function twitterBatchGetUsersByIdsWithHttpInfo($user_ids, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterBatchGetUsersByIds'][0])
     {
-        $request = $this->twitterBatchGetUsersByIdsRequest($user_ids, $contentType);
+        $request = $this->twitterBatchGetUsersByIdsRequest($user_ids, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -790,6 +944,33 @@ class TwitterApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -851,6 +1032,14 @@ class TwitterApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -862,14 +1051,21 @@ class TwitterApi
      * Batch get users by IDs
      *
      * @param  string $user_ids (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterBatchGetUsersByIds'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterBatchGetUsersByIdsAsync($user_ids, string $contentType = self::contentTypes['twitterBatchGetUsersByIds'][0])
+    public function twitterBatchGetUsersByIdsAsync($user_ids, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterBatchGetUsersByIds'][0])
     {
-        return $this->twitterBatchGetUsersByIdsAsyncWithHttpInfo($user_ids, $contentType)
+        return $this->twitterBatchGetUsersByIdsAsyncWithHttpInfo($user_ids, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -883,15 +1079,22 @@ class TwitterApi
      * Batch get users by IDs
      *
      * @param  string $user_ids (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterBatchGetUsersByIds'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterBatchGetUsersByIdsAsyncWithHttpInfo($user_ids, string $contentType = self::contentTypes['twitterBatchGetUsersByIds'][0])
+    public function twitterBatchGetUsersByIdsAsyncWithHttpInfo($user_ids, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterBatchGetUsersByIds'][0])
     {
         $returnType = 'mixed';
-        $request = $this->twitterBatchGetUsersByIdsRequest($user_ids, $contentType);
+        $request = $this->twitterBatchGetUsersByIdsRequest($user_ids, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -933,12 +1136,19 @@ class TwitterApi
      * Create request for operation 'twitterBatchGetUsersByIds'
      *
      * @param  string $user_ids (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterBatchGetUsersByIds'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function twitterBatchGetUsersByIdsRequest($user_ids, string $contentType = self::contentTypes['twitterBatchGetUsersByIds'][0])
+    public function twitterBatchGetUsersByIdsRequest($user_ids, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterBatchGetUsersByIds'][0])
     {
 
         // verify the required parameter 'user_ids' is set
@@ -948,6 +1158,28 @@ class TwitterApi
             );
         }
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterBatchGetUsersByIds, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterBatchGetUsersByIds, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling TwitterApi.twitterBatchGetUsersByIds, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterBatchGetUsersByIds, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterBatchGetUsersByIds, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/twitter/users/batch_by_ids';
         $formParams = [];
@@ -965,7 +1197,55 @@ class TwitterApi
             true, // explode
             true // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
 
 
@@ -1033,15 +1313,22 @@ class TwitterApi
      * Batch get users by usernames
      *
      * @param  string $usernames usernames (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterBatchGetUsersByUsernames'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function twitterBatchGetUsersByUsernames($usernames, string $contentType = self::contentTypes['twitterBatchGetUsersByUsernames'][0])
+    public function twitterBatchGetUsersByUsernames($usernames, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterBatchGetUsersByUsernames'][0])
     {
-        list($response) = $this->twitterBatchGetUsersByUsernamesWithHttpInfo($usernames, $contentType);
+        list($response) = $this->twitterBatchGetUsersByUsernamesWithHttpInfo($usernames, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -1051,15 +1338,22 @@ class TwitterApi
      * Batch get users by usernames
      *
      * @param  string $usernames (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterBatchGetUsersByUsernames'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function twitterBatchGetUsersByUsernamesWithHttpInfo($usernames, string $contentType = self::contentTypes['twitterBatchGetUsersByUsernames'][0])
+    public function twitterBatchGetUsersByUsernamesWithHttpInfo($usernames, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterBatchGetUsersByUsernames'][0])
     {
-        $request = $this->twitterBatchGetUsersByUsernamesRequest($usernames, $contentType);
+        $request = $this->twitterBatchGetUsersByUsernamesRequest($usernames, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -1139,6 +1433,33 @@ class TwitterApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -1200,6 +1521,14 @@ class TwitterApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -1211,14 +1540,21 @@ class TwitterApi
      * Batch get users by usernames
      *
      * @param  string $usernames (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterBatchGetUsersByUsernames'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterBatchGetUsersByUsernamesAsync($usernames, string $contentType = self::contentTypes['twitterBatchGetUsersByUsernames'][0])
+    public function twitterBatchGetUsersByUsernamesAsync($usernames, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterBatchGetUsersByUsernames'][0])
     {
-        return $this->twitterBatchGetUsersByUsernamesAsyncWithHttpInfo($usernames, $contentType)
+        return $this->twitterBatchGetUsersByUsernamesAsyncWithHttpInfo($usernames, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -1232,15 +1568,22 @@ class TwitterApi
      * Batch get users by usernames
      *
      * @param  string $usernames (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterBatchGetUsersByUsernames'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterBatchGetUsersByUsernamesAsyncWithHttpInfo($usernames, string $contentType = self::contentTypes['twitterBatchGetUsersByUsernames'][0])
+    public function twitterBatchGetUsersByUsernamesAsyncWithHttpInfo($usernames, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterBatchGetUsersByUsernames'][0])
     {
         $returnType = 'mixed';
-        $request = $this->twitterBatchGetUsersByUsernamesRequest($usernames, $contentType);
+        $request = $this->twitterBatchGetUsersByUsernamesRequest($usernames, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -1282,12 +1625,19 @@ class TwitterApi
      * Create request for operation 'twitterBatchGetUsersByUsernames'
      *
      * @param  string $usernames (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterBatchGetUsersByUsernames'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function twitterBatchGetUsersByUsernamesRequest($usernames, string $contentType = self::contentTypes['twitterBatchGetUsersByUsernames'][0])
+    public function twitterBatchGetUsersByUsernamesRequest($usernames, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterBatchGetUsersByUsernames'][0])
     {
 
         // verify the required parameter 'usernames' is set
@@ -1297,6 +1647,28 @@ class TwitterApi
             );
         }
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterBatchGetUsersByUsernames, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterBatchGetUsersByUsernames, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling TwitterApi.twitterBatchGetUsersByUsernames, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterBatchGetUsersByUsernames, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterBatchGetUsersByUsernames, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/twitter/users/batch_by_usernames';
         $formParams = [];
@@ -1314,7 +1686,55 @@ class TwitterApi
             true, // explode
             true // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
 
 
@@ -2883,15 +3303,22 @@ class TwitterApi
      * Get article by ID
      *
      * @param  string $article_id article_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetArticleById'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function twitterGetArticleById($article_id, string $contentType = self::contentTypes['twitterGetArticleById'][0])
+    public function twitterGetArticleById($article_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetArticleById'][0])
     {
-        list($response) = $this->twitterGetArticleByIdWithHttpInfo($article_id, $contentType);
+        list($response) = $this->twitterGetArticleByIdWithHttpInfo($article_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -2901,15 +3328,22 @@ class TwitterApi
      * Get article by ID
      *
      * @param  string $article_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetArticleById'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function twitterGetArticleByIdWithHttpInfo($article_id, string $contentType = self::contentTypes['twitterGetArticleById'][0])
+    public function twitterGetArticleByIdWithHttpInfo($article_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetArticleById'][0])
     {
-        $request = $this->twitterGetArticleByIdRequest($article_id, $contentType);
+        $request = $this->twitterGetArticleByIdRequest($article_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -2989,6 +3423,33 @@ class TwitterApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -3050,6 +3511,14 @@ class TwitterApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -3061,14 +3530,21 @@ class TwitterApi
      * Get article by ID
      *
      * @param  string $article_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetArticleById'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetArticleByIdAsync($article_id, string $contentType = self::contentTypes['twitterGetArticleById'][0])
+    public function twitterGetArticleByIdAsync($article_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetArticleById'][0])
     {
-        return $this->twitterGetArticleByIdAsyncWithHttpInfo($article_id, $contentType)
+        return $this->twitterGetArticleByIdAsyncWithHttpInfo($article_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -3082,15 +3558,22 @@ class TwitterApi
      * Get article by ID
      *
      * @param  string $article_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetArticleById'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetArticleByIdAsyncWithHttpInfo($article_id, string $contentType = self::contentTypes['twitterGetArticleById'][0])
+    public function twitterGetArticleByIdAsyncWithHttpInfo($article_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetArticleById'][0])
     {
         $returnType = 'mixed';
-        $request = $this->twitterGetArticleByIdRequest($article_id, $contentType);
+        $request = $this->twitterGetArticleByIdRequest($article_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -3132,12 +3615,19 @@ class TwitterApi
      * Create request for operation 'twitterGetArticleById'
      *
      * @param  string $article_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetArticleById'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function twitterGetArticleByIdRequest($article_id, string $contentType = self::contentTypes['twitterGetArticleById'][0])
+    public function twitterGetArticleByIdRequest($article_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetArticleById'][0])
     {
 
         // verify the required parameter 'article_id' is set
@@ -3148,6 +3638,28 @@ class TwitterApi
         }
 
 
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetArticleById, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetArticleById, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling TwitterApi.twitterGetArticleById, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetArticleById, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetArticleById, must be bigger than or equal to 1.');
+        }
+        
+
         $resourcePath = '/v1/twitter/tweets/article/{article_id}';
         $formParams = [];
         $queryParams = [];
@@ -3155,7 +3667,55 @@ class TwitterApi
         $httpBody = '';
         $multipart = false;
 
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($article_id !== null) {
@@ -3231,15 +3791,22 @@ class TwitterApi
      * Get broadcast details
      *
      * @param  string $broadcast_id broadcast_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetBroadcastDetails'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function twitterGetBroadcastDetails($broadcast_id, string $contentType = self::contentTypes['twitterGetBroadcastDetails'][0])
+    public function twitterGetBroadcastDetails($broadcast_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetBroadcastDetails'][0])
     {
-        list($response) = $this->twitterGetBroadcastDetailsWithHttpInfo($broadcast_id, $contentType);
+        list($response) = $this->twitterGetBroadcastDetailsWithHttpInfo($broadcast_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -3249,15 +3816,22 @@ class TwitterApi
      * Get broadcast details
      *
      * @param  string $broadcast_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetBroadcastDetails'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function twitterGetBroadcastDetailsWithHttpInfo($broadcast_id, string $contentType = self::contentTypes['twitterGetBroadcastDetails'][0])
+    public function twitterGetBroadcastDetailsWithHttpInfo($broadcast_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetBroadcastDetails'][0])
     {
-        $request = $this->twitterGetBroadcastDetailsRequest($broadcast_id, $contentType);
+        $request = $this->twitterGetBroadcastDetailsRequest($broadcast_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -3337,6 +3911,33 @@ class TwitterApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -3398,6 +3999,14 @@ class TwitterApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -3409,14 +4018,21 @@ class TwitterApi
      * Get broadcast details
      *
      * @param  string $broadcast_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetBroadcastDetails'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetBroadcastDetailsAsync($broadcast_id, string $contentType = self::contentTypes['twitterGetBroadcastDetails'][0])
+    public function twitterGetBroadcastDetailsAsync($broadcast_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetBroadcastDetails'][0])
     {
-        return $this->twitterGetBroadcastDetailsAsyncWithHttpInfo($broadcast_id, $contentType)
+        return $this->twitterGetBroadcastDetailsAsyncWithHttpInfo($broadcast_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -3430,15 +4046,22 @@ class TwitterApi
      * Get broadcast details
      *
      * @param  string $broadcast_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetBroadcastDetails'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetBroadcastDetailsAsyncWithHttpInfo($broadcast_id, string $contentType = self::contentTypes['twitterGetBroadcastDetails'][0])
+    public function twitterGetBroadcastDetailsAsyncWithHttpInfo($broadcast_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetBroadcastDetails'][0])
     {
         $returnType = 'mixed';
-        $request = $this->twitterGetBroadcastDetailsRequest($broadcast_id, $contentType);
+        $request = $this->twitterGetBroadcastDetailsRequest($broadcast_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -3480,12 +4103,19 @@ class TwitterApi
      * Create request for operation 'twitterGetBroadcastDetails'
      *
      * @param  string $broadcast_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetBroadcastDetails'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function twitterGetBroadcastDetailsRequest($broadcast_id, string $contentType = self::contentTypes['twitterGetBroadcastDetails'][0])
+    public function twitterGetBroadcastDetailsRequest($broadcast_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetBroadcastDetails'][0])
     {
 
         // verify the required parameter 'broadcast_id' is set
@@ -3496,6 +4126,28 @@ class TwitterApi
         }
 
 
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetBroadcastDetails, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetBroadcastDetails, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling TwitterApi.twitterGetBroadcastDetails, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetBroadcastDetails, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetBroadcastDetails, must be bigger than or equal to 1.');
+        }
+        
+
         $resourcePath = '/v1/twitter/spaces/broadcast/{broadcast_id}';
         $formParams = [];
         $queryParams = [];
@@ -3503,7 +4155,55 @@ class TwitterApi
         $httpBody = '';
         $multipart = false;
 
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($broadcast_id !== null) {
@@ -3579,15 +4279,22 @@ class TwitterApi
      * Get community details
      *
      * @param  string $community_id community_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetCommunityDetails'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function twitterGetCommunityDetails($community_id, string $contentType = self::contentTypes['twitterGetCommunityDetails'][0])
+    public function twitterGetCommunityDetails($community_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetCommunityDetails'][0])
     {
-        list($response) = $this->twitterGetCommunityDetailsWithHttpInfo($community_id, $contentType);
+        list($response) = $this->twitterGetCommunityDetailsWithHttpInfo($community_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -3597,15 +4304,22 @@ class TwitterApi
      * Get community details
      *
      * @param  string $community_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetCommunityDetails'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function twitterGetCommunityDetailsWithHttpInfo($community_id, string $contentType = self::contentTypes['twitterGetCommunityDetails'][0])
+    public function twitterGetCommunityDetailsWithHttpInfo($community_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetCommunityDetails'][0])
     {
-        $request = $this->twitterGetCommunityDetailsRequest($community_id, $contentType);
+        $request = $this->twitterGetCommunityDetailsRequest($community_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -3685,6 +4399,33 @@ class TwitterApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -3746,6 +4487,14 @@ class TwitterApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -3757,14 +4506,21 @@ class TwitterApi
      * Get community details
      *
      * @param  string $community_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetCommunityDetails'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetCommunityDetailsAsync($community_id, string $contentType = self::contentTypes['twitterGetCommunityDetails'][0])
+    public function twitterGetCommunityDetailsAsync($community_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetCommunityDetails'][0])
     {
-        return $this->twitterGetCommunityDetailsAsyncWithHttpInfo($community_id, $contentType)
+        return $this->twitterGetCommunityDetailsAsyncWithHttpInfo($community_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -3778,15 +4534,22 @@ class TwitterApi
      * Get community details
      *
      * @param  string $community_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetCommunityDetails'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetCommunityDetailsAsyncWithHttpInfo($community_id, string $contentType = self::contentTypes['twitterGetCommunityDetails'][0])
+    public function twitterGetCommunityDetailsAsyncWithHttpInfo($community_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetCommunityDetails'][0])
     {
         $returnType = 'mixed';
-        $request = $this->twitterGetCommunityDetailsRequest($community_id, $contentType);
+        $request = $this->twitterGetCommunityDetailsRequest($community_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -3828,12 +4591,19 @@ class TwitterApi
      * Create request for operation 'twitterGetCommunityDetails'
      *
      * @param  string $community_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetCommunityDetails'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function twitterGetCommunityDetailsRequest($community_id, string $contentType = self::contentTypes['twitterGetCommunityDetails'][0])
+    public function twitterGetCommunityDetailsRequest($community_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetCommunityDetails'][0])
     {
 
         // verify the required parameter 'community_id' is set
@@ -3844,6 +4614,28 @@ class TwitterApi
         }
 
 
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetCommunityDetails, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetCommunityDetails, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling TwitterApi.twitterGetCommunityDetails, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetCommunityDetails, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetCommunityDetails, must be bigger than or equal to 1.');
+        }
+        
+
         $resourcePath = '/v1/twitter/communities/{community_id}';
         $formParams = [];
         $queryParams = [];
@@ -3851,7 +4643,55 @@ class TwitterApi
         $httpBody = '';
         $multipart = false;
 
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($community_id !== null) {
@@ -3927,15 +4767,22 @@ class TwitterApi
      * Get community notes
      *
      * @param  string $tweet_id tweet_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetCommunityNotes'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function twitterGetCommunityNotes($tweet_id, string $contentType = self::contentTypes['twitterGetCommunityNotes'][0])
+    public function twitterGetCommunityNotes($tweet_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetCommunityNotes'][0])
     {
-        list($response) = $this->twitterGetCommunityNotesWithHttpInfo($tweet_id, $contentType);
+        list($response) = $this->twitterGetCommunityNotesWithHttpInfo($tweet_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -3945,15 +4792,22 @@ class TwitterApi
      * Get community notes
      *
      * @param  string $tweet_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetCommunityNotes'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function twitterGetCommunityNotesWithHttpInfo($tweet_id, string $contentType = self::contentTypes['twitterGetCommunityNotes'][0])
+    public function twitterGetCommunityNotesWithHttpInfo($tweet_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetCommunityNotes'][0])
     {
-        $request = $this->twitterGetCommunityNotesRequest($tweet_id, $contentType);
+        $request = $this->twitterGetCommunityNotesRequest($tweet_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -4033,6 +4887,33 @@ class TwitterApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -4094,6 +4975,14 @@ class TwitterApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -4105,14 +4994,21 @@ class TwitterApi
      * Get community notes
      *
      * @param  string $tweet_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetCommunityNotes'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetCommunityNotesAsync($tweet_id, string $contentType = self::contentTypes['twitterGetCommunityNotes'][0])
+    public function twitterGetCommunityNotesAsync($tweet_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetCommunityNotes'][0])
     {
-        return $this->twitterGetCommunityNotesAsyncWithHttpInfo($tweet_id, $contentType)
+        return $this->twitterGetCommunityNotesAsyncWithHttpInfo($tweet_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -4126,15 +5022,22 @@ class TwitterApi
      * Get community notes
      *
      * @param  string $tweet_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetCommunityNotes'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetCommunityNotesAsyncWithHttpInfo($tweet_id, string $contentType = self::contentTypes['twitterGetCommunityNotes'][0])
+    public function twitterGetCommunityNotesAsyncWithHttpInfo($tweet_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetCommunityNotes'][0])
     {
         $returnType = 'mixed';
-        $request = $this->twitterGetCommunityNotesRequest($tweet_id, $contentType);
+        $request = $this->twitterGetCommunityNotesRequest($tweet_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -4176,12 +5079,19 @@ class TwitterApi
      * Create request for operation 'twitterGetCommunityNotes'
      *
      * @param  string $tweet_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetCommunityNotes'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function twitterGetCommunityNotesRequest($tweet_id, string $contentType = self::contentTypes['twitterGetCommunityNotes'][0])
+    public function twitterGetCommunityNotesRequest($tweet_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetCommunityNotes'][0])
     {
 
         // verify the required parameter 'tweet_id' is set
@@ -4192,6 +5102,28 @@ class TwitterApi
         }
 
 
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetCommunityNotes, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetCommunityNotes, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling TwitterApi.twitterGetCommunityNotes, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetCommunityNotes, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetCommunityNotes, must be bigger than or equal to 1.');
+        }
+        
+
         $resourcePath = '/v1/twitter/tweets/tweet/{tweet_id}/community_notes';
         $formParams = [];
         $queryParams = [];
@@ -4199,7 +5131,55 @@ class TwitterApi
         $httpBody = '';
         $multipart = false;
 
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($tweet_id !== null) {
@@ -4277,15 +5257,22 @@ class TwitterApi
      * @param  string $community_id community_id (required)
      * @param  string $tweet_type tweet_type (optional)
      * @param  string $cursor cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetCommunityTweets'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function twitterGetCommunityTweets($community_id, $tweet_type = null, $cursor = null, string $contentType = self::contentTypes['twitterGetCommunityTweets'][0])
+    public function twitterGetCommunityTweets($community_id, $tweet_type = null, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetCommunityTweets'][0])
     {
-        list($response) = $this->twitterGetCommunityTweetsWithHttpInfo($community_id, $tweet_type, $cursor, $contentType);
+        list($response) = $this->twitterGetCommunityTweetsWithHttpInfo($community_id, $tweet_type, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -4297,15 +5284,22 @@ class TwitterApi
      * @param  string $community_id (required)
      * @param  string $tweet_type (optional)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetCommunityTweets'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function twitterGetCommunityTweetsWithHttpInfo($community_id, $tweet_type = null, $cursor = null, string $contentType = self::contentTypes['twitterGetCommunityTweets'][0])
+    public function twitterGetCommunityTweetsWithHttpInfo($community_id, $tweet_type = null, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetCommunityTweets'][0])
     {
-        $request = $this->twitterGetCommunityTweetsRequest($community_id, $tweet_type, $cursor, $contentType);
+        $request = $this->twitterGetCommunityTweetsRequest($community_id, $tweet_type, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -4385,6 +5379,33 @@ class TwitterApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -4446,6 +5467,14 @@ class TwitterApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -4459,14 +5488,21 @@ class TwitterApi
      * @param  string $community_id (required)
      * @param  string $tweet_type (optional)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetCommunityTweets'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetCommunityTweetsAsync($community_id, $tweet_type = null, $cursor = null, string $contentType = self::contentTypes['twitterGetCommunityTweets'][0])
+    public function twitterGetCommunityTweetsAsync($community_id, $tweet_type = null, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetCommunityTweets'][0])
     {
-        return $this->twitterGetCommunityTweetsAsyncWithHttpInfo($community_id, $tweet_type, $cursor, $contentType)
+        return $this->twitterGetCommunityTweetsAsyncWithHttpInfo($community_id, $tweet_type, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -4482,15 +5518,22 @@ class TwitterApi
      * @param  string $community_id (required)
      * @param  string $tweet_type (optional)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetCommunityTweets'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetCommunityTweetsAsyncWithHttpInfo($community_id, $tweet_type = null, $cursor = null, string $contentType = self::contentTypes['twitterGetCommunityTweets'][0])
+    public function twitterGetCommunityTweetsAsyncWithHttpInfo($community_id, $tweet_type = null, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetCommunityTweets'][0])
     {
         $returnType = 'mixed';
-        $request = $this->twitterGetCommunityTweetsRequest($community_id, $tweet_type, $cursor, $contentType);
+        $request = $this->twitterGetCommunityTweetsRequest($community_id, $tweet_type, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -4534,12 +5577,19 @@ class TwitterApi
      * @param  string $community_id (required)
      * @param  string $tweet_type (optional)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetCommunityTweets'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function twitterGetCommunityTweetsRequest($community_id, $tweet_type = null, $cursor = null, string $contentType = self::contentTypes['twitterGetCommunityTweets'][0])
+    public function twitterGetCommunityTweetsRequest($community_id, $tweet_type = null, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetCommunityTweets'][0])
     {
 
         // verify the required parameter 'community_id' is set
@@ -4551,6 +5601,28 @@ class TwitterApi
 
 
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetCommunityTweets, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetCommunityTweets, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling TwitterApi.twitterGetCommunityTweets, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetCommunityTweets, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetCommunityTweets, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/twitter/communities/{community_id}/tweets';
         $formParams = [];
@@ -4577,7 +5649,55 @@ class TwitterApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($community_id !== null) {
@@ -5294,15 +6414,22 @@ class TwitterApi
      * Get list details
      *
      * @param  string $list_id list_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetListDetails'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function twitterGetListDetails($list_id, string $contentType = self::contentTypes['twitterGetListDetails'][0])
+    public function twitterGetListDetails($list_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetListDetails'][0])
     {
-        list($response) = $this->twitterGetListDetailsWithHttpInfo($list_id, $contentType);
+        list($response) = $this->twitterGetListDetailsWithHttpInfo($list_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -5312,15 +6439,22 @@ class TwitterApi
      * Get list details
      *
      * @param  string $list_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetListDetails'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function twitterGetListDetailsWithHttpInfo($list_id, string $contentType = self::contentTypes['twitterGetListDetails'][0])
+    public function twitterGetListDetailsWithHttpInfo($list_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetListDetails'][0])
     {
-        $request = $this->twitterGetListDetailsRequest($list_id, $contentType);
+        $request = $this->twitterGetListDetailsRequest($list_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -5400,6 +6534,33 @@ class TwitterApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -5461,6 +6622,14 @@ class TwitterApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -5472,14 +6641,21 @@ class TwitterApi
      * Get list details
      *
      * @param  string $list_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetListDetails'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetListDetailsAsync($list_id, string $contentType = self::contentTypes['twitterGetListDetails'][0])
+    public function twitterGetListDetailsAsync($list_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetListDetails'][0])
     {
-        return $this->twitterGetListDetailsAsyncWithHttpInfo($list_id, $contentType)
+        return $this->twitterGetListDetailsAsyncWithHttpInfo($list_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -5493,15 +6669,22 @@ class TwitterApi
      * Get list details
      *
      * @param  string $list_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetListDetails'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetListDetailsAsyncWithHttpInfo($list_id, string $contentType = self::contentTypes['twitterGetListDetails'][0])
+    public function twitterGetListDetailsAsyncWithHttpInfo($list_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetListDetails'][0])
     {
         $returnType = 'mixed';
-        $request = $this->twitterGetListDetailsRequest($list_id, $contentType);
+        $request = $this->twitterGetListDetailsRequest($list_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -5543,12 +6726,19 @@ class TwitterApi
      * Create request for operation 'twitterGetListDetails'
      *
      * @param  string $list_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetListDetails'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function twitterGetListDetailsRequest($list_id, string $contentType = self::contentTypes['twitterGetListDetails'][0])
+    public function twitterGetListDetailsRequest($list_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetListDetails'][0])
     {
 
         // verify the required parameter 'list_id' is set
@@ -5559,6 +6749,28 @@ class TwitterApi
         }
 
 
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetListDetails, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetListDetails, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling TwitterApi.twitterGetListDetails, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetListDetails, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetListDetails, must be bigger than or equal to 1.');
+        }
+        
+
         $resourcePath = '/v1/twitter/lists/{list_id}/detail';
         $formParams = [];
         $queryParams = [];
@@ -5566,7 +6778,55 @@ class TwitterApi
         $httpBody = '';
         $multipart = false;
 
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($list_id !== null) {
@@ -5643,15 +6903,22 @@ class TwitterApi
      *
      * @param  string $list_id list_id (required)
      * @param  string $cursor cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetListTweets'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function twitterGetListTweets($list_id, $cursor = null, string $contentType = self::contentTypes['twitterGetListTweets'][0])
+    public function twitterGetListTweets($list_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetListTweets'][0])
     {
-        list($response) = $this->twitterGetListTweetsWithHttpInfo($list_id, $cursor, $contentType);
+        list($response) = $this->twitterGetListTweetsWithHttpInfo($list_id, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -5662,15 +6929,22 @@ class TwitterApi
      *
      * @param  string $list_id (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetListTweets'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function twitterGetListTweetsWithHttpInfo($list_id, $cursor = null, string $contentType = self::contentTypes['twitterGetListTweets'][0])
+    public function twitterGetListTweetsWithHttpInfo($list_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetListTweets'][0])
     {
-        $request = $this->twitterGetListTweetsRequest($list_id, $cursor, $contentType);
+        $request = $this->twitterGetListTweetsRequest($list_id, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -5750,6 +7024,33 @@ class TwitterApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -5811,6 +7112,14 @@ class TwitterApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -5823,14 +7132,21 @@ class TwitterApi
      *
      * @param  string $list_id (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetListTweets'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetListTweetsAsync($list_id, $cursor = null, string $contentType = self::contentTypes['twitterGetListTweets'][0])
+    public function twitterGetListTweetsAsync($list_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetListTweets'][0])
     {
-        return $this->twitterGetListTweetsAsyncWithHttpInfo($list_id, $cursor, $contentType)
+        return $this->twitterGetListTweetsAsyncWithHttpInfo($list_id, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -5845,15 +7161,22 @@ class TwitterApi
      *
      * @param  string $list_id (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetListTweets'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetListTweetsAsyncWithHttpInfo($list_id, $cursor = null, string $contentType = self::contentTypes['twitterGetListTweets'][0])
+    public function twitterGetListTweetsAsyncWithHttpInfo($list_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetListTweets'][0])
     {
         $returnType = 'mixed';
-        $request = $this->twitterGetListTweetsRequest($list_id, $cursor, $contentType);
+        $request = $this->twitterGetListTweetsRequest($list_id, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -5896,12 +7219,19 @@ class TwitterApi
      *
      * @param  string $list_id (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetListTweets'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function twitterGetListTweetsRequest($list_id, $cursor = null, string $contentType = self::contentTypes['twitterGetListTweets'][0])
+    public function twitterGetListTweetsRequest($list_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetListTweets'][0])
     {
 
         // verify the required parameter 'list_id' is set
@@ -5912,6 +7242,28 @@ class TwitterApi
         }
 
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetListTweets, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetListTweets, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling TwitterApi.twitterGetListTweets, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetListTweets, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetListTweets, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/twitter/lists/{list_id}/tweets';
         $formParams = [];
@@ -5929,7 +7281,55 @@ class TwitterApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($list_id !== null) {
@@ -6005,15 +7405,22 @@ class TwitterApi
      * Get place details
      *
      * @param  string $place_id place_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetPlaceDetails'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function twitterGetPlaceDetails($place_id, string $contentType = self::contentTypes['twitterGetPlaceDetails'][0])
+    public function twitterGetPlaceDetails($place_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetPlaceDetails'][0])
     {
-        list($response) = $this->twitterGetPlaceDetailsWithHttpInfo($place_id, $contentType);
+        list($response) = $this->twitterGetPlaceDetailsWithHttpInfo($place_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -6023,15 +7430,22 @@ class TwitterApi
      * Get place details
      *
      * @param  string $place_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetPlaceDetails'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function twitterGetPlaceDetailsWithHttpInfo($place_id, string $contentType = self::contentTypes['twitterGetPlaceDetails'][0])
+    public function twitterGetPlaceDetailsWithHttpInfo($place_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetPlaceDetails'][0])
     {
-        $request = $this->twitterGetPlaceDetailsRequest($place_id, $contentType);
+        $request = $this->twitterGetPlaceDetailsRequest($place_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -6111,6 +7525,33 @@ class TwitterApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -6172,6 +7613,14 @@ class TwitterApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -6183,14 +7632,21 @@ class TwitterApi
      * Get place details
      *
      * @param  string $place_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetPlaceDetails'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetPlaceDetailsAsync($place_id, string $contentType = self::contentTypes['twitterGetPlaceDetails'][0])
+    public function twitterGetPlaceDetailsAsync($place_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetPlaceDetails'][0])
     {
-        return $this->twitterGetPlaceDetailsAsyncWithHttpInfo($place_id, $contentType)
+        return $this->twitterGetPlaceDetailsAsyncWithHttpInfo($place_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -6204,15 +7660,22 @@ class TwitterApi
      * Get place details
      *
      * @param  string $place_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetPlaceDetails'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetPlaceDetailsAsyncWithHttpInfo($place_id, string $contentType = self::contentTypes['twitterGetPlaceDetails'][0])
+    public function twitterGetPlaceDetailsAsyncWithHttpInfo($place_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetPlaceDetails'][0])
     {
         $returnType = 'mixed';
-        $request = $this->twitterGetPlaceDetailsRequest($place_id, $contentType);
+        $request = $this->twitterGetPlaceDetailsRequest($place_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -6254,12 +7717,19 @@ class TwitterApi
      * Create request for operation 'twitterGetPlaceDetails'
      *
      * @param  string $place_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetPlaceDetails'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function twitterGetPlaceDetailsRequest($place_id, string $contentType = self::contentTypes['twitterGetPlaceDetails'][0])
+    public function twitterGetPlaceDetailsRequest($place_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetPlaceDetails'][0])
     {
 
         // verify the required parameter 'place_id' is set
@@ -6270,6 +7740,28 @@ class TwitterApi
         }
 
 
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetPlaceDetails, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetPlaceDetails, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling TwitterApi.twitterGetPlaceDetails, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetPlaceDetails, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetPlaceDetails, must be bigger than or equal to 1.');
+        }
+        
+
         $resourcePath = '/v1/twitter/geo/places/{place_id}';
         $formParams = [];
         $queryParams = [];
@@ -6277,7 +7769,55 @@ class TwitterApi
         $httpBody = '';
         $multipart = false;
 
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($place_id !== null) {
@@ -6353,15 +7893,22 @@ class TwitterApi
      * Get similar tweets
      *
      * @param  string $tweet_id tweet_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetSimilarTweets'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function twitterGetSimilarTweets($tweet_id, string $contentType = self::contentTypes['twitterGetSimilarTweets'][0])
+    public function twitterGetSimilarTweets($tweet_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetSimilarTweets'][0])
     {
-        list($response) = $this->twitterGetSimilarTweetsWithHttpInfo($tweet_id, $contentType);
+        list($response) = $this->twitterGetSimilarTweetsWithHttpInfo($tweet_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -6371,15 +7918,22 @@ class TwitterApi
      * Get similar tweets
      *
      * @param  string $tweet_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetSimilarTweets'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function twitterGetSimilarTweetsWithHttpInfo($tweet_id, string $contentType = self::contentTypes['twitterGetSimilarTweets'][0])
+    public function twitterGetSimilarTweetsWithHttpInfo($tweet_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetSimilarTweets'][0])
     {
-        $request = $this->twitterGetSimilarTweetsRequest($tweet_id, $contentType);
+        $request = $this->twitterGetSimilarTweetsRequest($tweet_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -6459,6 +8013,33 @@ class TwitterApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -6520,6 +8101,14 @@ class TwitterApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -6531,14 +8120,21 @@ class TwitterApi
      * Get similar tweets
      *
      * @param  string $tweet_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetSimilarTweets'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetSimilarTweetsAsync($tweet_id, string $contentType = self::contentTypes['twitterGetSimilarTweets'][0])
+    public function twitterGetSimilarTweetsAsync($tweet_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetSimilarTweets'][0])
     {
-        return $this->twitterGetSimilarTweetsAsyncWithHttpInfo($tweet_id, $contentType)
+        return $this->twitterGetSimilarTweetsAsyncWithHttpInfo($tweet_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -6552,15 +8148,22 @@ class TwitterApi
      * Get similar tweets
      *
      * @param  string $tweet_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetSimilarTweets'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetSimilarTweetsAsyncWithHttpInfo($tweet_id, string $contentType = self::contentTypes['twitterGetSimilarTweets'][0])
+    public function twitterGetSimilarTweetsAsyncWithHttpInfo($tweet_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetSimilarTweets'][0])
     {
         $returnType = 'mixed';
-        $request = $this->twitterGetSimilarTweetsRequest($tweet_id, $contentType);
+        $request = $this->twitterGetSimilarTweetsRequest($tweet_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -6602,12 +8205,19 @@ class TwitterApi
      * Create request for operation 'twitterGetSimilarTweets'
      *
      * @param  string $tweet_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetSimilarTweets'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function twitterGetSimilarTweetsRequest($tweet_id, string $contentType = self::contentTypes['twitterGetSimilarTweets'][0])
+    public function twitterGetSimilarTweetsRequest($tweet_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetSimilarTweets'][0])
     {
 
         // verify the required parameter 'tweet_id' is set
@@ -6618,6 +8228,28 @@ class TwitterApi
         }
 
 
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetSimilarTweets, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetSimilarTweets, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling TwitterApi.twitterGetSimilarTweets, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetSimilarTweets, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetSimilarTweets, must be bigger than or equal to 1.');
+        }
+        
+
         $resourcePath = '/v1/twitter/tweets/tweet/{tweet_id}/similar';
         $formParams = [];
         $queryParams = [];
@@ -6625,7 +8257,55 @@ class TwitterApi
         $httpBody = '';
         $multipart = false;
 
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($tweet_id !== null) {
@@ -6701,15 +8381,22 @@ class TwitterApi
      * Get Space details
      *
      * @param  string $space_id space_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetSpaceDetails'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function twitterGetSpaceDetails($space_id, string $contentType = self::contentTypes['twitterGetSpaceDetails'][0])
+    public function twitterGetSpaceDetails($space_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetSpaceDetails'][0])
     {
-        list($response) = $this->twitterGetSpaceDetailsWithHttpInfo($space_id, $contentType);
+        list($response) = $this->twitterGetSpaceDetailsWithHttpInfo($space_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -6719,15 +8406,22 @@ class TwitterApi
      * Get Space details
      *
      * @param  string $space_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetSpaceDetails'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function twitterGetSpaceDetailsWithHttpInfo($space_id, string $contentType = self::contentTypes['twitterGetSpaceDetails'][0])
+    public function twitterGetSpaceDetailsWithHttpInfo($space_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetSpaceDetails'][0])
     {
-        $request = $this->twitterGetSpaceDetailsRequest($space_id, $contentType);
+        $request = $this->twitterGetSpaceDetailsRequest($space_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -6807,6 +8501,33 @@ class TwitterApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -6868,6 +8589,14 @@ class TwitterApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -6879,14 +8608,21 @@ class TwitterApi
      * Get Space details
      *
      * @param  string $space_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetSpaceDetails'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetSpaceDetailsAsync($space_id, string $contentType = self::contentTypes['twitterGetSpaceDetails'][0])
+    public function twitterGetSpaceDetailsAsync($space_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetSpaceDetails'][0])
     {
-        return $this->twitterGetSpaceDetailsAsyncWithHttpInfo($space_id, $contentType)
+        return $this->twitterGetSpaceDetailsAsyncWithHttpInfo($space_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -6900,15 +8636,22 @@ class TwitterApi
      * Get Space details
      *
      * @param  string $space_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetSpaceDetails'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetSpaceDetailsAsyncWithHttpInfo($space_id, string $contentType = self::contentTypes['twitterGetSpaceDetails'][0])
+    public function twitterGetSpaceDetailsAsyncWithHttpInfo($space_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetSpaceDetails'][0])
     {
         $returnType = 'mixed';
-        $request = $this->twitterGetSpaceDetailsRequest($space_id, $contentType);
+        $request = $this->twitterGetSpaceDetailsRequest($space_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -6950,12 +8693,19 @@ class TwitterApi
      * Create request for operation 'twitterGetSpaceDetails'
      *
      * @param  string $space_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetSpaceDetails'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function twitterGetSpaceDetailsRequest($space_id, string $contentType = self::contentTypes['twitterGetSpaceDetails'][0])
+    public function twitterGetSpaceDetailsRequest($space_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetSpaceDetails'][0])
     {
 
         // verify the required parameter 'space_id' is set
@@ -6966,6 +8716,28 @@ class TwitterApi
         }
 
 
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetSpaceDetails, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetSpaceDetails, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling TwitterApi.twitterGetSpaceDetails, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetSpaceDetails, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetSpaceDetails, must be bigger than or equal to 1.');
+        }
+        
+
         $resourcePath = '/v1/twitter/spaces/{space_id}';
         $formParams = [];
         $queryParams = [];
@@ -6973,7 +8745,55 @@ class TwitterApi
         $httpBody = '';
         $multipart = false;
 
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($space_id !== null) {
@@ -7398,15 +9218,22 @@ class TwitterApi
      *
      * @param  string $category category (optional)
      * @param  int $count count (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTrendingTopics'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function twitterGetTrendingTopics($category = null, $count = null, string $contentType = self::contentTypes['twitterGetTrendingTopics'][0])
+    public function twitterGetTrendingTopics($category = null, $count = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTrendingTopics'][0])
     {
-        list($response) = $this->twitterGetTrendingTopicsWithHttpInfo($category, $count, $contentType);
+        list($response) = $this->twitterGetTrendingTopicsWithHttpInfo($category, $count, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -7417,15 +9244,22 @@ class TwitterApi
      *
      * @param  string $category (optional)
      * @param  int $count (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTrendingTopics'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function twitterGetTrendingTopicsWithHttpInfo($category = null, $count = null, string $contentType = self::contentTypes['twitterGetTrendingTopics'][0])
+    public function twitterGetTrendingTopicsWithHttpInfo($category = null, $count = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTrendingTopics'][0])
     {
-        $request = $this->twitterGetTrendingTopicsRequest($category, $count, $contentType);
+        $request = $this->twitterGetTrendingTopicsRequest($category, $count, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -7505,6 +9339,33 @@ class TwitterApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -7566,6 +9427,14 @@ class TwitterApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -7578,14 +9447,21 @@ class TwitterApi
      *
      * @param  string $category (optional)
      * @param  int $count (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTrendingTopics'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetTrendingTopicsAsync($category = null, $count = null, string $contentType = self::contentTypes['twitterGetTrendingTopics'][0])
+    public function twitterGetTrendingTopicsAsync($category = null, $count = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTrendingTopics'][0])
     {
-        return $this->twitterGetTrendingTopicsAsyncWithHttpInfo($category, $count, $contentType)
+        return $this->twitterGetTrendingTopicsAsyncWithHttpInfo($category, $count, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -7600,15 +9476,22 @@ class TwitterApi
      *
      * @param  string $category (optional)
      * @param  int $count (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTrendingTopics'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetTrendingTopicsAsyncWithHttpInfo($category = null, $count = null, string $contentType = self::contentTypes['twitterGetTrendingTopics'][0])
+    public function twitterGetTrendingTopicsAsyncWithHttpInfo($category = null, $count = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTrendingTopics'][0])
     {
         $returnType = 'mixed';
-        $request = $this->twitterGetTrendingTopicsRequest($category, $count, $contentType);
+        $request = $this->twitterGetTrendingTopicsRequest($category, $count, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -7651,16 +9534,45 @@ class TwitterApi
      *
      * @param  string $category (optional)
      * @param  int $count (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTrendingTopics'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function twitterGetTrendingTopicsRequest($category = null, $count = null, string $contentType = self::contentTypes['twitterGetTrendingTopics'][0])
+    public function twitterGetTrendingTopicsRequest($category = null, $count = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTrendingTopics'][0])
     {
 
 
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetTrendingTopics, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetTrendingTopics, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling TwitterApi.twitterGetTrendingTopics, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetTrendingTopics, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetTrendingTopics, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/twitter/trends/';
         $formParams = [];
@@ -7687,7 +9599,55 @@ class TwitterApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
 
 
@@ -7755,15 +9715,22 @@ class TwitterApi
      * Get trends by location
      *
      * @param  string $woeid woeid (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTrendsByLocation'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function twitterGetTrendsByLocation($woeid, string $contentType = self::contentTypes['twitterGetTrendsByLocation'][0])
+    public function twitterGetTrendsByLocation($woeid, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTrendsByLocation'][0])
     {
-        list($response) = $this->twitterGetTrendsByLocationWithHttpInfo($woeid, $contentType);
+        list($response) = $this->twitterGetTrendsByLocationWithHttpInfo($woeid, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -7773,15 +9740,22 @@ class TwitterApi
      * Get trends by location
      *
      * @param  string $woeid (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTrendsByLocation'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function twitterGetTrendsByLocationWithHttpInfo($woeid, string $contentType = self::contentTypes['twitterGetTrendsByLocation'][0])
+    public function twitterGetTrendsByLocationWithHttpInfo($woeid, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTrendsByLocation'][0])
     {
-        $request = $this->twitterGetTrendsByLocationRequest($woeid, $contentType);
+        $request = $this->twitterGetTrendsByLocationRequest($woeid, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -7861,6 +9835,33 @@ class TwitterApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -7922,6 +9923,14 @@ class TwitterApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -7933,14 +9942,21 @@ class TwitterApi
      * Get trends by location
      *
      * @param  string $woeid (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTrendsByLocation'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetTrendsByLocationAsync($woeid, string $contentType = self::contentTypes['twitterGetTrendsByLocation'][0])
+    public function twitterGetTrendsByLocationAsync($woeid, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTrendsByLocation'][0])
     {
-        return $this->twitterGetTrendsByLocationAsyncWithHttpInfo($woeid, $contentType)
+        return $this->twitterGetTrendsByLocationAsyncWithHttpInfo($woeid, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -7954,15 +9970,22 @@ class TwitterApi
      * Get trends by location
      *
      * @param  string $woeid (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTrendsByLocation'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetTrendsByLocationAsyncWithHttpInfo($woeid, string $contentType = self::contentTypes['twitterGetTrendsByLocation'][0])
+    public function twitterGetTrendsByLocationAsyncWithHttpInfo($woeid, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTrendsByLocation'][0])
     {
         $returnType = 'mixed';
-        $request = $this->twitterGetTrendsByLocationRequest($woeid, $contentType);
+        $request = $this->twitterGetTrendsByLocationRequest($woeid, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -8004,12 +10027,19 @@ class TwitterApi
      * Create request for operation 'twitterGetTrendsByLocation'
      *
      * @param  string $woeid (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTrendsByLocation'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function twitterGetTrendsByLocationRequest($woeid, string $contentType = self::contentTypes['twitterGetTrendsByLocation'][0])
+    public function twitterGetTrendsByLocationRequest($woeid, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTrendsByLocation'][0])
     {
 
         // verify the required parameter 'woeid' is set
@@ -8020,6 +10050,28 @@ class TwitterApi
         }
 
 
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetTrendsByLocation, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetTrendsByLocation, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling TwitterApi.twitterGetTrendsByLocation, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetTrendsByLocation, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetTrendsByLocation, must be bigger than or equal to 1.');
+        }
+        
+
         $resourcePath = '/v1/twitter/trends/place/{woeid}';
         $formParams = [];
         $queryParams = [];
@@ -8027,7 +10079,55 @@ class TwitterApi
         $httpBody = '';
         $multipart = false;
 
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($woeid !== null) {
@@ -8104,15 +10204,22 @@ class TwitterApi
      *
      * @param  string $tweet_id tweet_id (required)
      * @param  string $cursor cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetDetails'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function twitterGetTweetDetails($tweet_id, $cursor = null, string $contentType = self::contentTypes['twitterGetTweetDetails'][0])
+    public function twitterGetTweetDetails($tweet_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetDetails'][0])
     {
-        list($response) = $this->twitterGetTweetDetailsWithHttpInfo($tweet_id, $cursor, $contentType);
+        list($response) = $this->twitterGetTweetDetailsWithHttpInfo($tweet_id, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -8123,15 +10230,22 @@ class TwitterApi
      *
      * @param  string $tweet_id (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetDetails'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function twitterGetTweetDetailsWithHttpInfo($tweet_id, $cursor = null, string $contentType = self::contentTypes['twitterGetTweetDetails'][0])
+    public function twitterGetTweetDetailsWithHttpInfo($tweet_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetDetails'][0])
     {
-        $request = $this->twitterGetTweetDetailsRequest($tweet_id, $cursor, $contentType);
+        $request = $this->twitterGetTweetDetailsRequest($tweet_id, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -8211,6 +10325,33 @@ class TwitterApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -8272,6 +10413,14 @@ class TwitterApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -8284,14 +10433,21 @@ class TwitterApi
      *
      * @param  string $tweet_id (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetDetails'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetTweetDetailsAsync($tweet_id, $cursor = null, string $contentType = self::contentTypes['twitterGetTweetDetails'][0])
+    public function twitterGetTweetDetailsAsync($tweet_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetDetails'][0])
     {
-        return $this->twitterGetTweetDetailsAsyncWithHttpInfo($tweet_id, $cursor, $contentType)
+        return $this->twitterGetTweetDetailsAsyncWithHttpInfo($tweet_id, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -8306,15 +10462,22 @@ class TwitterApi
      *
      * @param  string $tweet_id (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetDetails'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetTweetDetailsAsyncWithHttpInfo($tweet_id, $cursor = null, string $contentType = self::contentTypes['twitterGetTweetDetails'][0])
+    public function twitterGetTweetDetailsAsyncWithHttpInfo($tweet_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetDetails'][0])
     {
         $returnType = 'mixed';
-        $request = $this->twitterGetTweetDetailsRequest($tweet_id, $cursor, $contentType);
+        $request = $this->twitterGetTweetDetailsRequest($tweet_id, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -8357,12 +10520,19 @@ class TwitterApi
      *
      * @param  string $tweet_id (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetDetails'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function twitterGetTweetDetailsRequest($tweet_id, $cursor = null, string $contentType = self::contentTypes['twitterGetTweetDetails'][0])
+    public function twitterGetTweetDetailsRequest($tweet_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetDetails'][0])
     {
 
         // verify the required parameter 'tweet_id' is set
@@ -8373,6 +10543,28 @@ class TwitterApi
         }
 
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetTweetDetails, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetTweetDetails, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling TwitterApi.twitterGetTweetDetails, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetTweetDetails, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetTweetDetails, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/twitter/tweets/tweet/{tweet_id}';
         $formParams = [];
@@ -8390,7 +10582,55 @@ class TwitterApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($tweet_id !== null) {
@@ -8466,15 +10706,22 @@ class TwitterApi
      * Get tweet edit history
      *
      * @param  string $tweet_id tweet_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetEditHistory'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function twitterGetTweetEditHistory($tweet_id, string $contentType = self::contentTypes['twitterGetTweetEditHistory'][0])
+    public function twitterGetTweetEditHistory($tweet_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetEditHistory'][0])
     {
-        list($response) = $this->twitterGetTweetEditHistoryWithHttpInfo($tweet_id, $contentType);
+        list($response) = $this->twitterGetTweetEditHistoryWithHttpInfo($tweet_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -8484,15 +10731,22 @@ class TwitterApi
      * Get tweet edit history
      *
      * @param  string $tweet_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetEditHistory'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function twitterGetTweetEditHistoryWithHttpInfo($tweet_id, string $contentType = self::contentTypes['twitterGetTweetEditHistory'][0])
+    public function twitterGetTweetEditHistoryWithHttpInfo($tweet_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetEditHistory'][0])
     {
-        $request = $this->twitterGetTweetEditHistoryRequest($tweet_id, $contentType);
+        $request = $this->twitterGetTweetEditHistoryRequest($tweet_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -8572,6 +10826,33 @@ class TwitterApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -8633,6 +10914,14 @@ class TwitterApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -8644,14 +10933,21 @@ class TwitterApi
      * Get tweet edit history
      *
      * @param  string $tweet_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetEditHistory'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetTweetEditHistoryAsync($tweet_id, string $contentType = self::contentTypes['twitterGetTweetEditHistory'][0])
+    public function twitterGetTweetEditHistoryAsync($tweet_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetEditHistory'][0])
     {
-        return $this->twitterGetTweetEditHistoryAsyncWithHttpInfo($tweet_id, $contentType)
+        return $this->twitterGetTweetEditHistoryAsyncWithHttpInfo($tweet_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -8665,15 +10961,22 @@ class TwitterApi
      * Get tweet edit history
      *
      * @param  string $tweet_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetEditHistory'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetTweetEditHistoryAsyncWithHttpInfo($tweet_id, string $contentType = self::contentTypes['twitterGetTweetEditHistory'][0])
+    public function twitterGetTweetEditHistoryAsyncWithHttpInfo($tweet_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetEditHistory'][0])
     {
         $returnType = 'mixed';
-        $request = $this->twitterGetTweetEditHistoryRequest($tweet_id, $contentType);
+        $request = $this->twitterGetTweetEditHistoryRequest($tweet_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -8715,12 +11018,19 @@ class TwitterApi
      * Create request for operation 'twitterGetTweetEditHistory'
      *
      * @param  string $tweet_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetEditHistory'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function twitterGetTweetEditHistoryRequest($tweet_id, string $contentType = self::contentTypes['twitterGetTweetEditHistory'][0])
+    public function twitterGetTweetEditHistoryRequest($tweet_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetEditHistory'][0])
     {
 
         // verify the required parameter 'tweet_id' is set
@@ -8731,6 +11041,28 @@ class TwitterApi
         }
 
 
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetTweetEditHistory, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetTweetEditHistory, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling TwitterApi.twitterGetTweetEditHistory, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetTweetEditHistory, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetTweetEditHistory, must be bigger than or equal to 1.');
+        }
+        
+
         $resourcePath = '/v1/twitter/tweets/tweet/{tweet_id}/edit_history';
         $formParams = [];
         $queryParams = [];
@@ -8738,7 +11070,55 @@ class TwitterApi
         $httpBody = '';
         $multipart = false;
 
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($tweet_id !== null) {
@@ -8815,15 +11195,22 @@ class TwitterApi
      *
      * @param  string $tweet_id tweet_id (required)
      * @param  string $cursor cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetFavoriters'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function twitterGetTweetFavoriters($tweet_id, $cursor = null, string $contentType = self::contentTypes['twitterGetTweetFavoriters'][0])
+    public function twitterGetTweetFavoriters($tweet_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetFavoriters'][0])
     {
-        list($response) = $this->twitterGetTweetFavoritersWithHttpInfo($tweet_id, $cursor, $contentType);
+        list($response) = $this->twitterGetTweetFavoritersWithHttpInfo($tweet_id, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -8834,15 +11221,22 @@ class TwitterApi
      *
      * @param  string $tweet_id (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetFavoriters'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function twitterGetTweetFavoritersWithHttpInfo($tweet_id, $cursor = null, string $contentType = self::contentTypes['twitterGetTweetFavoriters'][0])
+    public function twitterGetTweetFavoritersWithHttpInfo($tweet_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetFavoriters'][0])
     {
-        $request = $this->twitterGetTweetFavoritersRequest($tweet_id, $cursor, $contentType);
+        $request = $this->twitterGetTweetFavoritersRequest($tweet_id, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -8922,6 +11316,33 @@ class TwitterApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -8983,6 +11404,14 @@ class TwitterApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -8995,14 +11424,21 @@ class TwitterApi
      *
      * @param  string $tweet_id (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetFavoriters'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetTweetFavoritersAsync($tweet_id, $cursor = null, string $contentType = self::contentTypes['twitterGetTweetFavoriters'][0])
+    public function twitterGetTweetFavoritersAsync($tweet_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetFavoriters'][0])
     {
-        return $this->twitterGetTweetFavoritersAsyncWithHttpInfo($tweet_id, $cursor, $contentType)
+        return $this->twitterGetTweetFavoritersAsyncWithHttpInfo($tweet_id, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -9017,15 +11453,22 @@ class TwitterApi
      *
      * @param  string $tweet_id (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetFavoriters'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetTweetFavoritersAsyncWithHttpInfo($tweet_id, $cursor = null, string $contentType = self::contentTypes['twitterGetTweetFavoriters'][0])
+    public function twitterGetTweetFavoritersAsyncWithHttpInfo($tweet_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetFavoriters'][0])
     {
         $returnType = 'mixed';
-        $request = $this->twitterGetTweetFavoritersRequest($tweet_id, $cursor, $contentType);
+        $request = $this->twitterGetTweetFavoritersRequest($tweet_id, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -9068,12 +11511,19 @@ class TwitterApi
      *
      * @param  string $tweet_id (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetFavoriters'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function twitterGetTweetFavoritersRequest($tweet_id, $cursor = null, string $contentType = self::contentTypes['twitterGetTweetFavoriters'][0])
+    public function twitterGetTweetFavoritersRequest($tweet_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetFavoriters'][0])
     {
 
         // verify the required parameter 'tweet_id' is set
@@ -9084,6 +11534,28 @@ class TwitterApi
         }
 
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetTweetFavoriters, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetTweetFavoriters, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling TwitterApi.twitterGetTweetFavoriters, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetTweetFavoriters, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetTweetFavoriters, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/twitter/tweets/tweet/{tweet_id}/favoriters';
         $formParams = [];
@@ -9101,7 +11573,55 @@ class TwitterApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($tweet_id !== null) {
@@ -9178,15 +11698,22 @@ class TwitterApi
      *
      * @param  string $tweet_id tweet_id (required)
      * @param  string $cursor cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetQuotes'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function twitterGetTweetQuotes($tweet_id, $cursor = null, string $contentType = self::contentTypes['twitterGetTweetQuotes'][0])
+    public function twitterGetTweetQuotes($tweet_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetQuotes'][0])
     {
-        list($response) = $this->twitterGetTweetQuotesWithHttpInfo($tweet_id, $cursor, $contentType);
+        list($response) = $this->twitterGetTweetQuotesWithHttpInfo($tweet_id, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -9197,15 +11724,22 @@ class TwitterApi
      *
      * @param  string $tweet_id (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetQuotes'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function twitterGetTweetQuotesWithHttpInfo($tweet_id, $cursor = null, string $contentType = self::contentTypes['twitterGetTweetQuotes'][0])
+    public function twitterGetTweetQuotesWithHttpInfo($tweet_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetQuotes'][0])
     {
-        $request = $this->twitterGetTweetQuotesRequest($tweet_id, $cursor, $contentType);
+        $request = $this->twitterGetTweetQuotesRequest($tweet_id, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -9285,6 +11819,33 @@ class TwitterApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -9346,6 +11907,14 @@ class TwitterApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -9358,14 +11927,21 @@ class TwitterApi
      *
      * @param  string $tweet_id (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetQuotes'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetTweetQuotesAsync($tweet_id, $cursor = null, string $contentType = self::contentTypes['twitterGetTweetQuotes'][0])
+    public function twitterGetTweetQuotesAsync($tweet_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetQuotes'][0])
     {
-        return $this->twitterGetTweetQuotesAsyncWithHttpInfo($tweet_id, $cursor, $contentType)
+        return $this->twitterGetTweetQuotesAsyncWithHttpInfo($tweet_id, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -9380,15 +11956,22 @@ class TwitterApi
      *
      * @param  string $tweet_id (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetQuotes'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetTweetQuotesAsyncWithHttpInfo($tweet_id, $cursor = null, string $contentType = self::contentTypes['twitterGetTweetQuotes'][0])
+    public function twitterGetTweetQuotesAsyncWithHttpInfo($tweet_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetQuotes'][0])
     {
         $returnType = 'mixed';
-        $request = $this->twitterGetTweetQuotesRequest($tweet_id, $cursor, $contentType);
+        $request = $this->twitterGetTweetQuotesRequest($tweet_id, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -9431,12 +12014,19 @@ class TwitterApi
      *
      * @param  string $tweet_id (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetQuotes'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function twitterGetTweetQuotesRequest($tweet_id, $cursor = null, string $contentType = self::contentTypes['twitterGetTweetQuotes'][0])
+    public function twitterGetTweetQuotesRequest($tweet_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetQuotes'][0])
     {
 
         // verify the required parameter 'tweet_id' is set
@@ -9447,6 +12037,28 @@ class TwitterApi
         }
 
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetTweetQuotes, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetTweetQuotes, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling TwitterApi.twitterGetTweetQuotes, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetTweetQuotes, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetTweetQuotes, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/twitter/tweets/tweet/{tweet_id}/quotes';
         $formParams = [];
@@ -9464,7 +12076,55 @@ class TwitterApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($tweet_id !== null) {
@@ -9541,15 +12201,22 @@ class TwitterApi
      *
      * @param  string $tweet_id tweet_id (required)
      * @param  string $cursor cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetReplies'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function twitterGetTweetReplies($tweet_id, $cursor = null, string $contentType = self::contentTypes['twitterGetTweetReplies'][0])
+    public function twitterGetTweetReplies($tweet_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetReplies'][0])
     {
-        list($response) = $this->twitterGetTweetRepliesWithHttpInfo($tweet_id, $cursor, $contentType);
+        list($response) = $this->twitterGetTweetRepliesWithHttpInfo($tweet_id, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -9560,15 +12227,22 @@ class TwitterApi
      *
      * @param  string $tweet_id (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetReplies'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function twitterGetTweetRepliesWithHttpInfo($tweet_id, $cursor = null, string $contentType = self::contentTypes['twitterGetTweetReplies'][0])
+    public function twitterGetTweetRepliesWithHttpInfo($tweet_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetReplies'][0])
     {
-        $request = $this->twitterGetTweetRepliesRequest($tweet_id, $cursor, $contentType);
+        $request = $this->twitterGetTweetRepliesRequest($tweet_id, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -9648,6 +12322,33 @@ class TwitterApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -9709,6 +12410,14 @@ class TwitterApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -9721,14 +12430,21 @@ class TwitterApi
      *
      * @param  string $tweet_id (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetReplies'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetTweetRepliesAsync($tweet_id, $cursor = null, string $contentType = self::contentTypes['twitterGetTweetReplies'][0])
+    public function twitterGetTweetRepliesAsync($tweet_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetReplies'][0])
     {
-        return $this->twitterGetTweetRepliesAsyncWithHttpInfo($tweet_id, $cursor, $contentType)
+        return $this->twitterGetTweetRepliesAsyncWithHttpInfo($tweet_id, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -9743,15 +12459,22 @@ class TwitterApi
      *
      * @param  string $tweet_id (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetReplies'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetTweetRepliesAsyncWithHttpInfo($tweet_id, $cursor = null, string $contentType = self::contentTypes['twitterGetTweetReplies'][0])
+    public function twitterGetTweetRepliesAsyncWithHttpInfo($tweet_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetReplies'][0])
     {
         $returnType = 'mixed';
-        $request = $this->twitterGetTweetRepliesRequest($tweet_id, $cursor, $contentType);
+        $request = $this->twitterGetTweetRepliesRequest($tweet_id, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -9794,12 +12517,19 @@ class TwitterApi
      *
      * @param  string $tweet_id (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetReplies'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function twitterGetTweetRepliesRequest($tweet_id, $cursor = null, string $contentType = self::contentTypes['twitterGetTweetReplies'][0])
+    public function twitterGetTweetRepliesRequest($tweet_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetReplies'][0])
     {
 
         // verify the required parameter 'tweet_id' is set
@@ -9810,6 +12540,28 @@ class TwitterApi
         }
 
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetTweetReplies, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetTweetReplies, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling TwitterApi.twitterGetTweetReplies, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetTweetReplies, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetTweetReplies, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/twitter/tweets/tweet/{tweet_id}/replies';
         $formParams = [];
@@ -9827,7 +12579,55 @@ class TwitterApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($tweet_id !== null) {
@@ -9904,15 +12704,22 @@ class TwitterApi
      *
      * @param  string $tweet_id tweet_id (required)
      * @param  string $cursor cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetRetweeters'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function twitterGetTweetRetweeters($tweet_id, $cursor = null, string $contentType = self::contentTypes['twitterGetTweetRetweeters'][0])
+    public function twitterGetTweetRetweeters($tweet_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetRetweeters'][0])
     {
-        list($response) = $this->twitterGetTweetRetweetersWithHttpInfo($tweet_id, $cursor, $contentType);
+        list($response) = $this->twitterGetTweetRetweetersWithHttpInfo($tweet_id, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -9923,15 +12730,22 @@ class TwitterApi
      *
      * @param  string $tweet_id (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetRetweeters'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function twitterGetTweetRetweetersWithHttpInfo($tweet_id, $cursor = null, string $contentType = self::contentTypes['twitterGetTweetRetweeters'][0])
+    public function twitterGetTweetRetweetersWithHttpInfo($tweet_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetRetweeters'][0])
     {
-        $request = $this->twitterGetTweetRetweetersRequest($tweet_id, $cursor, $contentType);
+        $request = $this->twitterGetTweetRetweetersRequest($tweet_id, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -10011,6 +12825,33 @@ class TwitterApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -10072,6 +12913,14 @@ class TwitterApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -10084,14 +12933,21 @@ class TwitterApi
      *
      * @param  string $tweet_id (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetRetweeters'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetTweetRetweetersAsync($tweet_id, $cursor = null, string $contentType = self::contentTypes['twitterGetTweetRetweeters'][0])
+    public function twitterGetTweetRetweetersAsync($tweet_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetRetweeters'][0])
     {
-        return $this->twitterGetTweetRetweetersAsyncWithHttpInfo($tweet_id, $cursor, $contentType)
+        return $this->twitterGetTweetRetweetersAsyncWithHttpInfo($tweet_id, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -10106,15 +12962,22 @@ class TwitterApi
      *
      * @param  string $tweet_id (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetRetweeters'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetTweetRetweetersAsyncWithHttpInfo($tweet_id, $cursor = null, string $contentType = self::contentTypes['twitterGetTweetRetweeters'][0])
+    public function twitterGetTweetRetweetersAsyncWithHttpInfo($tweet_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetRetweeters'][0])
     {
         $returnType = 'mixed';
-        $request = $this->twitterGetTweetRetweetersRequest($tweet_id, $cursor, $contentType);
+        $request = $this->twitterGetTweetRetweetersRequest($tweet_id, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -10157,12 +13020,19 @@ class TwitterApi
      *
      * @param  string $tweet_id (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetRetweeters'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function twitterGetTweetRetweetersRequest($tweet_id, $cursor = null, string $contentType = self::contentTypes['twitterGetTweetRetweeters'][0])
+    public function twitterGetTweetRetweetersRequest($tweet_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetRetweeters'][0])
     {
 
         // verify the required parameter 'tweet_id' is set
@@ -10173,6 +13043,28 @@ class TwitterApi
         }
 
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetTweetRetweeters, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetTweetRetweeters, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling TwitterApi.twitterGetTweetRetweeters, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetTweetRetweeters, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetTweetRetweeters, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/twitter/tweets/tweet/{tweet_id}/retweeters';
         $formParams = [];
@@ -10190,7 +13082,55 @@ class TwitterApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($tweet_id !== null) {
@@ -10266,15 +13206,22 @@ class TwitterApi
      * Get tweets by IDs
      *
      * @param  string $tweets tweets (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetsByIds'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function twitterGetTweetsByIds($tweets, string $contentType = self::contentTypes['twitterGetTweetsByIds'][0])
+    public function twitterGetTweetsByIds($tweets, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetsByIds'][0])
     {
-        list($response) = $this->twitterGetTweetsByIdsWithHttpInfo($tweets, $contentType);
+        list($response) = $this->twitterGetTweetsByIdsWithHttpInfo($tweets, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -10284,15 +13231,22 @@ class TwitterApi
      * Get tweets by IDs
      *
      * @param  string $tweets (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetsByIds'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function twitterGetTweetsByIdsWithHttpInfo($tweets, string $contentType = self::contentTypes['twitterGetTweetsByIds'][0])
+    public function twitterGetTweetsByIdsWithHttpInfo($tweets, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetsByIds'][0])
     {
-        $request = $this->twitterGetTweetsByIdsRequest($tweets, $contentType);
+        $request = $this->twitterGetTweetsByIdsRequest($tweets, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -10372,6 +13326,33 @@ class TwitterApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -10433,6 +13414,14 @@ class TwitterApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -10444,14 +13433,21 @@ class TwitterApi
      * Get tweets by IDs
      *
      * @param  string $tweets (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetsByIds'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetTweetsByIdsAsync($tweets, string $contentType = self::contentTypes['twitterGetTweetsByIds'][0])
+    public function twitterGetTweetsByIdsAsync($tweets, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetsByIds'][0])
     {
-        return $this->twitterGetTweetsByIdsAsyncWithHttpInfo($tweets, $contentType)
+        return $this->twitterGetTweetsByIdsAsyncWithHttpInfo($tweets, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -10465,15 +13461,22 @@ class TwitterApi
      * Get tweets by IDs
      *
      * @param  string $tweets (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetsByIds'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetTweetsByIdsAsyncWithHttpInfo($tweets, string $contentType = self::contentTypes['twitterGetTweetsByIds'][0])
+    public function twitterGetTweetsByIdsAsyncWithHttpInfo($tweets, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetsByIds'][0])
     {
         $returnType = 'mixed';
-        $request = $this->twitterGetTweetsByIdsRequest($tweets, $contentType);
+        $request = $this->twitterGetTweetsByIdsRequest($tweets, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -10515,12 +13518,19 @@ class TwitterApi
      * Create request for operation 'twitterGetTweetsByIds'
      *
      * @param  string $tweets (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetTweetsByIds'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function twitterGetTweetsByIdsRequest($tweets, string $contentType = self::contentTypes['twitterGetTweetsByIds'][0])
+    public function twitterGetTweetsByIdsRequest($tweets, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetTweetsByIds'][0])
     {
 
         // verify the required parameter 'tweets' is set
@@ -10530,6 +13540,28 @@ class TwitterApi
             );
         }
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetTweetsByIds, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetTweetsByIds, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling TwitterApi.twitterGetTweetsByIds, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetTweetsByIds, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetTweetsByIds, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/twitter/tweets/';
         $formParams = [];
@@ -10547,7 +13579,55 @@ class TwitterApi
             true, // explode
             true // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
 
 
@@ -10616,15 +13696,22 @@ class TwitterApi
      *
      * @param  string $user_id user_id (required)
      * @param  string $cursor cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserArticles'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function twitterGetUserArticles($user_id, $cursor = null, string $contentType = self::contentTypes['twitterGetUserArticles'][0])
+    public function twitterGetUserArticles($user_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserArticles'][0])
     {
-        list($response) = $this->twitterGetUserArticlesWithHttpInfo($user_id, $cursor, $contentType);
+        list($response) = $this->twitterGetUserArticlesWithHttpInfo($user_id, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -10635,15 +13722,22 @@ class TwitterApi
      *
      * @param  string $user_id (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserArticles'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function twitterGetUserArticlesWithHttpInfo($user_id, $cursor = null, string $contentType = self::contentTypes['twitterGetUserArticles'][0])
+    public function twitterGetUserArticlesWithHttpInfo($user_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserArticles'][0])
     {
-        $request = $this->twitterGetUserArticlesRequest($user_id, $cursor, $contentType);
+        $request = $this->twitterGetUserArticlesRequest($user_id, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -10723,6 +13817,33 @@ class TwitterApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -10784,6 +13905,14 @@ class TwitterApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -10796,14 +13925,21 @@ class TwitterApi
      *
      * @param  string $user_id (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserArticles'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetUserArticlesAsync($user_id, $cursor = null, string $contentType = self::contentTypes['twitterGetUserArticles'][0])
+    public function twitterGetUserArticlesAsync($user_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserArticles'][0])
     {
-        return $this->twitterGetUserArticlesAsyncWithHttpInfo($user_id, $cursor, $contentType)
+        return $this->twitterGetUserArticlesAsyncWithHttpInfo($user_id, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -10818,15 +13954,22 @@ class TwitterApi
      *
      * @param  string $user_id (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserArticles'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetUserArticlesAsyncWithHttpInfo($user_id, $cursor = null, string $contentType = self::contentTypes['twitterGetUserArticles'][0])
+    public function twitterGetUserArticlesAsyncWithHttpInfo($user_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserArticles'][0])
     {
         $returnType = 'mixed';
-        $request = $this->twitterGetUserArticlesRequest($user_id, $cursor, $contentType);
+        $request = $this->twitterGetUserArticlesRequest($user_id, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -10869,12 +14012,19 @@ class TwitterApi
      *
      * @param  string $user_id (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserArticles'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function twitterGetUserArticlesRequest($user_id, $cursor = null, string $contentType = self::contentTypes['twitterGetUserArticles'][0])
+    public function twitterGetUserArticlesRequest($user_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserArticles'][0])
     {
 
         // verify the required parameter 'user_id' is set
@@ -10885,6 +14035,28 @@ class TwitterApi
         }
 
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetUserArticles, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetUserArticles, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling TwitterApi.twitterGetUserArticles, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetUserArticles, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetUserArticles, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/twitter/users/{user_id}/articles';
         $formParams = [];
@@ -10902,7 +14074,55 @@ class TwitterApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($user_id !== null) {
@@ -10978,15 +14198,22 @@ class TwitterApi
      * Get user by ID
      *
      * @param  string $user_id user_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserById'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function twitterGetUserById($user_id, string $contentType = self::contentTypes['twitterGetUserById'][0])
+    public function twitterGetUserById($user_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserById'][0])
     {
-        list($response) = $this->twitterGetUserByIdWithHttpInfo($user_id, $contentType);
+        list($response) = $this->twitterGetUserByIdWithHttpInfo($user_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -10996,15 +14223,22 @@ class TwitterApi
      * Get user by ID
      *
      * @param  string $user_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserById'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function twitterGetUserByIdWithHttpInfo($user_id, string $contentType = self::contentTypes['twitterGetUserById'][0])
+    public function twitterGetUserByIdWithHttpInfo($user_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserById'][0])
     {
-        $request = $this->twitterGetUserByIdRequest($user_id, $contentType);
+        $request = $this->twitterGetUserByIdRequest($user_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -11084,6 +14318,33 @@ class TwitterApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -11145,6 +14406,14 @@ class TwitterApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -11156,14 +14425,21 @@ class TwitterApi
      * Get user by ID
      *
      * @param  string $user_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserById'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetUserByIdAsync($user_id, string $contentType = self::contentTypes['twitterGetUserById'][0])
+    public function twitterGetUserByIdAsync($user_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserById'][0])
     {
-        return $this->twitterGetUserByIdAsyncWithHttpInfo($user_id, $contentType)
+        return $this->twitterGetUserByIdAsyncWithHttpInfo($user_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -11177,15 +14453,22 @@ class TwitterApi
      * Get user by ID
      *
      * @param  string $user_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserById'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetUserByIdAsyncWithHttpInfo($user_id, string $contentType = self::contentTypes['twitterGetUserById'][0])
+    public function twitterGetUserByIdAsyncWithHttpInfo($user_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserById'][0])
     {
         $returnType = 'mixed';
-        $request = $this->twitterGetUserByIdRequest($user_id, $contentType);
+        $request = $this->twitterGetUserByIdRequest($user_id, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -11227,12 +14510,19 @@ class TwitterApi
      * Create request for operation 'twitterGetUserById'
      *
      * @param  string $user_id (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserById'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function twitterGetUserByIdRequest($user_id, string $contentType = self::contentTypes['twitterGetUserById'][0])
+    public function twitterGetUserByIdRequest($user_id, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserById'][0])
     {
 
         // verify the required parameter 'user_id' is set
@@ -11243,6 +14533,28 @@ class TwitterApi
         }
 
 
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetUserById, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetUserById, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling TwitterApi.twitterGetUserById, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetUserById, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetUserById, must be bigger than or equal to 1.');
+        }
+        
+
         $resourcePath = '/v1/twitter/users/{user_id}/by_id';
         $formParams = [];
         $queryParams = [];
@@ -11250,7 +14562,55 @@ class TwitterApi
         $httpBody = '';
         $multipart = false;
 
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($user_id !== null) {
@@ -11326,15 +14686,22 @@ class TwitterApi
      * Get user by username
      *
      * @param  string $username username (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserByUsername'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function twitterGetUserByUsername($username, string $contentType = self::contentTypes['twitterGetUserByUsername'][0])
+    public function twitterGetUserByUsername($username, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserByUsername'][0])
     {
-        list($response) = $this->twitterGetUserByUsernameWithHttpInfo($username, $contentType);
+        list($response) = $this->twitterGetUserByUsernameWithHttpInfo($username, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -11344,15 +14711,22 @@ class TwitterApi
      * Get user by username
      *
      * @param  string $username (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserByUsername'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function twitterGetUserByUsernameWithHttpInfo($username, string $contentType = self::contentTypes['twitterGetUserByUsername'][0])
+    public function twitterGetUserByUsernameWithHttpInfo($username, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserByUsername'][0])
     {
-        $request = $this->twitterGetUserByUsernameRequest($username, $contentType);
+        $request = $this->twitterGetUserByUsernameRequest($username, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -11432,6 +14806,33 @@ class TwitterApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -11493,6 +14894,14 @@ class TwitterApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -11504,14 +14913,21 @@ class TwitterApi
      * Get user by username
      *
      * @param  string $username (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserByUsername'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetUserByUsernameAsync($username, string $contentType = self::contentTypes['twitterGetUserByUsername'][0])
+    public function twitterGetUserByUsernameAsync($username, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserByUsername'][0])
     {
-        return $this->twitterGetUserByUsernameAsyncWithHttpInfo($username, $contentType)
+        return $this->twitterGetUserByUsernameAsyncWithHttpInfo($username, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -11525,15 +14941,22 @@ class TwitterApi
      * Get user by username
      *
      * @param  string $username (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserByUsername'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetUserByUsernameAsyncWithHttpInfo($username, string $contentType = self::contentTypes['twitterGetUserByUsername'][0])
+    public function twitterGetUserByUsernameAsyncWithHttpInfo($username, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserByUsername'][0])
     {
         $returnType = 'mixed';
-        $request = $this->twitterGetUserByUsernameRequest($username, $contentType);
+        $request = $this->twitterGetUserByUsernameRequest($username, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -11575,12 +14998,19 @@ class TwitterApi
      * Create request for operation 'twitterGetUserByUsername'
      *
      * @param  string $username (required)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserByUsername'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function twitterGetUserByUsernameRequest($username, string $contentType = self::contentTypes['twitterGetUserByUsername'][0])
+    public function twitterGetUserByUsernameRequest($username, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserByUsername'][0])
     {
 
         // verify the required parameter 'username' is set
@@ -11591,6 +15021,28 @@ class TwitterApi
         }
 
 
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetUserByUsername, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetUserByUsername, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling TwitterApi.twitterGetUserByUsername, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetUserByUsername, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetUserByUsername, must be bigger than or equal to 1.');
+        }
+        
+
         $resourcePath = '/v1/twitter/users/{username}/by_username';
         $formParams = [];
         $queryParams = [];
@@ -11598,7 +15050,55 @@ class TwitterApi
         $httpBody = '';
         $multipart = false;
 
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($username !== null) {
@@ -11675,15 +15175,22 @@ class TwitterApi
      *
      * @param  string $username username (required)
      * @param  string $cursor cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserFollowers'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function twitterGetUserFollowers($username, $cursor = null, string $contentType = self::contentTypes['twitterGetUserFollowers'][0])
+    public function twitterGetUserFollowers($username, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserFollowers'][0])
     {
-        list($response) = $this->twitterGetUserFollowersWithHttpInfo($username, $cursor, $contentType);
+        list($response) = $this->twitterGetUserFollowersWithHttpInfo($username, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -11694,15 +15201,22 @@ class TwitterApi
      *
      * @param  string $username (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserFollowers'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function twitterGetUserFollowersWithHttpInfo($username, $cursor = null, string $contentType = self::contentTypes['twitterGetUserFollowers'][0])
+    public function twitterGetUserFollowersWithHttpInfo($username, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserFollowers'][0])
     {
-        $request = $this->twitterGetUserFollowersRequest($username, $cursor, $contentType);
+        $request = $this->twitterGetUserFollowersRequest($username, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -11782,6 +15296,33 @@ class TwitterApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -11843,6 +15384,14 @@ class TwitterApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -11855,14 +15404,21 @@ class TwitterApi
      *
      * @param  string $username (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserFollowers'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetUserFollowersAsync($username, $cursor = null, string $contentType = self::contentTypes['twitterGetUserFollowers'][0])
+    public function twitterGetUserFollowersAsync($username, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserFollowers'][0])
     {
-        return $this->twitterGetUserFollowersAsyncWithHttpInfo($username, $cursor, $contentType)
+        return $this->twitterGetUserFollowersAsyncWithHttpInfo($username, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -11877,15 +15433,22 @@ class TwitterApi
      *
      * @param  string $username (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserFollowers'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetUserFollowersAsyncWithHttpInfo($username, $cursor = null, string $contentType = self::contentTypes['twitterGetUserFollowers'][0])
+    public function twitterGetUserFollowersAsyncWithHttpInfo($username, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserFollowers'][0])
     {
         $returnType = 'mixed';
-        $request = $this->twitterGetUserFollowersRequest($username, $cursor, $contentType);
+        $request = $this->twitterGetUserFollowersRequest($username, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -11928,12 +15491,19 @@ class TwitterApi
      *
      * @param  string $username (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserFollowers'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function twitterGetUserFollowersRequest($username, $cursor = null, string $contentType = self::contentTypes['twitterGetUserFollowers'][0])
+    public function twitterGetUserFollowersRequest($username, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserFollowers'][0])
     {
 
         // verify the required parameter 'username' is set
@@ -11944,6 +15514,28 @@ class TwitterApi
         }
 
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetUserFollowers, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetUserFollowers, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling TwitterApi.twitterGetUserFollowers, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetUserFollowers, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetUserFollowers, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/twitter/users/{username}/followers';
         $formParams = [];
@@ -11961,7 +15553,55 @@ class TwitterApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($username !== null) {
@@ -12038,15 +15678,22 @@ class TwitterApi
      *
      * @param  string $username username (required)
      * @param  string $cursor cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserFollowing'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function twitterGetUserFollowing($username, $cursor = null, string $contentType = self::contentTypes['twitterGetUserFollowing'][0])
+    public function twitterGetUserFollowing($username, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserFollowing'][0])
     {
-        list($response) = $this->twitterGetUserFollowingWithHttpInfo($username, $cursor, $contentType);
+        list($response) = $this->twitterGetUserFollowingWithHttpInfo($username, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -12057,15 +15704,22 @@ class TwitterApi
      *
      * @param  string $username (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserFollowing'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function twitterGetUserFollowingWithHttpInfo($username, $cursor = null, string $contentType = self::contentTypes['twitterGetUserFollowing'][0])
+    public function twitterGetUserFollowingWithHttpInfo($username, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserFollowing'][0])
     {
-        $request = $this->twitterGetUserFollowingRequest($username, $cursor, $contentType);
+        $request = $this->twitterGetUserFollowingRequest($username, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -12145,6 +15799,33 @@ class TwitterApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -12206,6 +15887,14 @@ class TwitterApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -12218,14 +15907,21 @@ class TwitterApi
      *
      * @param  string $username (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserFollowing'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetUserFollowingAsync($username, $cursor = null, string $contentType = self::contentTypes['twitterGetUserFollowing'][0])
+    public function twitterGetUserFollowingAsync($username, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserFollowing'][0])
     {
-        return $this->twitterGetUserFollowingAsyncWithHttpInfo($username, $cursor, $contentType)
+        return $this->twitterGetUserFollowingAsyncWithHttpInfo($username, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -12240,15 +15936,22 @@ class TwitterApi
      *
      * @param  string $username (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserFollowing'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetUserFollowingAsyncWithHttpInfo($username, $cursor = null, string $contentType = self::contentTypes['twitterGetUserFollowing'][0])
+    public function twitterGetUserFollowingAsyncWithHttpInfo($username, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserFollowing'][0])
     {
         $returnType = 'mixed';
-        $request = $this->twitterGetUserFollowingRequest($username, $cursor, $contentType);
+        $request = $this->twitterGetUserFollowingRequest($username, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -12291,12 +15994,19 @@ class TwitterApi
      *
      * @param  string $username (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserFollowing'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function twitterGetUserFollowingRequest($username, $cursor = null, string $contentType = self::contentTypes['twitterGetUserFollowing'][0])
+    public function twitterGetUserFollowingRequest($username, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserFollowing'][0])
     {
 
         // verify the required parameter 'username' is set
@@ -12307,6 +16017,28 @@ class TwitterApi
         }
 
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetUserFollowing, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetUserFollowing, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling TwitterApi.twitterGetUserFollowing, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetUserFollowing, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetUserFollowing, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/twitter/users/{username}/followings';
         $formParams = [];
@@ -12324,7 +16056,55 @@ class TwitterApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($username !== null) {
@@ -12402,15 +16182,22 @@ class TwitterApi
      * @param  string $username username (required)
      * @param  int $count count (optional)
      * @param  string $cursor cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserMentions'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function twitterGetUserMentions($username, $count = null, $cursor = null, string $contentType = self::contentTypes['twitterGetUserMentions'][0])
+    public function twitterGetUserMentions($username, $count = null, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserMentions'][0])
     {
-        list($response) = $this->twitterGetUserMentionsWithHttpInfo($username, $count, $cursor, $contentType);
+        list($response) = $this->twitterGetUserMentionsWithHttpInfo($username, $count, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -12422,15 +16209,22 @@ class TwitterApi
      * @param  string $username (required)
      * @param  int $count (optional)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserMentions'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function twitterGetUserMentionsWithHttpInfo($username, $count = null, $cursor = null, string $contentType = self::contentTypes['twitterGetUserMentions'][0])
+    public function twitterGetUserMentionsWithHttpInfo($username, $count = null, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserMentions'][0])
     {
-        $request = $this->twitterGetUserMentionsRequest($username, $count, $cursor, $contentType);
+        $request = $this->twitterGetUserMentionsRequest($username, $count, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -12510,6 +16304,33 @@ class TwitterApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -12571,6 +16392,14 @@ class TwitterApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -12584,14 +16413,21 @@ class TwitterApi
      * @param  string $username (required)
      * @param  int $count (optional)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserMentions'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetUserMentionsAsync($username, $count = null, $cursor = null, string $contentType = self::contentTypes['twitterGetUserMentions'][0])
+    public function twitterGetUserMentionsAsync($username, $count = null, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserMentions'][0])
     {
-        return $this->twitterGetUserMentionsAsyncWithHttpInfo($username, $count, $cursor, $contentType)
+        return $this->twitterGetUserMentionsAsyncWithHttpInfo($username, $count, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -12607,15 +16443,22 @@ class TwitterApi
      * @param  string $username (required)
      * @param  int $count (optional)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserMentions'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetUserMentionsAsyncWithHttpInfo($username, $count = null, $cursor = null, string $contentType = self::contentTypes['twitterGetUserMentions'][0])
+    public function twitterGetUserMentionsAsyncWithHttpInfo($username, $count = null, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserMentions'][0])
     {
         $returnType = 'mixed';
-        $request = $this->twitterGetUserMentionsRequest($username, $count, $cursor, $contentType);
+        $request = $this->twitterGetUserMentionsRequest($username, $count, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -12659,12 +16502,19 @@ class TwitterApi
      * @param  string $username (required)
      * @param  int $count (optional)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserMentions'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function twitterGetUserMentionsRequest($username, $count = null, $cursor = null, string $contentType = self::contentTypes['twitterGetUserMentions'][0])
+    public function twitterGetUserMentionsRequest($username, $count = null, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserMentions'][0])
     {
 
         // verify the required parameter 'username' is set
@@ -12676,6 +16526,28 @@ class TwitterApi
 
 
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetUserMentions, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetUserMentions, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling TwitterApi.twitterGetUserMentions, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetUserMentions, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetUserMentions, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/twitter/users/{username}/mentions';
         $formParams = [];
@@ -12702,7 +16574,55 @@ class TwitterApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($username !== null) {
@@ -12779,15 +16699,22 @@ class TwitterApi
      *
      * @param  string $user_id user_id (required)
      * @param  string $cursor cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserSubscriptions'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function twitterGetUserSubscriptions($user_id, $cursor = null, string $contentType = self::contentTypes['twitterGetUserSubscriptions'][0])
+    public function twitterGetUserSubscriptions($user_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserSubscriptions'][0])
     {
-        list($response) = $this->twitterGetUserSubscriptionsWithHttpInfo($user_id, $cursor, $contentType);
+        list($response) = $this->twitterGetUserSubscriptionsWithHttpInfo($user_id, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -12798,15 +16725,22 @@ class TwitterApi
      *
      * @param  string $user_id (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserSubscriptions'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function twitterGetUserSubscriptionsWithHttpInfo($user_id, $cursor = null, string $contentType = self::contentTypes['twitterGetUserSubscriptions'][0])
+    public function twitterGetUserSubscriptionsWithHttpInfo($user_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserSubscriptions'][0])
     {
-        $request = $this->twitterGetUserSubscriptionsRequest($user_id, $cursor, $contentType);
+        $request = $this->twitterGetUserSubscriptionsRequest($user_id, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -12886,6 +16820,33 @@ class TwitterApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -12947,6 +16908,14 @@ class TwitterApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -12959,14 +16928,21 @@ class TwitterApi
      *
      * @param  string $user_id (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserSubscriptions'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetUserSubscriptionsAsync($user_id, $cursor = null, string $contentType = self::contentTypes['twitterGetUserSubscriptions'][0])
+    public function twitterGetUserSubscriptionsAsync($user_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserSubscriptions'][0])
     {
-        return $this->twitterGetUserSubscriptionsAsyncWithHttpInfo($user_id, $cursor, $contentType)
+        return $this->twitterGetUserSubscriptionsAsyncWithHttpInfo($user_id, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -12981,15 +16957,22 @@ class TwitterApi
      *
      * @param  string $user_id (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserSubscriptions'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetUserSubscriptionsAsyncWithHttpInfo($user_id, $cursor = null, string $contentType = self::contentTypes['twitterGetUserSubscriptions'][0])
+    public function twitterGetUserSubscriptionsAsyncWithHttpInfo($user_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserSubscriptions'][0])
     {
         $returnType = 'mixed';
-        $request = $this->twitterGetUserSubscriptionsRequest($user_id, $cursor, $contentType);
+        $request = $this->twitterGetUserSubscriptionsRequest($user_id, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -13032,12 +17015,19 @@ class TwitterApi
      *
      * @param  string $user_id (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserSubscriptions'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function twitterGetUserSubscriptionsRequest($user_id, $cursor = null, string $contentType = self::contentTypes['twitterGetUserSubscriptions'][0])
+    public function twitterGetUserSubscriptionsRequest($user_id, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserSubscriptions'][0])
     {
 
         // verify the required parameter 'user_id' is set
@@ -13048,6 +17038,28 @@ class TwitterApi
         }
 
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetUserSubscriptions, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetUserSubscriptions, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling TwitterApi.twitterGetUserSubscriptions, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetUserSubscriptions, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetUserSubscriptions, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/twitter/users/{user_id}/subscriptions';
         $formParams = [];
@@ -13065,7 +17077,55 @@ class TwitterApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($user_id !== null) {
@@ -13142,15 +17202,22 @@ class TwitterApi
      *
      * @param  string $username username (required)
      * @param  string $cursor cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserTweets'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function twitterGetUserTweets($username, $cursor = null, string $contentType = self::contentTypes['twitterGetUserTweets'][0])
+    public function twitterGetUserTweets($username, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserTweets'][0])
     {
-        list($response) = $this->twitterGetUserTweetsWithHttpInfo($username, $cursor, $contentType);
+        list($response) = $this->twitterGetUserTweetsWithHttpInfo($username, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -13161,15 +17228,22 @@ class TwitterApi
      *
      * @param  string $username (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserTweets'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function twitterGetUserTweetsWithHttpInfo($username, $cursor = null, string $contentType = self::contentTypes['twitterGetUserTweets'][0])
+    public function twitterGetUserTweetsWithHttpInfo($username, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserTweets'][0])
     {
-        $request = $this->twitterGetUserTweetsRequest($username, $cursor, $contentType);
+        $request = $this->twitterGetUserTweetsRequest($username, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -13249,6 +17323,33 @@ class TwitterApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -13310,6 +17411,14 @@ class TwitterApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -13322,14 +17431,21 @@ class TwitterApi
      *
      * @param  string $username (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserTweets'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetUserTweetsAsync($username, $cursor = null, string $contentType = self::contentTypes['twitterGetUserTweets'][0])
+    public function twitterGetUserTweetsAsync($username, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserTweets'][0])
     {
-        return $this->twitterGetUserTweetsAsyncWithHttpInfo($username, $cursor, $contentType)
+        return $this->twitterGetUserTweetsAsyncWithHttpInfo($username, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -13344,15 +17460,22 @@ class TwitterApi
      *
      * @param  string $username (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserTweets'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterGetUserTweetsAsyncWithHttpInfo($username, $cursor = null, string $contentType = self::contentTypes['twitterGetUserTweets'][0])
+    public function twitterGetUserTweetsAsyncWithHttpInfo($username, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserTweets'][0])
     {
         $returnType = 'mixed';
-        $request = $this->twitterGetUserTweetsRequest($username, $cursor, $contentType);
+        $request = $this->twitterGetUserTweetsRequest($username, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -13395,12 +17518,19 @@ class TwitterApi
      *
      * @param  string $username (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterGetUserTweets'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function twitterGetUserTweetsRequest($username, $cursor = null, string $contentType = self::contentTypes['twitterGetUserTweets'][0])
+    public function twitterGetUserTweetsRequest($username, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterGetUserTweets'][0])
     {
 
         // verify the required parameter 'username' is set
@@ -13411,6 +17541,28 @@ class TwitterApi
         }
 
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetUserTweets, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterGetUserTweets, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling TwitterApi.twitterGetUserTweets, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetUserTweets, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterGetUserTweets, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/twitter/users/{username}/latest_tweets';
         $formParams = [];
@@ -13428,7 +17580,55 @@ class TwitterApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($username !== null) {
@@ -15682,15 +19882,22 @@ class TwitterApi
      *
      * @param  string $query query (required)
      * @param  string $cursor cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterSearchCommunities'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function twitterSearchCommunities($query, $cursor = null, string $contentType = self::contentTypes['twitterSearchCommunities'][0])
+    public function twitterSearchCommunities($query, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterSearchCommunities'][0])
     {
-        list($response) = $this->twitterSearchCommunitiesWithHttpInfo($query, $cursor, $contentType);
+        list($response) = $this->twitterSearchCommunitiesWithHttpInfo($query, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -15701,15 +19908,22 @@ class TwitterApi
      *
      * @param  string $query (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterSearchCommunities'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function twitterSearchCommunitiesWithHttpInfo($query, $cursor = null, string $contentType = self::contentTypes['twitterSearchCommunities'][0])
+    public function twitterSearchCommunitiesWithHttpInfo($query, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterSearchCommunities'][0])
     {
-        $request = $this->twitterSearchCommunitiesRequest($query, $cursor, $contentType);
+        $request = $this->twitterSearchCommunitiesRequest($query, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -15789,6 +20003,33 @@ class TwitterApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -15850,6 +20091,14 @@ class TwitterApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -15862,14 +20111,21 @@ class TwitterApi
      *
      * @param  string $query (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterSearchCommunities'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterSearchCommunitiesAsync($query, $cursor = null, string $contentType = self::contentTypes['twitterSearchCommunities'][0])
+    public function twitterSearchCommunitiesAsync($query, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterSearchCommunities'][0])
     {
-        return $this->twitterSearchCommunitiesAsyncWithHttpInfo($query, $cursor, $contentType)
+        return $this->twitterSearchCommunitiesAsyncWithHttpInfo($query, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -15884,15 +20140,22 @@ class TwitterApi
      *
      * @param  string $query (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterSearchCommunities'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterSearchCommunitiesAsyncWithHttpInfo($query, $cursor = null, string $contentType = self::contentTypes['twitterSearchCommunities'][0])
+    public function twitterSearchCommunitiesAsyncWithHttpInfo($query, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterSearchCommunities'][0])
     {
         $returnType = 'mixed';
-        $request = $this->twitterSearchCommunitiesRequest($query, $cursor, $contentType);
+        $request = $this->twitterSearchCommunitiesRequest($query, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -15935,12 +20198,19 @@ class TwitterApi
      *
      * @param  string $query (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterSearchCommunities'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function twitterSearchCommunitiesRequest($query, $cursor = null, string $contentType = self::contentTypes['twitterSearchCommunities'][0])
+    public function twitterSearchCommunitiesRequest($query, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterSearchCommunities'][0])
     {
 
         // verify the required parameter 'query' is set
@@ -15951,6 +20221,28 @@ class TwitterApi
         }
 
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterSearchCommunities, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterSearchCommunities, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling TwitterApi.twitterSearchCommunities, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterSearchCommunities, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterSearchCommunities, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/twitter/communities/search';
         $formParams = [];
@@ -15977,7 +20269,55 @@ class TwitterApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
 
 
@@ -16047,15 +20387,22 @@ class TwitterApi
      * @param  string $list_id list_id (required)
      * @param  string $query query (required)
      * @param  string $cursor cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterSearchListTweets'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function twitterSearchListTweets($list_id, $query, $cursor = null, string $contentType = self::contentTypes['twitterSearchListTweets'][0])
+    public function twitterSearchListTweets($list_id, $query, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterSearchListTweets'][0])
     {
-        list($response) = $this->twitterSearchListTweetsWithHttpInfo($list_id, $query, $cursor, $contentType);
+        list($response) = $this->twitterSearchListTweetsWithHttpInfo($list_id, $query, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -16067,15 +20414,22 @@ class TwitterApi
      * @param  string $list_id (required)
      * @param  string $query (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterSearchListTweets'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function twitterSearchListTweetsWithHttpInfo($list_id, $query, $cursor = null, string $contentType = self::contentTypes['twitterSearchListTweets'][0])
+    public function twitterSearchListTweetsWithHttpInfo($list_id, $query, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterSearchListTweets'][0])
     {
-        $request = $this->twitterSearchListTweetsRequest($list_id, $query, $cursor, $contentType);
+        $request = $this->twitterSearchListTweetsRequest($list_id, $query, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -16155,6 +20509,33 @@ class TwitterApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -16216,6 +20597,14 @@ class TwitterApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -16229,14 +20618,21 @@ class TwitterApi
      * @param  string $list_id (required)
      * @param  string $query (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterSearchListTweets'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterSearchListTweetsAsync($list_id, $query, $cursor = null, string $contentType = self::contentTypes['twitterSearchListTweets'][0])
+    public function twitterSearchListTweetsAsync($list_id, $query, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterSearchListTweets'][0])
     {
-        return $this->twitterSearchListTweetsAsyncWithHttpInfo($list_id, $query, $cursor, $contentType)
+        return $this->twitterSearchListTweetsAsyncWithHttpInfo($list_id, $query, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -16252,15 +20648,22 @@ class TwitterApi
      * @param  string $list_id (required)
      * @param  string $query (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterSearchListTweets'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterSearchListTweetsAsyncWithHttpInfo($list_id, $query, $cursor = null, string $contentType = self::contentTypes['twitterSearchListTweets'][0])
+    public function twitterSearchListTweetsAsyncWithHttpInfo($list_id, $query, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterSearchListTweets'][0])
     {
         $returnType = 'mixed';
-        $request = $this->twitterSearchListTweetsRequest($list_id, $query, $cursor, $contentType);
+        $request = $this->twitterSearchListTweetsRequest($list_id, $query, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -16304,12 +20707,19 @@ class TwitterApi
      * @param  string $list_id (required)
      * @param  string $query (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterSearchListTweets'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function twitterSearchListTweetsRequest($list_id, $query, $cursor = null, string $contentType = self::contentTypes['twitterSearchListTweets'][0])
+    public function twitterSearchListTweetsRequest($list_id, $query, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterSearchListTweets'][0])
     {
 
         // verify the required parameter 'list_id' is set
@@ -16327,6 +20737,28 @@ class TwitterApi
         }
 
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterSearchListTweets, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterSearchListTweets, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling TwitterApi.twitterSearchListTweets, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterSearchListTweets, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterSearchListTweets, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/twitter/lists/{list_id}/search_tweets';
         $formParams = [];
@@ -16353,7 +20785,55 @@ class TwitterApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
         // path params
         if ($list_id !== null) {
@@ -16431,15 +20911,22 @@ class TwitterApi
      * @param  string $query query (optional)
      * @param  float $lat lat (optional)
      * @param  float $long long (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterSearchPlaces'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function twitterSearchPlaces($query = null, $lat = null, $long = null, string $contentType = self::contentTypes['twitterSearchPlaces'][0])
+    public function twitterSearchPlaces($query = null, $lat = null, $long = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterSearchPlaces'][0])
     {
-        list($response) = $this->twitterSearchPlacesWithHttpInfo($query, $lat, $long, $contentType);
+        list($response) = $this->twitterSearchPlacesWithHttpInfo($query, $lat, $long, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -16451,15 +20938,22 @@ class TwitterApi
      * @param  string $query (optional)
      * @param  float $lat (optional)
      * @param  float $long (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterSearchPlaces'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function twitterSearchPlacesWithHttpInfo($query = null, $lat = null, $long = null, string $contentType = self::contentTypes['twitterSearchPlaces'][0])
+    public function twitterSearchPlacesWithHttpInfo($query = null, $lat = null, $long = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterSearchPlaces'][0])
     {
-        $request = $this->twitterSearchPlacesRequest($query, $lat, $long, $contentType);
+        $request = $this->twitterSearchPlacesRequest($query, $lat, $long, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -16539,6 +21033,33 @@ class TwitterApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -16600,6 +21121,14 @@ class TwitterApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -16613,14 +21142,21 @@ class TwitterApi
      * @param  string $query (optional)
      * @param  float $lat (optional)
      * @param  float $long (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterSearchPlaces'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterSearchPlacesAsync($query = null, $lat = null, $long = null, string $contentType = self::contentTypes['twitterSearchPlaces'][0])
+    public function twitterSearchPlacesAsync($query = null, $lat = null, $long = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterSearchPlaces'][0])
     {
-        return $this->twitterSearchPlacesAsyncWithHttpInfo($query, $lat, $long, $contentType)
+        return $this->twitterSearchPlacesAsyncWithHttpInfo($query, $lat, $long, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -16636,15 +21172,22 @@ class TwitterApi
      * @param  string $query (optional)
      * @param  float $lat (optional)
      * @param  float $long (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterSearchPlaces'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterSearchPlacesAsyncWithHttpInfo($query = null, $lat = null, $long = null, string $contentType = self::contentTypes['twitterSearchPlaces'][0])
+    public function twitterSearchPlacesAsyncWithHttpInfo($query = null, $lat = null, $long = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterSearchPlaces'][0])
     {
         $returnType = 'mixed';
-        $request = $this->twitterSearchPlacesRequest($query, $lat, $long, $contentType);
+        $request = $this->twitterSearchPlacesRequest($query, $lat, $long, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -16688,17 +21231,46 @@ class TwitterApi
      * @param  string $query (optional)
      * @param  float $lat (optional)
      * @param  float $long (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterSearchPlaces'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function twitterSearchPlacesRequest($query = null, $lat = null, $long = null, string $contentType = self::contentTypes['twitterSearchPlaces'][0])
+    public function twitterSearchPlacesRequest($query = null, $lat = null, $long = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterSearchPlaces'][0])
     {
 
 
 
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterSearchPlaces, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterSearchPlaces, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling TwitterApi.twitterSearchPlaces, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterSearchPlaces, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterSearchPlaces, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/twitter/geo/search';
         $formParams = [];
@@ -16734,7 +21306,55 @@ class TwitterApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
 
 
@@ -16803,15 +21423,22 @@ class TwitterApi
      *
      * @param  string $query query (required)
      * @param  string $cursor cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterSearchUsers'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return mixed|\ScrapeBadger\Model\HTTPValidationError
+     * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function twitterSearchUsers($query, $cursor = null, string $contentType = self::contentTypes['twitterSearchUsers'][0])
+    public function twitterSearchUsers($query, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterSearchUsers'][0])
     {
-        list($response) = $this->twitterSearchUsersWithHttpInfo($query, $cursor, $contentType);
+        list($response) = $this->twitterSearchUsersWithHttpInfo($query, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -16822,15 +21449,22 @@ class TwitterApi
      *
      * @param  string $query (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterSearchUsers'] to see the possible values for this operation
      *
      * @throws \ScrapeBadger\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function twitterSearchUsersWithHttpInfo($query, $cursor = null, string $contentType = self::contentTypes['twitterSearchUsers'][0])
+    public function twitterSearchUsersWithHttpInfo($query, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterSearchUsers'][0])
     {
-        $request = $this->twitterSearchUsersRequest($query, $cursor, $contentType);
+        $request = $this->twitterSearchUsersRequest($query, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -16910,6 +21544,33 @@ class TwitterApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
+                case 202:
+                    if ('\ScrapeBadger\Model\AsyncAccepted' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\ScrapeBadger\Model\AsyncAccepted' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\ScrapeBadger\Model\AsyncAccepted', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
             }
 
             if ($statusCode < 200 || $statusCode > 299) {
@@ -16971,6 +21632,14 @@ class TwitterApi
                     );
                     $e->setResponseObject($data);
                     break;
+                case 202:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\ScrapeBadger\Model\AsyncAccepted',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -16983,14 +21652,21 @@ class TwitterApi
      *
      * @param  string $query (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterSearchUsers'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterSearchUsersAsync($query, $cursor = null, string $contentType = self::contentTypes['twitterSearchUsers'][0])
+    public function twitterSearchUsersAsync($query, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterSearchUsers'][0])
     {
-        return $this->twitterSearchUsersAsyncWithHttpInfo($query, $cursor, $contentType)
+        return $this->twitterSearchUsersAsyncWithHttpInfo($query, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -17005,15 +21681,22 @@ class TwitterApi
      *
      * @param  string $query (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterSearchUsers'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function twitterSearchUsersAsyncWithHttpInfo($query, $cursor = null, string $contentType = self::contentTypes['twitterSearchUsers'][0])
+    public function twitterSearchUsersAsyncWithHttpInfo($query, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterSearchUsers'][0])
     {
         $returnType = 'mixed';
-        $request = $this->twitterSearchUsersRequest($query, $cursor, $contentType);
+        $request = $this->twitterSearchUsersRequest($query, $cursor, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -17056,12 +21739,19 @@ class TwitterApi
      *
      * @param  string $query (required)
      * @param  string $cursor (optional)
+     * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
+     * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
+     * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
+     * @param  bool $async Query form of &#x60;Prefer: respond-async&#x60;: &#x60;true&#x60; or &#x60;1&#x60; (also &#x60;yes&#x60;, &#x60;on&#x60;; &#x60;false&#x60;, &#x60;0&#x60;, &#x60;no&#x60;, &#x60;off&#x60; leave the call synchronous). Waits 25 s unless &#x60;async_wait&#x60; is given. Not sent to the scraper. (optional)
+     * @param  int $async_wait Seconds (0-120; values outside are clamped) to wait for the result before answering &#x60;202&#x60;. Implies async. Not sent to the scraper. (optional)
+     * @param  string $callback_url Query form of &#x60;X-Callback-URL&#x60; (URL-encode it). Implies async; on its own the answer is an immediate &#x60;202&#x60; (wait 0). Not sent to the scraper. (optional)
+     * @param  string $idempotency_key2 Query form of &#x60;Idempotency-Key&#x60;. Not sent to the scraper. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['twitterSearchUsers'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function twitterSearchUsersRequest($query, $cursor = null, string $contentType = self::contentTypes['twitterSearchUsers'][0])
+    public function twitterSearchUsersRequest($query, $cursor = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['twitterSearchUsers'][0])
     {
 
         // verify the required parameter 'query' is set
@@ -17072,6 +21762,28 @@ class TwitterApi
         }
 
 
+
+
+        if ($idempotency_key !== null && strlen($idempotency_key) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterSearchUsers, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key !== null && strlen($idempotency_key) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key" when calling TwitterApi.twitterSearchUsers, must be bigger than or equal to 1.');
+        }
+        if ($idempotency_key !== null && !preg_match("/^[!-~]{1,200}$/", $idempotency_key)) {
+            throw new \InvalidArgumentException("invalid value for \"idempotency_key\" when calling TwitterApi.twitterSearchUsers, must conform to the pattern /^[!-~]{1,200}$/.");
+        }
+        
+
+
+
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) > 200) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterSearchUsers, must be smaller than or equal to 200.');
+        }
+        if ($idempotency_key2 !== null && strlen($idempotency_key2) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$idempotency_key2" when calling TwitterApi.twitterSearchUsers, must be bigger than or equal to 1.');
+        }
+        
 
         $resourcePath = '/v1/twitter/users/search_users';
         $formParams = [];
@@ -17098,7 +21810,55 @@ class TwitterApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async,
+            'async', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $async_wait,
+            'async_wait', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $callback_url,
+            'callback_url', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $idempotency_key2,
+            'idempotency_key', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
+        // header params
+        if ($prefer !== null) {
+            $headerParams['Prefer'] = ObjectSerializer::toHeaderValue($prefer);
+        }
+        // header params
+        if ($x_callback_url !== null) {
+            $headerParams['X-Callback-URL'] = ObjectSerializer::toHeaderValue($x_callback_url);
+        }
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
 
 

@@ -72,6 +72,18 @@ class RequestsApiTest extends TestCase
     }
 
     /**
+     * Test case for requestsCallbackStatus
+     *
+     * Callback status.
+     *
+     */
+    public function testRequestsCallbackStatus()
+    {
+        // TODO: implement
+        self::markTestIncomplete('Not implemented');
+    }
+
+    /**
      * Test case for requestsPollAnAsyncRequest
      *
      * Poll an async request.

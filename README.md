@@ -122,9 +122,16 @@ $store = 'store_example'; // string | Override store, e.g. COM or US
 $country = 'country_example'; // string | ISO country override
 $currency = 'currency_example'; // string | Currency override
 $language = 'language_example'; // string | Locale override, e.g. en-GB
+$prefer = respond-async, wait=25; // string | `respond-async[, wait=N]` (RFC 7240): run the call async. If it has not finished after `wait` seconds (0-120, default 25) the answer is `202` with a `request_id`; poll `GET /v1/requests/{request_id}`. Its `wait=` wins over `async_wait`; without one, `async_wait` sets the wait.
+$x_callback_url = 'x_callback_url_example'; // string | An `https` URL that receives the signed `request.completed` webhook when the call finishes. Implies async: on its own (no `Prefer`, `async` or `async_wait`) the answer is an immediate `202`; with `Prefer: respond-async` or `async=true` the call still waits 25 s unless a wait is given. Wins over `callback_url`.
+$idempotency_key = 'idempotency_key_example'; // string | 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call's current state (`Idempotent-Replayed: true`) without running or billing it again; on a different call it is `409 idempotency_key_reused`. Applies to async calls only; on a synchronous call it is ignored. Wins over `idempotency_key`.
+$async = True; // bool | Query form of `Prefer: respond-async`: `true` or `1` (also `yes`, `on`; `false`, `0`, `no`, `off` leave the call synchronous). Waits 25 s unless `async_wait` is given. Not sent to the scraper.
+$async_wait = 56; // int | Seconds (0-120; values outside are clamped) to wait for the result before answering `202`. Implies async. Not sent to the scraper.
+$callback_url = 'callback_url_example'; // string | Query form of `X-Callback-URL` (URL-encode it). Implies async; on its own the answer is an immediate `202` (wait 0). Not sent to the scraper.
+$idempotency_key2 = 'idempotency_key_example'; // string | Query form of `Idempotency-Key`. Not sent to the scraper.
 
 try {
-    $result = $apiInstance->asosGetProductDetail($product_id, $market, $store, $country, $currency, $language);
+    $result = $apiInstance->asosGetProductDetail($product_id, $market, $store, $country, $currency, $language, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling ASOSApi->asosGetProductDetail: ', $e->getMessage(), PHP_EOL;
@@ -148,6 +155,7 @@ Class | Method | HTTP request | Description
 *AccountApi* | [**accountGetAccountInfo**](docs/Api/AccountApi.md#accountgetaccountinfo) | **GET** /v1/account/me | Get account info
 *AccountApi* | [**accountGetTheWebhookSigningSecret**](docs/Api/AccountApi.md#accountgetthewebhooksigningsecret) | **GET** /v1/account/webhook-secret | Get the webhook signing secret
 *AccountApi* | [**accountRotateTheWebhookSigningSecret**](docs/Api/AccountApi.md#accountrotatethewebhooksigningsecret) | **POST** /v1/account/webhook-secret/rotate | Rotate the webhook signing secret
+*AccountApi* | [**accountWebhookDeliveries**](docs/Api/AccountApi.md#accountwebhookdeliveries) | **GET** /v1/account/webhook-deliveries | Webhook deliveries
 *AirbnbApi* | [**airbnbAirbnbScraperHealthCheck**](docs/Api/AirbnbApi.md#airbnbairbnbscraperhealthcheck) | **GET** /v1/airbnb/health | Airbnb scraper health check
 *AirbnbApi* | [**airbnbAirbnbScraperHealthCheckHead**](docs/Api/AirbnbApi.md#airbnbairbnbscraperhealthcheckhead) | **HEAD** /v1/airbnb/health | Airbnb scraper health check
 *AirbnbApi* | [**airbnbGetAvailabilityCalendar**](docs/Api/AirbnbApi.md#airbnbgetavailabilitycalendar) | **GET** /v1/airbnb/listings/{room_id}/calendar | Get availability calendar
@@ -526,6 +534,7 @@ Class | Method | HTTP request | Description
 *RedfinApi* | [**redfinRedfinScraperHealthCheckHead**](docs/Api/RedfinApi.md#redfinredfinscraperhealthcheckhead) | **HEAD** /v1/redfin/health | Redfin scraper health check
 *RedfinApi* | [**redfinRegionAddressSuggestions**](docs/Api/RedfinApi.md#redfinregionaddresssuggestions) | **GET** /v1/redfin/autocomplete | Region/address suggestions
 *RedfinApi* | [**redfinSearchProperties**](docs/Api/RedfinApi.md#redfinsearchproperties) | **GET** /v1/redfin/search | Search properties
+*RequestsApi* | [**requestsCallbackStatus**](docs/Api/RequestsApi.md#requestscallbackstatus) | **GET** /v1/requests/{request_id}/callback | Callback status
 *RequestsApi* | [**requestsPollAnAsyncRequest**](docs/Api/RequestsApi.md#requestspollanasyncrequest) | **GET** /v1/requests/{request_id} | Poll an async request
 *ResultsApi* | [**resultsReReadAResultRemoved**](docs/Api/ResultsApi.md#resultsrereadaresultremoved) | **GET** /v1/results/{result_id} | Re-read a result (removed)
 *RufusApi* | [**rufusAmazonRufusScraperHealthCheck**](docs/Api/RufusApi.md#rufusamazonrufusscraperhealthcheck) | **GET** /v1/rufus/health | Amazon Rufus scraper health check
@@ -751,9 +760,13 @@ Class | Method | HTTP request | Description
 ## Models
 
 - [AccountInfo](docs/Model/AccountInfo.md)
+- [AccountWebhookDeliveries403Response](docs/Model/AccountWebhookDeliveries403Response.md)
 - [Age](docs/Model/Age.md)
 - [AgentTrialInfo](docs/Model/AgentTrialInfo.md)
 - [Article](docs/Model/Article.md)
+- [AsyncAccepted](docs/Model/AsyncAccepted.md)
+- [AsyncAcceptedNextAction](docs/Model/AsyncAcceptedNextAction.md)
+- [AsyncCallbackStatus](docs/Model/AsyncCallbackStatus.md)
 - [AutoScout24FiltersResponse](docs/Model/AutoScout24FiltersResponse.md)
 - [AutoScout24Listing](docs/Model/AutoScout24Listing.md)
 - [AutoScout24ListingDetail](docs/Model/AutoScout24ListingDetail.md)
@@ -915,6 +928,9 @@ Class | Method | HTTP request | Description
 - [VintedUserProfile](docs/Model/VintedUserProfile.md)
 - [VintedUserSummary](docs/Model/VintedUserSummary.md)
 - [WebhookCreate](docs/Model/WebhookCreate.md)
+- [WebhookDeliveries](docs/Model/WebhookDeliveries.md)
+- [WebhookDelivery](docs/Model/WebhookDelivery.md)
+- [WebhookEvent](docs/Model/WebhookEvent.md)
 - [WebhookListItem](docs/Model/WebhookListItem.md)
 - [WebhookListResponse](docs/Model/WebhookListResponse.md)
 - [WebhookResponse](docs/Model/WebhookResponse.md)

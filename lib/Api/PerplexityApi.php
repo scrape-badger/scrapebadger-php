@@ -146,6 +146,8 @@ class PerplexityApi
      * @param  string $country ISO-3166 alpha-2 egress country, e.g. &#39;US&#39;, &#39;GB&#39;, &#39;DE&#39;. (optional)
      * @param  bool $strict_country Answer only from an exit in &#x60;country&#x60;, never another one; 503 &#x60;country_unavailable&#x60; (not billed) when none answers. Requires &#x60;country&#x60;. (optional, default to false)
      * @param  string $location Where the asker is: a city (tokyo, osaka, seoul, new-york, london, ...) or &#39;lat,lng&#39; in decimal degrees. Perplexity answers a local-sounding question for it instead of the exit IP&#39;s city. It does not pick the egress: &#x60;country&#x60; does. (optional)
+     * @param  bool $html Also return &#x60;answer_html&#x60;: the answer rendered as an HTML fragment, with each &#x60;[n]&#x60; citation linked to its source (&#x60;&lt;a class&#x3D;\&quot;citation\&quot; data-ref&#x3D;\&quot;n\&quot;&gt;&#x60;). Raw HTML and unsafe links in the answer are dropped. Same price. (optional, default to false)
+     * @param  bool $raw Also return &#x60;raw&#x60;: Perplexity&#39;s own final answer object as it sent it (answer blocks, web results, related queries, model and mode metadata), minus its thread write token. Every other field is parsed from it. Same price. (optional, default to false)
      * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
      * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
      * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
@@ -159,9 +161,9 @@ class PerplexityApi
      * @throws \InvalidArgumentException
      * @return mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted
      */
-    public function perplexityAskPerplexityAQuestion($prompt, $country = null, $strict_country = false, $location = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['perplexityAskPerplexityAQuestion'][0])
+    public function perplexityAskPerplexityAQuestion($prompt, $country = null, $strict_country = false, $location = null, $html = false, $raw = false, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['perplexityAskPerplexityAQuestion'][0])
     {
-        list($response) = $this->perplexityAskPerplexityAQuestionWithHttpInfo($prompt, $country, $strict_country, $location, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
+        list($response) = $this->perplexityAskPerplexityAQuestionWithHttpInfo($prompt, $country, $strict_country, $location, $html, $raw, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
         return $response;
     }
 
@@ -174,6 +176,8 @@ class PerplexityApi
      * @param  string $country ISO-3166 alpha-2 egress country, e.g. &#39;US&#39;, &#39;GB&#39;, &#39;DE&#39;. (optional)
      * @param  bool $strict_country Answer only from an exit in &#x60;country&#x60;, never another one; 503 &#x60;country_unavailable&#x60; (not billed) when none answers. Requires &#x60;country&#x60;. (optional, default to false)
      * @param  string $location Where the asker is: a city (tokyo, osaka, seoul, new-york, london, ...) or &#39;lat,lng&#39; in decimal degrees. Perplexity answers a local-sounding question for it instead of the exit IP&#39;s city. It does not pick the egress: &#x60;country&#x60; does. (optional)
+     * @param  bool $html Also return &#x60;answer_html&#x60;: the answer rendered as an HTML fragment, with each &#x60;[n]&#x60; citation linked to its source (&#x60;&lt;a class&#x3D;\&quot;citation\&quot; data-ref&#x3D;\&quot;n\&quot;&gt;&#x60;). Raw HTML and unsafe links in the answer are dropped. Same price. (optional, default to false)
+     * @param  bool $raw Also return &#x60;raw&#x60;: Perplexity&#39;s own final answer object as it sent it (answer blocks, web results, related queries, model and mode metadata), minus its thread write token. Every other field is parsed from it. Same price. (optional, default to false)
      * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
      * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
      * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
@@ -187,9 +191,9 @@ class PerplexityApi
      * @throws \InvalidArgumentException
      * @return array of mixed|\ScrapeBadger\Model\HTTPValidationError|\ScrapeBadger\Model\AsyncAccepted, HTTP status code, HTTP response headers (array of strings)
      */
-    public function perplexityAskPerplexityAQuestionWithHttpInfo($prompt, $country = null, $strict_country = false, $location = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['perplexityAskPerplexityAQuestion'][0])
+    public function perplexityAskPerplexityAQuestionWithHttpInfo($prompt, $country = null, $strict_country = false, $location = null, $html = false, $raw = false, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['perplexityAskPerplexityAQuestion'][0])
     {
-        $request = $this->perplexityAskPerplexityAQuestionRequest($prompt, $country, $strict_country, $location, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
+        $request = $this->perplexityAskPerplexityAQuestionRequest($prompt, $country, $strict_country, $location, $html, $raw, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -379,6 +383,8 @@ class PerplexityApi
      * @param  string $country ISO-3166 alpha-2 egress country, e.g. &#39;US&#39;, &#39;GB&#39;, &#39;DE&#39;. (optional)
      * @param  bool $strict_country Answer only from an exit in &#x60;country&#x60;, never another one; 503 &#x60;country_unavailable&#x60; (not billed) when none answers. Requires &#x60;country&#x60;. (optional, default to false)
      * @param  string $location Where the asker is: a city (tokyo, osaka, seoul, new-york, london, ...) or &#39;lat,lng&#39; in decimal degrees. Perplexity answers a local-sounding question for it instead of the exit IP&#39;s city. It does not pick the egress: &#x60;country&#x60; does. (optional)
+     * @param  bool $html Also return &#x60;answer_html&#x60;: the answer rendered as an HTML fragment, with each &#x60;[n]&#x60; citation linked to its source (&#x60;&lt;a class&#x3D;\&quot;citation\&quot; data-ref&#x3D;\&quot;n\&quot;&gt;&#x60;). Raw HTML and unsafe links in the answer are dropped. Same price. (optional, default to false)
+     * @param  bool $raw Also return &#x60;raw&#x60;: Perplexity&#39;s own final answer object as it sent it (answer blocks, web results, related queries, model and mode metadata), minus its thread write token. Every other field is parsed from it. Same price. (optional, default to false)
      * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
      * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
      * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
@@ -391,9 +397,9 @@ class PerplexityApi
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function perplexityAskPerplexityAQuestionAsync($prompt, $country = null, $strict_country = false, $location = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['perplexityAskPerplexityAQuestion'][0])
+    public function perplexityAskPerplexityAQuestionAsync($prompt, $country = null, $strict_country = false, $location = null, $html = false, $raw = false, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['perplexityAskPerplexityAQuestion'][0])
     {
-        return $this->perplexityAskPerplexityAQuestionAsyncWithHttpInfo($prompt, $country, $strict_country, $location, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
+        return $this->perplexityAskPerplexityAQuestionAsyncWithHttpInfo($prompt, $country, $strict_country, $location, $html, $raw, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -410,6 +416,8 @@ class PerplexityApi
      * @param  string $country ISO-3166 alpha-2 egress country, e.g. &#39;US&#39;, &#39;GB&#39;, &#39;DE&#39;. (optional)
      * @param  bool $strict_country Answer only from an exit in &#x60;country&#x60;, never another one; 503 &#x60;country_unavailable&#x60; (not billed) when none answers. Requires &#x60;country&#x60;. (optional, default to false)
      * @param  string $location Where the asker is: a city (tokyo, osaka, seoul, new-york, london, ...) or &#39;lat,lng&#39; in decimal degrees. Perplexity answers a local-sounding question for it instead of the exit IP&#39;s city. It does not pick the egress: &#x60;country&#x60; does. (optional)
+     * @param  bool $html Also return &#x60;answer_html&#x60;: the answer rendered as an HTML fragment, with each &#x60;[n]&#x60; citation linked to its source (&#x60;&lt;a class&#x3D;\&quot;citation\&quot; data-ref&#x3D;\&quot;n\&quot;&gt;&#x60;). Raw HTML and unsafe links in the answer are dropped. Same price. (optional, default to false)
+     * @param  bool $raw Also return &#x60;raw&#x60;: Perplexity&#39;s own final answer object as it sent it (answer blocks, web results, related queries, model and mode metadata), minus its thread write token. Every other field is parsed from it. Same price. (optional, default to false)
      * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
      * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
      * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
@@ -422,10 +430,10 @@ class PerplexityApi
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function perplexityAskPerplexityAQuestionAsyncWithHttpInfo($prompt, $country = null, $strict_country = false, $location = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['perplexityAskPerplexityAQuestion'][0])
+    public function perplexityAskPerplexityAQuestionAsyncWithHttpInfo($prompt, $country = null, $strict_country = false, $location = null, $html = false, $raw = false, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['perplexityAskPerplexityAQuestion'][0])
     {
         $returnType = 'mixed';
-        $request = $this->perplexityAskPerplexityAQuestionRequest($prompt, $country, $strict_country, $location, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
+        $request = $this->perplexityAskPerplexityAQuestionRequest($prompt, $country, $strict_country, $location, $html, $raw, $prefer, $x_callback_url, $idempotency_key, $async, $async_wait, $callback_url, $idempotency_key2, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -470,6 +478,8 @@ class PerplexityApi
      * @param  string $country ISO-3166 alpha-2 egress country, e.g. &#39;US&#39;, &#39;GB&#39;, &#39;DE&#39;. (optional)
      * @param  bool $strict_country Answer only from an exit in &#x60;country&#x60;, never another one; 503 &#x60;country_unavailable&#x60; (not billed) when none answers. Requires &#x60;country&#x60;. (optional, default to false)
      * @param  string $location Where the asker is: a city (tokyo, osaka, seoul, new-york, london, ...) or &#39;lat,lng&#39; in decimal degrees. Perplexity answers a local-sounding question for it instead of the exit IP&#39;s city. It does not pick the egress: &#x60;country&#x60; does. (optional)
+     * @param  bool $html Also return &#x60;answer_html&#x60;: the answer rendered as an HTML fragment, with each &#x60;[n]&#x60; citation linked to its source (&#x60;&lt;a class&#x3D;\&quot;citation\&quot; data-ref&#x3D;\&quot;n\&quot;&gt;&#x60;). Raw HTML and unsafe links in the answer are dropped. Same price. (optional, default to false)
+     * @param  bool $raw Also return &#x60;raw&#x60;: Perplexity&#39;s own final answer object as it sent it (answer blocks, web results, related queries, model and mode metadata), minus its thread write token. Every other field is parsed from it. Same price. (optional, default to false)
      * @param  string $prefer &#x60;respond-async[, wait&#x3D;N]&#x60; (RFC 7240): run the call async. If it has not finished after &#x60;wait&#x60; seconds (0-120, default 25) the answer is &#x60;202&#x60; with a &#x60;request_id&#x60;; poll &#x60;GET /v1/requests/{request_id}&#x60;. Its &#x60;wait&#x3D;&#x60; wins over &#x60;async_wait&#x60;; without one, &#x60;async_wait&#x60; sets the wait. (optional)
      * @param  string $x_callback_url An &#x60;https&#x60; URL that receives the signed &#x60;request.completed&#x60; webhook when the call finishes. Implies async: on its own (no &#x60;Prefer&#x60;, &#x60;async&#x60; or &#x60;async_wait&#x60;) the answer is an immediate &#x60;202&#x60;; with &#x60;Prefer: respond-async&#x60; or &#x60;async&#x3D;true&#x60; the call still waits 25 s unless a wait is given. Wins over &#x60;callback_url&#x60;. (optional)
      * @param  string $idempotency_key 1-200 visible ASCII characters, per account, kept as long as the result (about 15 minutes). The same key on the same call returns that call&#39;s current state (&#x60;Idempotent-Replayed: true&#x60;) without running or billing it again; on a different call it is &#x60;409 idempotency_key_reused&#x60;. Applies to async calls only; on a synchronous call it is ignored. Wins over &#x60;idempotency_key&#x60;. (optional)
@@ -482,7 +492,7 @@ class PerplexityApi
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function perplexityAskPerplexityAQuestionRequest($prompt, $country = null, $strict_country = false, $location = null, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['perplexityAskPerplexityAQuestion'][0])
+    public function perplexityAskPerplexityAQuestionRequest($prompt, $country = null, $strict_country = false, $location = null, $html = false, $raw = false, $prefer = null, $x_callback_url = null, $idempotency_key = null, $async = null, $async_wait = null, $callback_url = null, $idempotency_key2 = null, string $contentType = self::contentTypes['perplexityAskPerplexityAQuestion'][0])
     {
 
         // verify the required parameter 'prompt' is set
@@ -491,6 +501,8 @@ class PerplexityApi
                 'Missing the required parameter $prompt when calling perplexityAskPerplexityAQuestion'
             );
         }
+
+
 
 
 
@@ -557,6 +569,24 @@ class PerplexityApi
             $location,
             'location', // param base name
             'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $html,
+            'html', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $raw,
+            'raw', // param base name
+            'boolean', // openApiType
             'form', // style
             true, // explode
             false // required
